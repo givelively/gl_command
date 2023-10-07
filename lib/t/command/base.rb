@@ -27,5 +27,7 @@ module T
       context.errors << e
       rollback
     end
+
+    def rollback; end
   end
 end
