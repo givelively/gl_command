@@ -22,7 +22,7 @@ module T
 
     def perform
       call
-    rescue => e
+    rescue StandardError => e
       context.fail!
       context.errors << e
       context.rollback
