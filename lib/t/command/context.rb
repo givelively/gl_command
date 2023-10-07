@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module T
-  class Context < OpenStruct
+  class Context < OpenStruct # rubocop:disable Style/OpenStructUse
     def self.factory(context = {})
       return context if context.is_a?(Context)
 

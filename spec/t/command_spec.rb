@@ -44,6 +44,10 @@ RSpec.describe T::Command do
         def call
           non_existing_command
         end
+
+        def rollback
+          context.rolled_back = true
+        end
       end
     end
 
@@ -57,6 +61,10 @@ RSpec.describe T::Command do
 
     it 'is a failure' do
       expect(test_class.call).to be_failure
+    end
+
+    it 'calls `:rollback`' do
+      expect(test_class.call(rolled_back: false).rolled_back).to be(true)
     end
   end
 end

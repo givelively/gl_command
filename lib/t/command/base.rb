@@ -25,7 +25,7 @@ module T
     rescue StandardError => e
       context.fail!
       context.errors << e
-      context.rollback
+      rollback
     end
   end
 end
