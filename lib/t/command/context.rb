@@ -19,5 +19,6 @@ module T
     def success?
       !failure?
     end
+    alias_method :successful?, :success?
   end
 end

@@ -27,7 +27,7 @@ RSpec.describe T::Command do
     end
 
     it 'is successful' do
-      expect(test_class.call).to be_success
+      expect(test_class.call).to be_successful
     end
 
     it 'is not a failure' do
@@ -56,7 +56,7 @@ RSpec.describe T::Command do
     end
 
     it 'is not successful' do
-      expect(test_class.call).not_to be_success
+      expect(test_class.call).not_to be_successful
     end
 
     it 'is a failure' do
