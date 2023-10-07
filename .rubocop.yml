@@ -1,0 +1,15 @@
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-factory_bot
+  - rubocop-rake
+
+AllCops:
+  NewCops: enable
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Style/Documentation:
+  Enabled: false
