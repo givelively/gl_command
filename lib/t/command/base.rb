@@ -13,16 +13,8 @@ module T
     end
 
     module ClassMethods
-      def before(method)
-        set_callback(:call, :before, method)
-      end
-
-      def around(method)
-        set_callback(:call, :around, method)
-      end
-
-      def after(method)
-        set_callback(:call, :after, method)
+      %i[before around after].each do |event|
+        define_method(event) { set_callback(:call, event, method) }
       end
 
       def call(context = {})
