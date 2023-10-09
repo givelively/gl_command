@@ -13,8 +13,10 @@ module T
     end
 
     module ClassMethods
-      %i[before around after].each do |callback|
-        define_method(callback) { |method| set_callback(:call, callback, method) }
+      %i[before around after].each do |hook|
+        define_method(hook) do |method_or_block|
+          set_callback(:call, hook, method_or_block)
+        end
       end
 
       def call(context = {})

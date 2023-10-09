@@ -2,10 +2,16 @@
 
 module T
   class Context < OpenStruct # rubocop:disable Style/OpenStructUse
+    attr_writer :errors
+
     def self.factory(context = {})
       return context if context.is_a?(Context)
 
-      Context.new(context.merge(errors: ActiveModel::Errors.new(self)))
+      Context.new(context)
+    end
+
+    def errors
+      @errors ||= ActiveModel::Errors.new(self)
     end
 
     def fail!
