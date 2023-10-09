@@ -1,4 +1,4 @@
-# t-command
+# T::Command
 
 T::Command is an implementation of the [Command Pattern](https://en.wikipedia.org/wiki/Command_pattern) to encapsulate business logic.
 
