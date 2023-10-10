@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe T::Chain do
   describe 'A Chain class' do
-    subject(:call) {test_class.call(foo: :bar) }
+    subject(:call) { test_class.call(foo: :bar) }
 
     let(:test_class) do
       success_link = Class.new do

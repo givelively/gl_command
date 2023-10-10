@@ -8,7 +8,6 @@ module T
         include Command
 
         @commands = []
-
       end
     end
 
