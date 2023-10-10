@@ -7,25 +7,25 @@ module T
         extend ClassMethods
         include Command
 
-        @links = [] if @links.blank?
-        @links_called = [] if @links_called.blank?
+        @commands = []
+        @commands_called = []
       end
     end
 
     module ClassMethods
-      def chain(foo)
-        @links << foo
+      def chain(command)
+        @commands << command
       end
     end
 
     def perform
       run_callbacks :call do
-        links = self.class.instance_variable_get(:@links)
-        links_called = self.class.instance_variable_get(:@links_called)
+        commands = self.class.instance_variable_get(:@commands)
+        commands_called = self.class.instance_variable_get(:@commands_called)
 
-        links.each do |chainlink|
-          links_called << chainlink
-          chainlink.call(context)
+        commands.each do |command|
+          commands_called << command
+          @context = command.call(@context)
         end
       end
     rescue StandardError
@@ -33,7 +33,7 @@ module T
     end
 
     def rollback
-      @links_called.reverse.map(&:rollback)
+      @commands_called.reverse.map(&:rollback)
     end
   end
 end

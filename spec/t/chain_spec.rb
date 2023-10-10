@@ -4,13 +4,15 @@ require 'spec_helper'
 
 RSpec.describe T::Chain do
   describe 'A Chain class' do
-    subject(:test_class) do
+    subject(:call) {test_class.call(foo: :bar) }
+
+    let(:test_class) do
       success_link = Class.new do
         require 't/command'
         include T::Command
 
         def call
-          # noop
+          context.success_link_called = true
         end
       end
 
@@ -23,19 +25,16 @@ RSpec.describe T::Chain do
       end
     end
 
-    it { is_expected.to respond_to(:call) }
-    it { is_expected.to respond_to(:context) }
+    it { is_expected.to be_a(T::Context) }
+    it { is_expected.to be_successful }
+    it { is_expected.not_to be_failure }
 
-    it 'returns a T::Context' do
-      expect(test_class.call).to be_a(T::Context)
+    it 'carries over the context' do
+      expect(call.foo).to eq(:bar)
     end
 
-    it 'is successful' do
-      expect(test_class.call).to be_successful
-    end
-
-    it 'is not a failure' do
-      expect(test_class.call).not_to be_failure
+    it 'carries over the context of the commands' do
+      expect(call.success_link_called).to be(true)
     end
   end
 end
