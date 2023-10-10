@@ -5,4 +5,5 @@ require 'rails/railtie'
 
 require 't/command/base'
 require 't/command/context'
+require 't/command/chain'
 require 't/command/version'

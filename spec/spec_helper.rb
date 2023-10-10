@@ -2,6 +2,9 @@
 
 ENV['RAILS_ENV'] = 'test'
 
+require 't/command'
+require 'active_record'
+
 require 'simplecov'
 SimpleCov.start 'rails' do
   add_filter 'spec/'
