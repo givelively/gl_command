@@ -8,7 +8,7 @@ module T
         include Command
 
         @commands = []
-        @commands_called = []
+
       end
     end
 
@@ -16,15 +16,19 @@ module T
       def chain(command)
         @commands << command
       end
+
+      def commands
+        @commands
+      end
     end
 
     def perform
       run_callbacks :call do
-        commands = self.class.instance_variable_get(:@commands)
-        commands_called = self.class.instance_variable_get(:@commands_called)
+        commands = self.class.commands
+        @commands_called = []
 
         commands.each do |command|
-          commands_called << command
+          @commands_called << command
           @context = command.call(@context)
         end
       end
