@@ -5,7 +5,6 @@ module T
     def self.included(base)
       base.class_eval do
         extend ClassMethods
-        include Command
 
         @commands = []
       end
