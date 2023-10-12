@@ -11,8 +11,6 @@ module T
     end
 
     module ClassMethods
-      attr_accessor :commands_called
-
       def chain(command)
         @commands << command
       end
