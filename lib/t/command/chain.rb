@@ -11,6 +11,8 @@ module T
     end
 
     module ClassMethods
+      attr_accessor :commands_called
+
       def chain(command)
         @commands << command
       end
@@ -20,22 +22,31 @@ module T
       end
     end
 
+    def commands
+      self.class.commands
+    end
+
     def perform
       run_callbacks :call do
-        commands = self.class.commands
         @commands_called = []
-
-        commands.each do |command|
-          @commands_called << command
-          @context = command.call(@context)
-        end
+        commands.each { |command| call_command(command) }
       end
-    rescue StandardError
+    rescue ContextFailure
       rollback
     end
 
     def rollback
-      @commands_called.reverse.map(&:rollback)
+      @commands_called.reverse_each do |command|
+        command.new(@context).rollback
+      end
     end
+
+    def call_command(command)
+      @commands_called << command
+      @context = command.call(@context)
+      raise ContextFailure if @context.failure?
+    end
+
+    class ContextFailure < StandardError; end
   end
 end
