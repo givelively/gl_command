@@ -24,8 +24,12 @@ RSpec.describe T::Contract do
       end
     end
 
-    it 'tests the contract' do
+    it 'fails if a requirement is not met' do
       expect(test_class.call).to be_failure
+    end
+
+    it 'succeeds if the requirement is met' do
+      expect(test_class.call(bar: true)).to be_success
     end
   end
 end

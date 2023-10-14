@@ -67,20 +67,10 @@ GEM
     ast (2.4.2)
     base64 (0.1.1)
     builder (3.2.4)
-    codecov (0.2.12)
-      json
-      simplecov
     concurrent-ruby (1.2.2)
     crass (1.0.6)
-    database_cleaner (2.0.2)
-      database_cleaner-active_record (>= 2, < 3)
-    database_cleaner-active_record (2.1.0)
-      activerecord (>= 5.a)
-      database_cleaner-core (~> 2.0.0)
-    database_cleaner-core (2.0.1)
     date (3.3.3)
     diff-lcs (1.5.0)
-    docile (1.4.0)
     erubi (1.12.0)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
@@ -94,7 +84,7 @@ GEM
       concurrent-ruby (~> 1.0)
     json (2.6.3)
     language_server-protocol (3.17.0.3)
-    loofah (2.21.3)
+    loofah (2.21.4)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.8.1)
@@ -106,7 +96,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.20.0)
-    net-imap (0.4.0)
+    net-imap (0.4.1)
       date
       net-protocol
     net-pop (0.1.2)
@@ -124,7 +114,6 @@ GEM
     parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
-    pg (1.4.6)
     prettier (3.1.2)
       syntax_tree (>= 2.3.1)
       syntax_tree-haml (>= 1.1.0)
@@ -165,7 +154,7 @@ GEM
     rainbow (3.1.1)
     rake (13.0.6)
     rbs (3.2.2)
-    regexp_parser (2.8.1)
+    regexp_parser (2.8.2)
     rexml (3.2.6)
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
@@ -188,12 +177,12 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.12.1)
-    rubocop (1.56.4)
+    rubocop (1.57.1)
       base64 (~> 0.1.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.2.2.3)
+      parser (>= 3.2.2.4)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
@@ -220,12 +209,6 @@ GEM
       rubocop-capybara (~> 2.17)
       rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
-    simplecov (0.22.0)
-      docile (~> 1.1)
-      simplecov-html (~> 0.11)
-      simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.12.3)
-    simplecov_json_formatter (0.1.4)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -261,10 +244,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  codecov (~> 0.1)
-  database_cleaner (~> 2.0.1)
   factory_bot (~> 6.2.1)
-  pg (~> 1.4.1)
   prettier (~> 3.1.2)
   rails (~> 6.0.5.1)
   rake (~> 13.0)
@@ -275,7 +255,6 @@ DEPENDENCIES
   rubocop-rails (~> 2.15.2)
   rubocop-rake (~> 0.6)
   rubocop-rspec (~> 2.12)
-  simplecov (~> 0.16)
   t-command!
 
 BUNDLED WITH
