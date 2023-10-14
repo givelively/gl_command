@@ -44,7 +44,5 @@ module T
       @context = command.call(@context)
       raise ContextFailure if @context.failure?
     end
-
-    class ContextFailure < StandardError; end
   end
 end

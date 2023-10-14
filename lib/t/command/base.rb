@@ -4,8 +4,8 @@ module T
   module Command
     def self.included(base)
       base.class_eval do
-        extend ClassMethods
         include ActiveSupport::Callbacks
+        extend ClassMethods
 
         define_callbacks :call
         attr_reader :context
@@ -32,6 +32,9 @@ module T
       run_callbacks :call do
         call
       end
+    rescue ContractFailure
+      context.fail!
+      rollback
     rescue StandardError => e
       context.fail!
       context.errors.add(:base, e)

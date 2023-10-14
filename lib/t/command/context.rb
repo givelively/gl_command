@@ -2,7 +2,9 @@
 
 module T
   class Context < OpenStruct # rubocop:disable Style/OpenStructUse
-    attr_writer :errors
+    include ActiveModel::Validations
+
+    attr_accessor :errors
 
     def self.factory(context = {})
       return context if context.is_a?(Context)
@@ -10,8 +12,9 @@ module T
       Context.new(context)
     end
 
-    def errors
-      @errors ||= ActiveModel::Errors.new(self)
+    def initialize(args)
+      super(args)
+      @errors = ActiveModel::Errors.new(self)
     end
 
     def fail!
