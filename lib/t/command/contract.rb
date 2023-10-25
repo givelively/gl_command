@@ -12,13 +12,17 @@ module T
     end
 
     module ClassMethods
-      def allows; end
+      def allows(*attributes)
+        delegate(*attributes, to: :context)
+      end
 
       def requires(*attributes)
         validate_attributes(attributes)
       end
 
-      def returns; end
+      def returns(*attributes)
+        delegate(*attributes, to: :context)
+      end
 
       private
 
