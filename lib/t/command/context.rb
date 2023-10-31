@@ -31,7 +31,7 @@ module T
     alias_method :successful?, :success?
 
     def to_s
-      "success:#{success?} errors:#{@errors.to_h} data:#{to_h}"
+      "success:#{success?} errors:#{@errors.full_messages} data:#{to_h}"
     end
   end
 end
