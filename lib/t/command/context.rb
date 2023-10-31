@@ -33,5 +33,9 @@ module T
     def to_s
       "success:#{success?} errors:#{@errors.full_messages} data:#{to_h}"
     end
+
+    def inspect
+      "success:#{success?} errors:#{@errors.full_messages} data:#{to_h}"
+    end
   end
 end
