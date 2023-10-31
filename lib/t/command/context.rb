@@ -31,7 +31,7 @@ module T
     alias_method :successful?, :success?
 
     def to_s
-      "success:#{success?} errors:#{@errors.full_messages} data:#{to_h}"
+      "<T::Context success:#{success?} errors:#{@errors.full_messages} data:#{to_h}>"
     end
 
     def inspect
