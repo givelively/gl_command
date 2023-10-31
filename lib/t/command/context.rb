@@ -35,7 +35,7 @@ module T
     end
 
     def inspect
-      to_s
+      "#<T::Context success:#{success?} errors:#{@errors.to_h} data:#{to_h}>"
     end
   end
 end
