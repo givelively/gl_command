@@ -29,5 +29,9 @@ module T
       !failure?
     end
     alias_method :successful?, :success?
+
+    def to_s
+      "<T::Context success:#{success?} errors:#{@errors} data:#{to_h}>"
+    end
   end
 end
