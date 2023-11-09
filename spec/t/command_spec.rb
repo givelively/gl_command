@@ -76,51 +76,106 @@ RSpec.describe T::Command do
 
     describe 'Delegation' do
       context 'when using :requires' do
-        subject(:test_class) do
-          Class.new(BaseCommand) do
-            requires :foo
+        context 'without type specification' do
+          subject(:test_class) do
+            Class.new(BaseCommand) do
+              requires :foo
 
-            def call
-              raise if foo.blank?
+              def call
+                raise if foo.blank?
+              end
             end
+          end
+
+          it 'delegates variable to the context' do
+            expect(test_class.call(foo: :bar)).to be_successful
           end
         end
 
-        it 'delegates variable to the context' do
-          expect(test_class.call(foo: :bar)).to be_successful
+        context 'with type specification' do
+          subject(:test_class) do
+            Class.new(BaseCommand) do
+              requires foo: String
+
+              def call
+                raise if foo.blank?
+              end
+            end
+          end
+
+          it 'delegates variable to the context' do
+            expect(test_class.call(foo: 'a')).to be_successful
+          end
         end
       end
 
       context 'when using :allows' do
-        subject(:test_class) do
-          Class.new(BaseCommand) do
-            allows :foo
+        context 'without type specification' do
+          subject(:test_class) do
+            Class.new(BaseCommand) do
+              allows :foo
 
-            def call
-              raise if foo.blank?
+              def call
+                raise if foo.blank?
+              end
             end
+          end
+
+          it 'delegates variable to the context' do
+            expect(test_class.call(foo: :bar)).to be_successful
           end
         end
 
-        it 'delegates variable to the context' do
-          expect(test_class.call(foo: :bar)).to be_successful
+        context 'with type specification' do
+          subject(:test_class) do
+            Class.new(BaseCommand) do
+              allows foo: String
+
+              def call
+                raise if foo.blank?
+              end
+            end
+          end
+
+          it 'delegates variable to the context' do
+            expect(test_class.call(foo: 'a')).to be_successful
+          end
         end
       end
 
       context 'when using :returns' do
-        subject(:test_class) do
-          Class.new(BaseCommand) do
-            returns :foo
+        context 'without type specification' do
+          subject(:test_class) do
+            Class.new(BaseCommand) do
+              returns :foo
 
-            def call
-              context.foo = :bar
-              raise if foo.blank?
+              def call
+                context.foo = :bar
+                raise if foo.blank?
+              end
             end
+          end
+
+          it 'delegates variable to the context' do
+            expect(test_class.call).to be_successful
           end
         end
 
-        it 'delegates variable to the context' do
-          expect(test_class.call).to be_successful
+        context 'with type specification' do
+          subject(:test_class) do
+            Class.new(BaseCommand) do
+              returns foo: String
+
+              def call
+                context.foo = 'a'
+                raise if foo.blank?
+              end
+            end
+          end
+
+          it 'delegates variable to the context' do
+            expect(test_class.call).to be_successful
+          end
         end
       end
     end
