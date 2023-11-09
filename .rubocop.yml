@@ -13,3 +13,6 @@ Style/Alias:
 
 Style/Documentation:
   Enabled: false
+
+RSpec/NestedGroup:
+  Max: 5
