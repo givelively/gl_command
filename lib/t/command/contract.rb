@@ -12,8 +12,16 @@ module T
     end
 
     module ClassMethods
-      def allows(*attributes)
+      def allows(*attributes, **strong_attributes)
         delegate(*attributes, to: :context)
+        strong_attributes.each_key { |strong_attribute| delegate(strong_attribute, to: :context) }
+
+        validates_each strong_attributes.keys do |record, attr_name, value|
+          next if value.blank?
+
+          type = strong_attributes[attr_name].name.downcase.to_sym
+          record.errors.add attr_name, "is not of type #{type}" unless value.acts_like?(type)
+        end
       end
 
       def requires(*attributes)

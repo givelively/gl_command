@@ -15,7 +15,7 @@ RSpec.describe T::Contract do
         end
 
         requires :bar
-        # allows :foo
+        allows foo: String
         # returns :baz
 
         def call
@@ -24,12 +24,28 @@ RSpec.describe T::Contract do
       end
     end
 
-    it 'fails if a requirement is not met' do
-      expect(test_class.call).to be_failure
+    context 'with required variables' do
+      it 'fails if a required variable is not given' do
+        expect(test_class.call).to be_failure
+      end
+
+      it 'succeeds if the required variable is given' do
+        expect(test_class.call(bar: true)).to be_success
+      end
     end
 
-    it 'succeeds if the requirement is met' do
-      expect(test_class.call(bar: true)).to be_success
+    context 'with allowed variables' do
+      it 'succeeds if the allowed variable is not given' do
+        expect(test_class.call(bar: true)).to be_success
+      end
+
+      it 'succeeds if the allowed variable is given' do
+        expect(test_class.call(bar: true, foo: 'a')).to be_success
+      end
+
+      it 'fails if the allowed variable is of the wrong type' do
+        expect(test_class.call(bar: true, foo: 1)).to be_failure
+      end
     end
   end
 end
