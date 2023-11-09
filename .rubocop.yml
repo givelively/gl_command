@@ -14,5 +14,5 @@ Style/Alias:
 Style/Documentation:
   Enabled: false
 
-RSpec/NestedGroup:
+RSpec/NestedGroups:
   Max: 5
