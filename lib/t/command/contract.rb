@@ -14,37 +14,61 @@ module T
 
     module ClassMethods
       def allows(*attributes, **strong_attributes)
-        delegate(*attributes, to: :context) if attributes.present?
+        delegate_attributes(*attributes)
         return if strong_attributes.blank?
 
-        strong_attributes.each_key { |strng_attr| delegate(strng_attr, to: :context) }
-        validates_each strong_attributes.keys do |record, attr_name, value|
-          next if value.blank?
-
-          type = strong_attributes[attr_name].name.downcase.to_sym
-          record.errors.add attr_name, "does not act like #{type}" unless value.acts_like?(type)
-        end
+        delegate_attributes(*strong_attributes.keys)
+        enforce_attribute_types(**strong_attributes)
       end
 
       def requires(*attributes, **strong_attributes)
-        if attributes.present?
-          validates(*attributes, presence: true)
-          delegate(*attributes, to: :context)
-        end
-        return if strong_attributes.blank?
+        requires_attributes(*attributes)
+        requires_strong_attributes(**strong_attributes)
+      end
 
-        strong_attributes.each_key { |strng_attr| delegate(strng_attr, to: :context) }
-        validates_each strong_attributes.keys do |record, attr_name, value|
-          type = strong_attributes[attr_name].name.downcase.to_sym
-          record.errors.add attr_name, "does not act like #{type}" unless value.acts_like?(type)
-        end
+      def requires_attributes(*attributes)
+        return if attributes.blank?
+
+        delegate_attributes(*attributes)
+        enforce_attribute_presence(*attributes)
+      end
+
+      def requires_strong_attributes(**attributes)
+        return if attributes.blank?
+
+        attribute_keys = attributes.keys
+        requires_attributes(*attribute_keys)
+        enforce_attribute_types(**attributes)
       end
 
       def returns(*attributes, **strong_attributes)
-        delegate(*attributes, to: :context)
-        strong_attributes.each_key { |strng_attr| delegate(strng_attr, to: :context) }
+        delegate_attributes(*attributes)
         @return_attributes = attributes
+        return if strong_attributes.blank?
+
+        strong_attribute_keys = strong_attributes.keys
+        delegate_attributes(*strong_attribute_keys)
+        @return_attributes.concat(strong_attribute_keys)
         @return_strong_attributes = strong_attributes
+      end
+
+      def delegate_attributes(*attributes)
+        delegate(*attributes, to: :context)
+      end
+
+      def enforce_attribute_presence(*attributes)
+        validates(*attributes, presence: true) if attributes.present?
+      end
+
+      def enforce_attribute_types(**attributes)
+        return if attributes.blank?
+
+        validates_each attributes.keys do |record, attr_name, value|
+          next if value.blank?
+
+          type = attributes[attr_name].name.downcase.to_sym
+          record.errors.add attr_name, "does not act like #{type}" unless value.acts_like?(type)
+        end
       end
     end
 
@@ -56,39 +80,24 @@ module T
     end
 
     def validate_return_contract!
-      validate_return_attributes!
-      validate_strong_return_attributes!
+      klass.enforce_attribute_presence(*return_attributes)
+      klass.enforce_attribute_types(**return_strong_attributes)
+      return if valid?
+
+      context.errors.copy!(errors)
+      raise ContractFailure
     end
 
-    def strong_attributes
-      self.class.instance_variable_get(:@return_strong_attributes) || []
+    def return_attributes
+      klass.instance_variable_get(:@return_attributes) || []
     end
 
-    def validate_return_attributes!
-      attributes = self.class.instance_variable_get(:@return_attributes)
-      return if attributes.blank?
-
-      attributes.each do |attribute|
-        next if context[attribute].present?
-
-        record.errors.add attribute, 'is not being returned'
-        context.errors.copy!(errors)
-        raise ContractFailure
-      end
+    def return_strong_attributes
+      klass.instance_variable_get(:@return_strong_attributes) || {}
     end
 
-    def validate_strong_return_attributes!
-      strong_attributes.each do |attribute, type|
-        if context[attribute].blank?
-          context.errors.add strong_attribute, 'is not being returned'
-          raise ContractFailure
-        end
-        type = type.name.downcase.to_sym
-        next if context[attribute].acts_like?(type)
-
-        context.errors.add attribute, "is returned, but does not act like a #{type}"
-        raise ContractFailure
-      end
+    def klass
+      self.class
     end
   end
 end
