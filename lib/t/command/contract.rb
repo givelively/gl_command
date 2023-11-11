@@ -14,10 +14,10 @@ module T
 
     module ClassMethods
       def allows(*attributes, **strong_attributes)
-        delegate_attributes(*attributes)
+        delegate(*attributes, to: :context)
         return if strong_attributes.blank?
 
-        delegate_attributes(*strong_attributes.keys)
+        delegate(*strong_attributes.keys, to: :context)
         enforce_attribute_types(**strong_attributes)
       end
 
@@ -29,7 +29,7 @@ module T
       def requires_attributes(*attributes)
         return if attributes.blank?
 
-        delegate_attributes(*attributes)
+        delegate(*attributes, to: :context)
         enforce_attribute_presence(*attributes)
       end
 
@@ -42,18 +42,14 @@ module T
       end
 
       def returns(*attributes, **strong_attributes)
-        delegate_attributes(*attributes)
+        delegate(*attributes, to: :context)
         @return_attributes = attributes
         return if strong_attributes.blank?
 
         strong_attribute_keys = strong_attributes.keys
-        delegate_attributes(*strong_attribute_keys)
+        delegate(*strong_attribute_keys, to: :context)
         @return_attributes.concat(strong_attribute_keys)
         @return_strong_attributes = strong_attributes
-      end
-
-      def delegate_attributes(*attributes)
-        delegate(*attributes, to: :context)
       end
 
       def enforce_attribute_presence(*attributes)
