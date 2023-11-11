@@ -66,9 +66,15 @@ module T
         validates_each attributes.keys do |record, attr_name, value|
           next if value.blank?
 
-          type = attributes[attr_name].name.downcase.to_sym
-          record.errors.add attr_name, "does not act like #{type}" unless value.acts_like?(type)
+          type = attributes[attr_name]
+          record.errors.add attr_name, "does is not a #{type}" unless type_applies?(value, type)
         end
+      end
+
+      private
+
+      def type_applies?(value, type)
+        value.is_a?(type) || value.acts_like?(type.name.downcase.to_sym)
       end
     end
 
