@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module T
+  class NotAContextError < ArgumentError; end
+
   class Context < OpenStruct # rubocop:disable Style/OpenStructUse
     include ActiveModel::Validations
 
@@ -8,6 +10,7 @@ module T
 
     def self.factory(context = {})
       return context if context.is_a?(Context)
+      raise NotAContextError, 'Arguments are not a Context.' unless context.respond_to?(:each_pair)
 
       Context.new(context)
     end

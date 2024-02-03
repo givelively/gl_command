@@ -74,6 +74,18 @@ RSpec.describe T::Command do
       end
     end
 
+    describe 'a Command class called with invalid parameters' do
+      subject(:test_class) do
+        Class.new(BaseCommand) do
+          def call; end
+        end
+      end
+
+      it 'fails with a readable exception' do
+        expect { test_class.call(:not_a_hash) }.to raise_error(T::NotAContextError)
+      end
+    end
+
     describe 'Delegation' do
       context 'when using :requires' do
         context 'without type specification' do
