@@ -7,6 +7,7 @@ require:
 
 AllCops:
   NewCops: enable
+  TargetRubyVersion: 3.1
 
 Style/Alias:
   EnforcedStyle: prefer_alias_method
@@ -16,3 +17,6 @@ Style/Documentation:
 
 RSpec/NestedGroups:
   Max: 5
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
