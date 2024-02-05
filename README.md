@@ -1,6 +1,6 @@
-# T::Command
+# GL::Command
 
-T::Command is an implementation of the [Command Pattern](https://en.wikipedia.org/wiki/Command_pattern) to encapsulate business logic.
+GL::Command is an implementation of the [Command Pattern](https://en.wikipedia.org/wiki/Command_pattern) to encapsulate business logic.
 
 The idea is to avoid bloat in Controllers and reduce coupling between models.
 
@@ -28,7 +28,7 @@ class SomeController
 end
 
 class DoComplexCommand
-  include T::Command
+  include GL::Command
 
   def call
     ... complex business logic ...
@@ -47,7 +47,7 @@ class SomeController
 end
 
 class DoComplexCommand
-  include T::Command
+  include GL::Command
 
   def call
     BusinessObject.method_call(offset: context.page * 50,
@@ -58,7 +58,7 @@ end
 ```
 
 ### Returning data
-The parameters of the `call` method get converted into a `T::Context`.
+The parameters of the `call` method get converted into a `GL::Context`.
 ```ruby
 class SomeController
   def index
@@ -69,7 +69,7 @@ class SomeController
 end
 
 class DoComplexCommand
-  include T::Command
+  include GL::Command
 
   def call
     context.business_result = BusinessObject.method_call(offset: context.page * 50,
@@ -93,7 +93,7 @@ class SomeController
 end
 
 class DoComplexCommand
-  include T::Command
+  include GL::Command
 
   def call
     context.business_result = BusinessObject.method_call(offset: context.page * 50,
@@ -109,7 +109,7 @@ end
 Should an exception occur, the interactor fails automatically and adds exception details to `context.errors`.
 ```ruby
 class DoComplexCommand
-  include T::Command
+  include GL::Command
 
   def call
     raise StandardError
@@ -117,10 +117,10 @@ class DoComplexCommand
 end
 ```
 ### Rollback
-Whenever a T::Command fails, it executes `rollback` if defined.
+Whenever a GL::Command fails, it executes `rollback` if defined.
 ```ruby
 class DoComplexCommand
-  include T::Command
+  include GL::Command
 
   def call
     # change a lot of things
@@ -134,10 +134,10 @@ end
 ```
 
 ### Hooks
-T::Commands offer `before`, `around`, and `after` hooks.
+GL::Commands offer `before`, `around`, and `after` hooks.
 ```ruby
 class DoComplexCommand
-  include T::Command
+  include GL::Command
 
   before :initialize_logger
   around :measure_time
