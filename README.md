@@ -9,7 +9,7 @@ The idea is to avoid bloat in Controllers and reduce coupling between models.
 Add the following line to your Gemfile:
 
 ```ruby
-gem 't-command', git: 'https://github.com/timlawrenz/t-command.git'
+gem 'gl-command'
 ```
 
 Download and install the gem:
