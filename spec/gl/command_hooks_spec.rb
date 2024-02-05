@@ -2,15 +2,15 @@
 
 require 'spec_helper'
 
-RSpec.describe T::Command do
+RSpec.describe GL::Command do
   describe 'hooks' do
     context 'with a before hook calling a method' do
       subject(:call) { test_class.call }
 
       let(:test_class) do
         Class.new do
-          require 't/command'
-          include T::Command
+          require 'gl/command'
+          include GL::Command
 
           before :set_before_test
 
@@ -36,8 +36,8 @@ RSpec.describe T::Command do
 
       let(:test_class) do
         Class.new do
-          require 't/command'
-          include T::Command
+          require 'gl/command'
+          include GL::Command
 
           before -> { context.before_test = 1 }
 
@@ -57,8 +57,8 @@ RSpec.describe T::Command do
 
       let(:test_class) do
         Class.new do
-          require 't/command'
-          include T::Command
+          require 'gl/command'
+          include GL::Command
 
           after :set_after_test
 
@@ -84,8 +84,8 @@ RSpec.describe T::Command do
 
       let(:test_class) do
         Class.new do
-          require 't/command'
-          include T::Command
+          require 'gl/command'
+          include GL::Command
 
           after -> { context.after_test = 1 }
 

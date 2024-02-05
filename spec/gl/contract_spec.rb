@@ -2,13 +2,13 @@
 
 require 'spec_helper'
 
-RSpec.describe T::Contract do
+RSpec.describe GL::Contract do
   describe 'A Contract class' do
     before do
       base_contract = Class.new(Object) do
-        require 't/command'
-        include T::Command
-        include T::Contract
+        require 'gl/command'
+        include GL::Command
+        include GL::Contract
 
         def call; end
       end
