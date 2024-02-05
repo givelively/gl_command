@@ -2,17 +2,17 @@
 
 require 'spec_helper'
 
-RSpec.describe T::Command do
+RSpec.describe GL::Command do
   it 'has a version number' do
-    expect(T::Command::VERSION).to be_a(String)
+    expect(GL::Command::VERSION).to be_a(String)
   end
 
   describe 'A Command class' do
     before do
       base_command = Class.new(Object) do
-        require 't/command'
-        include T::Command
-        include T::Contract
+        require 'gl/command'
+        include GL::Command
+        include GL::Contract
 
         def call; end
       end
@@ -31,8 +31,8 @@ RSpec.describe T::Command do
       it { is_expected.to respond_to(:call) }
       it { is_expected.to respond_to(:context) }
 
-      it 'returns a T::Context' do
-        expect(test_class.call).to be_a(T::Context)
+      it 'returns a GL::Context' do
+        expect(test_class.call).to be_a(GL::Context)
       end
 
       it 'is successful' do
@@ -57,7 +57,7 @@ RSpec.describe T::Command do
         end
       end
 
-      it 'returns a T::Context with a non-empty errors object' do
+      it 'returns a GL::Context with a non-empty errors object' do
         expect(test_class.call.errors).not_to be_empty
       end
 
@@ -82,7 +82,7 @@ RSpec.describe T::Command do
       end
 
       it 'fails with a readable exception' do
-        expect { test_class.call(:not_a_hash) }.to raise_error(T::NotAContextError)
+        expect { test_class.call(:not_a_hash) }.to raise_error(GL::NotAContextError)
       end
     end
 

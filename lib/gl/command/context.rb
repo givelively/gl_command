@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module T
+module GL
   class NotAContextError < ArgumentError; end
 
   class Context < OpenStruct # rubocop:disable Style/OpenStructUse
@@ -34,7 +34,7 @@ module T
     alias_method :successful?, :success?
 
     def inspect
-      "<T::Context success:#{success?} errors:#{@errors.full_messages} data:#{to_h}>"
+      "<GL::Context success:#{success?} errors:#{@errors.full_messages} data:#{to_h}>"
     end
   end
 end

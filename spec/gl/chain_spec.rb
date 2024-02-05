@@ -2,14 +2,14 @@
 
 require 'spec_helper'
 
-RSpec.describe T::Chain do
+RSpec.describe GL::Chain do
   describe 'A Chain class' do
     subject(:call) { test_class.call(foo: :bar) }
 
     let(:test_class) do
       success_link = Class.new do
-        require 't/command'
-        include T::Command
+        require 'gl/command'
+        include GL::Command
 
         def call
           context.success_link_called = true
@@ -17,15 +17,15 @@ RSpec.describe T::Chain do
       end
 
       Class.new do
-        require 't/command'
-        include T::Command
-        include T::Chain
+        require 'gl/command'
+        include GL::Command
+        include GL::Chain
 
         chain success_link
       end
     end
 
-    it { is_expected.to be_a(T::Context) }
+    it { is_expected.to be_a(GL::Context) }
     it { is_expected.to be_successful }
     it { is_expected.not_to be_failure }
 
@@ -40,8 +40,8 @@ RSpec.describe T::Chain do
     context 'with a failing command' do
       let(:test_class) do
         first_link = Class.new do
-          require 't/command'
-          include T::Command
+          require 'gl/command'
+          include GL::Command
 
           def call
             context.first_link_called = true
@@ -53,8 +53,8 @@ RSpec.describe T::Chain do
         end
 
         second_link = Class.new do
-          require 't/command'
-          include T::Command
+          require 'gl/command'
+          include GL::Command
 
           def call
             context.second_link_called = true
@@ -67,8 +67,8 @@ RSpec.describe T::Chain do
         end
 
         third_link = Class.new do
-          require 't/command'
-          include T::Command
+          require 'gl/command'
+          include GL::Command
 
           def call
             context.third_link_called = true
@@ -80,9 +80,9 @@ RSpec.describe T::Chain do
         end
 
         Class.new do
-          require 't/command'
-          include T::Command
-          include T::Chain
+          require 'gl/command'
+          include GL::Command
+          include GL::Chain
 
           chain first_link
           chain second_link
