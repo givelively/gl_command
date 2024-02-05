@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
       'lib/**/*.rb',
       'lib/**/*.erb',
       'lib/**/*.rake',
-      'GL-command.gemspec',
+      'gl-command.gemspec',
       '.github/*.md',
       'Gemfile',
       'Rakefile'
