@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require File.expand_path('lib/t/command/version', __dir__)
+require File.expand_path('lib/gl/command/version', __dir__)
 
 Gem::Specification.new do |spec|
-  spec.name = 't-command'
-  spec.version = T::Command::VERSION
-  spec.authors = ['Tim Lawrenz']
+  spec.name = 'gl-command'
+  spec.version = GL::Command::VERSION
+  spec.authors = ['Give Lively']
   spec.summary = 'Implementation of the Command Pattern'
-  spec.homepage = 'https://github.com/timlawrenz/t-command'
+  spec.homepage = 'https://github.com/givelively/gl-command'
   spec.license = 'Apache'
   spec.platform = Gem::Platform::RUBY
 
@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
       'lib/**/*.rb',
       'lib/**/*.erb',
       'lib/**/*.rake',
-      't-command.gemspec',
+      'GL-command.gemspec',
       '.github/*.md',
       'Gemfile',
       'Rakefile'
