@@ -167,3 +167,20 @@ class DoComplexCommand
   end
 end
 ```
+
+## Publishing gem to rubygems!
+
+Make the gem
+
+    gem build gl-command.gemspec
+
+Push to rubygems
+
+    gem push gl-command-1.0.0.gem
+
+
+That's it. References:
+
+[Publishing](http://guides.rubygems.org/publishing/)
+
+[making your first gem](http://guides.rubygems.org/make-your-own-gem/)
