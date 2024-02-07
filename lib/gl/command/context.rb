@@ -1,23 +1,31 @@
 # frozen_string_literal: true
 
 module GL
-  class NotAContextError < ArgumentError; end
+  # class NotAContextError < ArgumentError; end
 
-  class Context < OpenStruct # rubocop:disable Style/OpenStructUse
-    include ActiveModel::Validations
+  class Context #< Struct
+    # include ActiveModel::Validations
 
-    attr_accessor :errors
+    # attr_accessor :error
 
-    def self.factory(context = {})
-      return context if context.is_a?(Context)
-      raise NotAContextError, 'Arguments are not a Context.' unless context.respond_to?(:each_pair)
+    # def self.factory(context = {})
+    #   return context if context.is_a?(Context)
+    #   raise NotAContextError, 'Arguments are not a Context.' unless context.respond_to?(:each_pair)
 
-      Context.new(context)
-    end
+    #   Context.new(context)
+    # end
 
     def initialize(args)
-      super(args)
-      @errors = ActiveModel::Errors.new(self)
+      # Struct.new('Context', :error, :failure, self.class.returns)
+      # # super(args)
+      # pp self.class
+      # @error = nil
+      # @do_not_raise = args[:do_not_raise]
+      # @errors = ActiveModel::Errors.new(self)
+    end
+
+    def raise_error?
+      !@do_not_raise
     end
 
     def fail!
@@ -31,6 +39,7 @@ module GL
     def success?
       !failure?
     end
+
     alias_method :successful?, :success?
 
     def inspect

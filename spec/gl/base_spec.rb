@@ -15,17 +15,16 @@ RSpec.describe GL::Command do
       @nonprofits ||= []
     end
 
-    attr_reader :ein, :name, :id
+    attr_reader :ein, :id
 
-    validates_presence_of :ein, :name
+    validates_presence_of :ein
 
     define_model_callbacks :initialize, only: :after
     after_initialize :add_to_all_if_valid
 
-    def initialize(ein:, name:)
+    def initialize(ein:)
       run_callbacks :initialize do
         @ein = ein
-        @name = name
         @id = Nonprofit.all.count + 1
       end
     end
@@ -39,31 +38,28 @@ RSpec.describe GL::Command do
     end
 
     def add_to_all_if_valid
-      # pp 'in add_to_all_if_valid'
       return if invalid?
       Nonprofit.all << self
     end
   end
 
-  # class NormalizeEin
-  #   include GL::Command
+  class NormalizeEin < GL::Command
+    returns :ein
 
-  #   returns :ein
+    def call(ein:)
+      context.ein = normalize(ein)
+    end
 
-  #   def call(ein:)
-  #     context.ein = normalize(ein)
-  #   end
+    def normalize(ein)
+      return nil if ein.blank?
+      ein_int = ein.gsub(/[^0-9]/, '')
 
-  #   def normalize(ein)
-  #     return nil if ein.blank?
-  #     ein_int = ein.gsub(/[^0-9]/, '')
-
-  #     [ein_int[0..1], ein_int[2..]].join("-")
-  #   end
-  # end
+      [ein_int[0..1], ein_int[2..]].join("-")
+    end
+  end
 
 
-  # class CreateNormalizedNonprofit
+  # class CreateNormalizedNonprofit < GL::Command
   #   include GL::Command
 
   #   def call(ein:, name:)
@@ -71,13 +67,13 @@ RSpec.describe GL::Command do
   #   end
   # end
 
-  # class CreateNonprofit
+  # class CreateNonprofit < GL::Command
   #   include GL::Command
   #   include GL::Chain
 
   #   returns :nonprofit
 
-  #   def call_chain(ein:, name:)
+  #   def call_chain(ein:)
   #     NormalizeEin,
   #     CreateNormalizedNonprofit
   #   end
@@ -86,7 +82,7 @@ RSpec.describe GL::Command do
   describe 'Nonprofit initialize' do
     it 'is valid' do
       expect do
-        nonprofit = Nonprofit.new(ein: '00-1111111', name: 'Test')
+        nonprofit = Nonprofit.new(ein: '00-1111111')
         expect(nonprofit).to be_valid
         expect(nonprofit.errors.count).to eq 0
       end.to change(Nonprofit.all, :count).by 1
@@ -95,25 +91,17 @@ RSpec.describe GL::Command do
     context 'invalid' do
       it 'is invalid with missing ein' do
         expect do
-          nonprofit = Nonprofit.new(ein: ' ', name: 'Test')
+          nonprofit = Nonprofit.new(ein: ' ')
           expect(nonprofit).not_to be_valid
           expect(nonprofit.errors.count).to eq 1
           expect(nonprofit.errors.full_messages.to_s).to match(/ein.*blank/i)
         end.to change(Nonprofit.all, :count).by 0
       end
 
-      it 'is invalid with missing name' do
-        expect {
-          nonprofit = Nonprofit.new(ein: '11-1111111', name: nil)
-          expect(nonprofit.errors.count).to eq 1
-          expect(nonprofit.errors.full_messages.to_s).to match(/name.*blank/i)
-        }.to change(Nonprofit.all, :count).by 0
-      end
-
       it 'is invalid with duplicate ein' do
-        Nonprofit.new(ein: '00-1111111', name: 'Test')
+        Nonprofit.new(ein: '00-1111111')
         expect {
-          nonprofit = Nonprofit.new(ein: '00-1111111', name: 'New Test')
+          nonprofit = Nonprofit.new(ein: '00-1111111')
           expect(nonprofit.errors.count).to eq 1
           expect(nonprofit.errors.full_messages.to_s).to match(/ein already taken/i)
         }.to change(Nonprofit.all, :count).by 0
