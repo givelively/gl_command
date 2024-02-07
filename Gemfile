@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 group :development do
   gem 'prettier', '~> 3.1.2'
@@ -9,7 +9,7 @@ end
 group :development, :test do
   gem 'factory_bot', '~> 6.2.1'
   gem 'guard-rspec'
-  gem 'rails', '~> 6.0.5.1'
+  gem 'rails', '~> 6.1.7.5'
   gem 'rake', '~> 13.0'
   gem 'rspec', '~> 3.6'
   gem 'rspec-rails', '~> 5.1.2'
