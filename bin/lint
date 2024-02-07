@@ -154,7 +154,7 @@ chdir APP_ROOT do
   filenames = options[:filenames] || filenames_for_target_files(options[:target_files])
 
   if filenames
-    rubocop_files = filenames.grep(/\.rb/)
+    rubocop_files = filenames.grep(/\.(rb|rake|gemspec)/)
     rubocop_files += filenames & NON_RB_RUBY_FILES
 
     prettier_files = filenames.grep(/\.(js|jsx|json|css|md)\z/)

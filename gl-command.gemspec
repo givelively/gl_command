@@ -19,12 +19,9 @@ Gem::Specification.new do |spec|
       'LICENSE',
       'CHANGELOG.md',
       'lib/**/*.rb',
-      'lib/**/*.erb',
-      'lib/**/*.rake',
       'gl-command.gemspec',
       '.github/*.md',
       'Gemfile',
-      'Rakefile'
     ]
   spec.require_paths = ['lib']
 
@@ -32,5 +29,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport', '>= 3.2.0'
   spec.add_dependency 'railties', '>= 3.2.0'
 
-  spec.metadata['rubygems_mfa_required'] = 'true'
+  spec.metadata = {
+    'homepage_uri' => 'https://github.com/givelively/gl-command',
+    'bug_tracker_uri' => 'https://github.com/givelively/gl-command/issues',
+    'source_code_uri' => 'https://github.com/givelively/gl-command',
+    'rubygems_mfa_required' => 'true'
+  }
 end
