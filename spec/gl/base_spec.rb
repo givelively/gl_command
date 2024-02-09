@@ -103,6 +103,15 @@ RSpec.describe GL::Command do
       end
     end
 
+    describe 'call' do
+      it 'returns the expected result' do
+        result = NormalizeEin.call(ein: '001111111')
+        expect(result).to be_successful
+        expect(result.error).to be_nil
+        expect(result.ein).to eq '00-1111111'
+      end
+    end
+
     describe 'ArgumentError' do
       it 'errors if called without keyword' do
         expect { NormalizeEin.call(ein) }.to raise_error(ArgumentError)
@@ -113,10 +122,37 @@ RSpec.describe GL::Command do
       end
 
       context 'with do_not_raise: true' do
-        it 'it still raises (because this is a structural issue)' do
-          expect do
-            NormalizeEin.call(not_ein: ein, do_not_raise: true)
-          end.to raise_error(ArgumentError)
+        it "it doesn't raise" do
+          result = NormalizeEin.call(not_ein: ein, do_not_raise: true)
+          expect(result).not_to be_successful
+          expect(result.error.class).to match(ArgumentError)
+        end
+      end
+    end
+
+    describe 'context' do
+      let(:context) { GL::Context.new(NormalizeEin) }
+      it 'is successful and raises errors by default' do
+        expect(context.raise_error?).to be_truthy
+        expect(context).to be_successful
+      end
+
+      it 'has the return method' do
+        context_instance_methods = (context.methods - Object.instance_methods).sort
+        expect(context_instance_methods).to eq(%i[ein ein= error error= fail! failure? raise_error? success? successful?])
+      end
+
+      context 'passed do_not_raise' do
+        let(:context) { GL::Context.new(NormalizeEin, do_not_raise: true) }
+        it 'is successful and does not raise errors by default' do
+          expect(context.raise_error?).to be_falsey
+          expect(context).to be_successful
+        end
+      end
+      describe 'inspect' do
+        let(:target) { '<GL::Context \'NormalizeEin\' success: true, error: , returns:??>' }
+        it 'renders inspect as expected' do
+          expect(context.inspect).to eq target
         end
       end
     end

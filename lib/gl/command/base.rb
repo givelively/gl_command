@@ -1,28 +1,28 @@
 # frozen_string_literal: true
 
 module GL
-  # frozen_string_literal: true
   class Context
     attr_accessor :error
-  #   def self.factory(klass)
-  #     Struct.new('Context', :error, :failure, klass.returns)
-  #   end
-    def initialize(args)
-      # Struct.new('Context', :error, :failure, self.class.returns)
-      # super(args)
-      # pp self.class
+
+    def initialize(klass, do_not_raise: false)
+      @klass = klass
       @error = nil
-      @do_not_raise = args[:do_not_raise]
-      # @errors = ActiveModel::Errors.new(self)
+      @do_not_raise = !!do_not_raise
+      klass.returns.each do |arg|
+        # It would be nice to have per-command context classes, and define attr_accessor on the class,
+        # (rather than on each instance)
+        singleton_class.class_eval { attr_accessor arg }
+      end
     end
 
     def raise_error?
       !@do_not_raise
     end
 
-    def fail!(error_message = nil)
+    def fail!(passed_error = nil)
       @failure = true
-      error = error_message if error_message.present?
+      self.error = passed_error if passed_error
+      self # Return self
     end
 
     def failure?
@@ -36,16 +36,12 @@ module GL
     alias_method :successful?, :success?
 
     def inspect
-      "<GL::Context success:#{success?} errors:#{@errors.full_messages} data:#{to_h}>"
+      "<GL::Context '#{@klass}' success: #{success?}, error: #{error}, returns:??>"
     end
   end
 
   class Command
-    # def self.included(base)
-    #   base.class_eval do
-    #     attr_reader :context
-    #   end
-    # end
+    attr_accessor :context
 
     class << self
       def returns(*return_attrs)
@@ -66,7 +62,7 @@ module GL
             parameters[:required] ||= []
             parameters[:required] << param[1]
           else
-            raise "what is this? #{param}"
+            raise "what is this? #{param}" # TODO: are there other options??
           end
         end
         @parameters = parameters
@@ -74,7 +70,7 @@ module GL
 
       def call(**args)
         opts = {
-          do_not_raise: !!args.delete(:do_not_raise)
+          do_not_raise: args.delete(:do_not_raise)
         }
         new(opts).perform_call(args)
       end
@@ -86,21 +82,19 @@ module GL
       end
     end
 
-    def initialize(context = {})
-      @context = GL::Context.new(context)
+    def initialize(context_opts = {})
+      @context = GL::Context.new(self.class, **context_opts)
     end
 
-    def perform_call(**args)
-      # run_callbacks :call do
-        call(args)
-    #   end
+    def perform_call(args)
+      call(**args)
+      @context
     rescue Exception => e
       rollback
-      if context.raise_error?
+      if @context.raise_error?
         raise e
       else
-        context.error = e
-        context.fail!
+        @context.fail!(e)
       end
     end
 
