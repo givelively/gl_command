@@ -48,27 +48,11 @@ module GL
         @returns ||= return_attrs
       end
 
-      def arguments
-        return @parameters if defined?(@parameters)
-        parameters = {}
-        priv_instance.method(:call).parameters.each do |param|
-          case param[0]
-          when :req, :opt
-            raise "#{name} `call` method only supports keyword arguments (not '#{param[1]}' positional)"
-          when :key
-            parameters[:optional] ||= []
-            parameters[:optional] << param[1]
-          when :keyreq
-            parameters[:required] ||= []
-            parameters[:required] << param[1]
-          else
-            raise "what is this? #{param}" # TODO: are there other options??
-          end
+      def call(*posargs, **args)
+        if posargs.any?
+          raise ArgumentError, "`call` only supports keyword arguments, not positional - you passed: '#{posargs}'"
         end
-        @parameters = parameters
-      end
 
-      def call(**args)
         opts = {
           do_not_raise: args.delete(:do_not_raise)
         }
@@ -89,7 +73,7 @@ module GL
     def perform_call(args)
       call(**args)
       @context
-    rescue Exception => e
+    rescue StandardError => e
       rollback
       if @context.raise_error?
         raise e
@@ -99,5 +83,8 @@ module GL
     end
 
     def rollback; end
+  end
+
+  class CommandChain < Command
   end
 end

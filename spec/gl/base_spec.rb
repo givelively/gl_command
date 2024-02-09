@@ -93,11 +93,7 @@ RSpec.describe GL::Command do
   describe 'NormalizeEin' do
     let(:ein) { '81-0693451' }
 
-    describe 'attributes' do
-      it 'provides required parameters' do
-        expect(NormalizeEin.arguments).to eq({required: [:ein]})
-      end
-
+    describe 'returns' do
       it 'provides returns' do
         expect(NormalizeEin.returns).to eq([:ein])
       end
@@ -158,229 +154,42 @@ RSpec.describe GL::Command do
     end
   end
 
-  # describe 'positional_parameter' do
-  #   class TestCommand < GL::Command
-  #     def call(something, another_thing:)
-  #     end
-  #   end
-  #   it 'raises with a legible error' do
-  #     expect do
-  #       TestCommand.call('fff', another_thing: "herere")
-  #     end.to raise_error(/TestCommand.*only.*keyword/i)
-  #   end
-  # end
+  describe 'command with positional_parameter' do
+    class TestCommand < GL::Command
+      def call(something, another_thing:)
+      end
+    end
 
-  # describe 'invalid parameters' do
-  #   class BadCommand < GL::Command
-  #     def call(ein)
-  #     end
-  #   end
-
-  #   it 'is invalid' do
-  #     Not sure how to write this test...
-  #   end
-  # end
+    it 'raises a legible error' do
+      expect do
+        TestCommand.call('fff', another_thing: "herere")
+      end.to raise_error(/only.*keyword/i)
+    end
+  end
 
 
-  # class CreateNormalizedNonprofit < GL::Command
-  #   include GL::Command
+  class CreateNormalizedNonprofit < GL::Command
+    def call(ein:, name:)
+      Nonprofit.new(ein:, name:)
+    end
 
-  #   def call(ein:, name:)
-  #     Nonprofit.new(ein:, name:)
-  #   end
-  #   def rollback
-  #     do something!
-  #   end
-  # end
+    def rollback
+      # do something!
+    end
+  end
 
-  # class CreateNonprofit < GL::Command
-  #   include GL::Command
-  #   include GL::Chain
+  describe 'rollback' do
+    it 'runs a rollback'
+  end
 
-  #   returns :nonprofit
+  class CreateNonprofit < GL::CommandChain
+    def call_chain(ein:)
+      [NormalizeEin,
+       CreateNormalizedNonprofit]
+    end
+  end
 
-  #   def call_chain(ein:)
-  #     NormalizeEin,
-  #     CreateNormalizedNonprofit
-  #   end
-  # end
-
-
-
-  # ----------------------------------------
-
-
-    # context 'when entering happy path' do
-    #   subject(:test_class) do
-    #     Class.new(BaseCommand) do
-    #       def call
-    #         context.foo = :bar
-    #       end
-    #     end
-    #   end
-
-    #   it { is_expected.to respond_to(:call) }
-    #   it { is_expected.to respond_to(:context) }
-
-    #   it 'returns a GL::Context' do
-    #     expect(test_class.call).to be_a(GL::Context)
-    #   end
-
-    #   it 'is successful' do
-    #     expect(test_class.call).to be_successful
-    #   end
-
-    #   it 'is not a failure' do
-    #     expect(test_class.call).not_to be_failure
-    #   end
-    # end
-
-    # describe 'A failing Command class' do
-    #   subject(:test_class) do
-    #     Class.new(BaseCommand) do
-    #       def call(at: )
-    #         non_existing_command
-    #       end
-
-    #       def rollback
-    #         context.rolled_back = true
-    #       end
-    #     end
-    #   end
-
-    #   it 'returns a GL::Context with a non-empty errors object' do
-    #     expect(test_class.call.errors).not_to be_empty
-    #   end
-
-    #   it 'is not successful' do
-    #     expect(test_class.call).not_to be_successful
-    #   end
-
-    #   it 'is a failure' do
-    #     expect(test_class.call).to be_failure
-    #   end
-
-    #   it 'calls `:rollback`' do
-    #     expect(test_class.call(rolled_back: false).rolled_back).to be(true)
-    #   end
-    # end
-
-    # describe 'a Command class called with invalid parameters' do
-    #   subject(:test_class) do
-    #     Class.new(BaseCommand) do
-    #       def call; end
-    #     end
-    #   end
-
-    #   it 'fails with a readable exception' do
-    #     expect { test_class.call(:not_a_hash) }.to raise_error(GL::NotAContextError)
-    #   end
-    # end
-
-    # describe 'Delegation' do
-    #   context 'when using :requires' do
-    #     context 'without type specification' do
-    #       subject(:test_class) do
-    #         Class.new(BaseCommand) do
-    #           requires :foo
-
-    #           def call
-    #             raise if foo.blank?
-    #           end
-    #         end
-    #       end
-
-    #       it 'delegates variable to the context' do
-    #         expect(test_class.call(foo: :bar)).to be_successful
-    #       end
-    #     end
-
-    #     context 'with type specification' do
-    #       subject(:test_class) do
-    #         Class.new(BaseCommand) do
-    #           requires foo: String
-
-    #           def call
-    #             raise if foo.blank?
-    #           end
-    #         end
-    #       end
-
-    #       it 'delegates variable to the context' do
-    #         expect(test_class.call(foo: 'a')).to be_successful
-    #       end
-    #     end
-    #   end
-
-    #   context 'when using :allows' do
-    #     context 'without type specification' do
-    #       subject(:test_class) do
-    #         Class.new(BaseCommand) do
-    #           allows :foo
-
-    #           def call
-    #             raise if foo.blank?
-    #           end
-    #         end
-    #       end
-
-    #       it 'delegates variable to the context' do
-    #         expect(test_class.call(foo: :bar)).to be_successful
-    #       end
-    #     end
-
-    #     context 'with type specification' do
-    #       subject(:test_class) do
-    #         Class.new(BaseCommand) do
-    #           allows foo: String
-
-    #           def call
-    #             raise if foo.blank?
-    #           end
-    #         end
-    #       end
-
-    #       it 'delegates variable to the context' do
-    #         expect(test_class.call(foo: 'a')).to be_successful
-    #       end
-    #     end
-    #   end
-
-    #   context 'when using :returns' do
-    #     context 'without type specification' do
-    #       subject(:test_class) do
-    #         Class.new(BaseCommand) do
-    #           returns :foo
-
-    #           def call
-    #             context.foo = :bar
-    #             raise if foo.blank?
-    #           end
-    #         end
-    #       end
-
-    #       it 'delegates variable to the context' do
-    #         expect(test_class.call).to be_successful
-    #       end
-    #     end
-
-    #     context 'with type specification' do
-    #       subject(:test_class) do
-    #         Class.new(BaseCommand) do
-    #           returns foo: String
-
-    #           def call
-    #             context.foo = 'a'
-    #             raise if foo.blank?
-    #           end
-    #         end
-    #       end
-
-    #       it 'delegates variable to the context' do
-    #         expect(test_class.call).to be_successful
-    #       end
-    #     end
-    #   end
-    # end
-  # end
+  describe "CreateNonprofit" do
+    it "chains"
+  end
 end
