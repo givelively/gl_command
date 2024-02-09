@@ -43,6 +43,38 @@ RSpec.describe GL::Command do
     end
   end
 
+  describe 'Nonprofit' do
+    describe 'initialize' do
+      it 'is valid' do
+        expect do
+          nonprofit = Nonprofit.new(ein: '00-1111111')
+          expect(nonprofit).to be_valid
+          expect(nonprofit.errors.count).to eq 0
+        end.to change(Nonprofit.all, :count).by 1
+      end
+
+      context 'invalid' do
+        it 'is invalid with missing ein' do
+          expect do
+            nonprofit = Nonprofit.new(ein: ' ')
+            expect(nonprofit).not_to be_valid
+            expect(nonprofit.errors.count).to eq 1
+            expect(nonprofit.errors.full_messages.to_s).to match(/ein.*blank/i)
+          end.to change(Nonprofit.all, :count).by 0
+        end
+
+        it 'is invalid with duplicate ein' do
+          Nonprofit.new(ein: '00-1111111')
+          expect {
+            nonprofit = Nonprofit.new(ein: '00-1111111')
+            expect(nonprofit.errors.count).to eq 1
+            expect(nonprofit.errors.full_messages.to_s).to match(/ein already taken/i)
+          }.to change(Nonprofit.all, :count).by 0
+        end
+      end
+    end
+  end
+
   class NormalizeEin < GL::Command
     returns :ein
 
@@ -58,12 +90,70 @@ RSpec.describe GL::Command do
     end
   end
 
+  describe 'NormalizeEin' do
+    let(:ein) { '81-0693451' }
+
+    describe 'attributes' do
+      it 'provides required parameters' do
+        expect(NormalizeEin.arguments).to eq({required: [:ein]})
+      end
+
+      it 'provides returns' do
+        expect(NormalizeEin.returns).to eq([:ein])
+      end
+    end
+
+    describe 'ArgumentError' do
+      it 'errors if called without keyword' do
+        expect { NormalizeEin.call(ein) }.to raise_error(ArgumentError)
+      end
+
+      it 'errors if called with a different keyword' do
+        expect { NormalizeEin.call(not_ein: ein) }.to raise_error(ArgumentError)
+      end
+
+      context 'with do_not_raise: true' do
+        it 'it still raises (because this is a structural issue)' do
+          expect do
+            NormalizeEin.call(not_ein: ein, do_not_raise: true)
+          end.to raise_error(ArgumentError)
+        end
+      end
+    end
+  end
+
+  # describe 'positional_parameter' do
+  #   class TestCommand < GL::Command
+  #     def call(something, another_thing:)
+  #     end
+  #   end
+  #   it 'raises with a legible error' do
+  #     expect do
+  #       TestCommand.call('fff', another_thing: "herere")
+  #     end.to raise_error(/TestCommand.*only.*keyword/i)
+  #   end
+  # end
+
+  # describe 'invalid parameters' do
+  #   class BadCommand < GL::Command
+  #     def call(ein)
+  #     end
+  #   end
+
+  #   it 'is invalid' do
+  #     Not sure how to write this test...
+  #   end
+  # end
+
 
   # class CreateNormalizedNonprofit < GL::Command
   #   include GL::Command
 
   #   def call(ein:, name:)
   #     Nonprofit.new(ein:, name:)
+  #   end
+  #   def rollback
+  #     do something!
   #   end
   # end
 
@@ -79,55 +169,10 @@ RSpec.describe GL::Command do
   #   end
   # end
 
-  describe 'Nonprofit initialize' do
-    it 'is valid' do
-      expect do
-        nonprofit = Nonprofit.new(ein: '00-1111111')
-        expect(nonprofit).to be_valid
-        expect(nonprofit.errors.count).to eq 0
-      end.to change(Nonprofit.all, :count).by 1
-    end
 
-    context 'invalid' do
-      it 'is invalid with missing ein' do
-        expect do
-          nonprofit = Nonprofit.new(ein: ' ')
-          expect(nonprofit).not_to be_valid
-          expect(nonprofit.errors.count).to eq 1
-          expect(nonprofit.errors.full_messages.to_s).to match(/ein.*blank/i)
-        end.to change(Nonprofit.all, :count).by 0
-      end
 
-      it 'is invalid with duplicate ein' do
-        Nonprofit.new(ein: '00-1111111')
-        expect {
-          nonprofit = Nonprofit.new(ein: '00-1111111')
-          expect(nonprofit.errors.count).to eq 1
-          expect(nonprofit.errors.full_messages.to_s).to match(/ein already taken/i)
-        }.to change(Nonprofit.all, :count).by 0
-      end
-    end
-  end
+  # ----------------------------------------
 
-  # describe 'NormalizeEin' do
-  #   let(:ein) { '81-0693451' }
-
-  #   describe 'call argument errors' do
-  #     it 'errors if called without keyword' do
-  #       expect(NormalizeEin.call(ein)).to_raise(ArgumentError)
-  #     end
-
-  #     it 'errors if called with a different keyword' do
-  #       expect
-  #     end
-
-  #     it 'returns the parameters' do
-  #       # def call(something:, stuff: nil)
-  #       # end
-  #       # method(:call).parameters
-  #     end
-  #   end
-  # end
 
     # context 'when entering happy path' do
     #   subject(:test_class) do

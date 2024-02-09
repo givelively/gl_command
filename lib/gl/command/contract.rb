@@ -100,6 +100,6 @@ module GL
 
     def klass
       self.class
-    # end
+    end
   end
 end
