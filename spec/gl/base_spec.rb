@@ -12,7 +12,7 @@ RSpec.describe GL::Command do
     extend ActiveModel::Callbacks
 
     def self.all
-      @nonprofits ||= []
+      @all ||= []
     end
 
     attr_reader :ein, :id
@@ -30,15 +30,14 @@ RSpec.describe GL::Command do
     end
 
     # REALLY hacky validate uniqueness
-    validates_each :ein do |record, attr, value| 
+    validates_each :ein do |record, attr, value|
       existing_nonprofit = Nonprofit.all.find { |n| n.ein == value }
-      if existing_nonprofit && existing_nonprofit&.id != record.id
-        record.errors.add attr, "EIN already taken"
-      end
+      record.errors.add attr, 'EIN already taken' if existing_nonprofit && existing_nonprofit&.id != record.id
     end
 
     def add_to_all_if_valid
       return if invalid?
+
       Nonprofit.all << self
     end
   end
@@ -60,16 +59,16 @@ RSpec.describe GL::Command do
             expect(nonprofit).not_to be_valid
             expect(nonprofit.errors.count).to eq 1
             expect(nonprofit.errors.full_messages.to_s).to match(/ein.*blank/i)
-          end.to change(Nonprofit.all, :count).by 0
+          end.not_to change(Nonprofit.all, :count)
         end
 
         it 'is invalid with duplicate ein' do
           Nonprofit.new(ein: '00-1111111')
-          expect {
+          expect do
             nonprofit = Nonprofit.new(ein: '00-1111111')
             expect(nonprofit.errors.count).to eq 1
             expect(nonprofit.errors.full_messages.to_s).to match(/ein already taken/i)
-          }.to change(Nonprofit.all, :count).by 0
+          end.not_to change(Nonprofit.all, :count)
         end
       end
     end
@@ -84,9 +83,10 @@ RSpec.describe GL::Command do
 
     def normalize(ein)
       return nil if ein.blank?
+
       ein_int = ein.gsub(/[^0-9]/, '')
 
-      [ein_int[0..1], ein_int[2..]].join("-")
+      [ein_int[0..1], ein_int[2..]].join('-')
     end
   end
 
@@ -118,7 +118,7 @@ RSpec.describe GL::Command do
       end
 
       context 'with do_not_raise: true' do
-        it "it doesn't raise" do
+        it "doesn't raise" do
           result = NormalizeEin.call(not_ein: ein, do_not_raise: true)
           expect(result).not_to be_successful
           expect(result.error.class).to match(ArgumentError)
@@ -128,25 +128,30 @@ RSpec.describe GL::Command do
 
     describe 'context' do
       let(:context) { GL::Context.new(NormalizeEin) }
+
       it 'is successful and raises errors by default' do
-        expect(context.raise_error?).to be_truthy
+        expect(context).to be_raise_error
         expect(context).to be_successful
       end
 
       it 'has the return method' do
         context_instance_methods = (context.methods - Object.instance_methods).sort
-        expect(context_instance_methods).to eq(%i[ein ein= error error= fail! failure? raise_error? success? successful?])
+        expect(context_instance_methods).to eq(%i[ein ein= error error= fail! failure? raise_error? success?
+                                                  successful?])
       end
 
       context 'passed do_not_raise' do
         let(:context) { GL::Context.new(NormalizeEin, do_not_raise: true) }
+
         it 'is successful and does not raise errors by default' do
-          expect(context.raise_error?).to be_falsey
+          expect(context).not_to be_raise_error
           expect(context).to be_successful
         end
       end
+
       describe 'inspect' do
         let(:target) { '<GL::Context \'NormalizeEin\' success: true, error: , returns:??>' }
+
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
         end
@@ -156,17 +161,15 @@ RSpec.describe GL::Command do
 
   describe 'command with positional_parameter' do
     class TestCommand < GL::Command
-      def call(something, another_thing:)
-      end
+      def call(something, another_thing:); end
     end
 
     it 'raises a legible error' do
       expect do
-        TestCommand.call('fff', another_thing: "herere")
+        TestCommand.call('fff', another_thing: 'herere')
       end.to raise_error(/only.*keyword/i)
     end
   end
-
 
   class CreateNormalizedNonprofit < GL::Command
     def call(ein:, name:)
@@ -189,7 +192,7 @@ RSpec.describe GL::Command do
     end
   end
 
-  describe "CreateNonprofit" do
-    it "chains"
+  describe 'CreateNonprofit' do
+    it 'chains'
   end
 end
