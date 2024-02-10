@@ -36,11 +36,9 @@ module GL
       @context
     rescue StandardError => e
       rollback
-      if @context.raise_error?
-        raise e
-      else
-        @context.fail!(e)
-      end
+      raise e if @context.raise_error?
+
+      @context.fail!(e)
     end
 
     def rollback; end
