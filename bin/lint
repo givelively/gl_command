@@ -27,6 +27,7 @@ OptionParser.new do |parser|
   end
 
   parser.on('--prettier', 'Lints only with prettier') do
+    raise "You can't pass both --rubocop and --prettier" if options[:linter]
     raise "This project doesn't support rubocop" unless LINTERS.include?('prettier')
 
     options[:linter] = ['prettier']
@@ -153,7 +154,7 @@ chdir APP_ROOT do
   filenames = options[:filenames] || filenames_for_target_files(options[:target_files])
 
   if filenames
-    rubocop_files = filenames.grep(/\.(rb|rake|gemspec)\z/)
+    rubocop_files = filenames.grep(/\.rb/)
     rubocop_files += filenames & NON_RB_RUBY_FILES
 
     prettier_files = filenames.grep(/\.(js|jsx|json|css|md)\z/)
@@ -162,6 +163,7 @@ chdir APP_ROOT do
   lint_ruby_files(options[:linter], options[:target_files], options[:no_fix], rubocop_files,
                   options[:list_target_files])
 
+  # Nonprofit Data API doesn't have JS, so skip
   lint_prettier_files(options[:linter], options[:target_files], options[:no_fix], prettier_files,
                       options[:list_target_files])
 end

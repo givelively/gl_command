@@ -8,7 +8,8 @@ module GL
       @klass = klass
       @error = nil
       @do_not_raise = !!do_not_raise
-      klass.returns.each do |arg|
+      @returns = klass.returns
+      @returns.each do |arg|
         # It would be nice to have per-command context classes, and define attr_accessor on the class,
         # (rather than on each instance)
         singleton_class.class_eval { attr_accessor arg }
@@ -36,7 +37,7 @@ module GL
     alias_method :successful?, :success?
 
     def inspect
-      "<GL::Context '#{@klass}' success: #{success?}, error: #{error}, returns:??>"
+      "<GL::Context '#{@klass}' success: #{success?}, error: #{error}, returns: #{@returns}>"
     end
   end
 

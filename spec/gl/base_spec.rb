@@ -150,7 +150,7 @@ RSpec.describe GL::Command do
       end
 
       describe 'inspect' do
-        let(:target) { '<GL::Context \'NormalizeEin\' success: true, error: , returns:??>' }
+        let(:target) { '<GL::Context \'NormalizeEin\' success: true, error: , returns: [:ein]>' }
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
