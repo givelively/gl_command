@@ -2,29 +2,20 @@
 
 module GL
   class Command
-    attr_accessor :context
+    attr_reader :context
+
+    include ActiveSupport::Callbacks
+    define_callbacks :call
 
     class << self
       def returns(*return_attrs)
         @returns ||= return_attrs
       end
 
-      def arguments_hash
-        return @arguments_hash if defined?(@arguments_hash)
-        arguments = {optional: [], required: []}
-        new(no_context: true).method(:call).parameters.each do |param|
-          case param[0]
-          when :key then arguments[:optional] << param[1]
-          when :keyreq then arguments[:required] << param[1]
-          else
-            raise "`call` only supports keyword arguments, not #{param}"
-          end
-        end
-        @arguments_hash = arguments
-      end
-
       def arguments
-        arguments_hash.values.flatten
+        @arguments ||= new(no_context: true).method(:call).parameters.map do |param|
+          param[1]
+        end
       end
 
       def call(*posargs, **args)
@@ -43,14 +34,13 @@ module GL
     end
 
     def initialize(raise_errors: false, no_context: false)
-      # no_context is a gross hack to prevent looping in #arguments
-      unless no_context
-        @context = GL::Context.new(self.class, raise_errors: raise_errors)
-      end
+      @context = GL::Context.new(self.class, raise_errors: raise_errors) unless no_context
     end
 
     def perform_call(args)
-      call(**args)
+      run_callbacks :call do
+        call(**args)
+      end
       @context
     rescue StandardError => e
       rollback

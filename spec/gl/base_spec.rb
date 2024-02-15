@@ -101,7 +101,6 @@ RSpec.describe GL::Command do
 
     describe 'arguments' do
       it 'provides returns' do
-        expect(NormalizeEin.arguments_hash).to eq({required: [:ein], optional: []})
         expect(NormalizeEin.arguments).to eq([:ein])
       end
     end
