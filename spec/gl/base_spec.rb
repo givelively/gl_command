@@ -99,29 +99,47 @@ RSpec.describe GL::Command do
       end
     end
 
+    describe 'arguments' do
+      it 'provides returns' do
+        expect(NormalizeEin.arguments_hash).to eq({required: [:ein], optional: []})
+        expect(NormalizeEin.arguments).to eq([:ein])
+      end
+    end
+
     describe 'call' do
       it 'returns the expected result' do
         result = NormalizeEin.call(ein: '001111111')
         expect(result).to be_successful
         expect(result.error).to be_nil
         expect(result.ein).to eq '00-1111111'
+        expect(result.raise_errors?).to be_falsey
       end
     end
 
     describe 'ArgumentError' do
-      it 'errors if called without keyword' do
-        expect { NormalizeEin.call(ein) }.to raise_error(ArgumentError)
+      it "doesn't raise" do
+        result = NormalizeEin.call(not_ein: ein)
+        expect(result).not_to be_successful
+        expect(result.error.class).to match(ArgumentError)
       end
 
-      it 'errors if called with a different keyword' do
-        expect { NormalizeEin.call(not_ein: ein) }.to raise_error(ArgumentError)
+      context 'with raise_errors: true' do
+        it 'errors if called without keyword' do
+          expect { NormalizeEin.call(ein, raise_errors: true) }.to raise_error(ArgumentError)
+        end
+
+        it 'errors if called with a different keyword' do
+          expect { NormalizeEin.call(not_ein: ein, raise_errors: true) }.to raise_error(ArgumentError)
+        end
       end
 
-      context 'with do_not_raise: true' do
-        it "doesn't raise" do
-          result = NormalizeEin.call(not_ein: ein, do_not_raise: true)
-          expect(result).not_to be_successful
-          expect(result.error.class).to match(ArgumentError)
+      context 'with call!' do
+        it 'errors if called without keyword' do
+          expect { NormalizeEin.call!(ein) }.to raise_error(ArgumentError)
+        end
+
+        it 'errors if called with a different keyword' do
+          expect { NormalizeEin.call!(not_ein: ein) }.to raise_error(ArgumentError)
         end
       end
     end
@@ -129,28 +147,28 @@ RSpec.describe GL::Command do
     describe 'context' do
       let(:context) { GL::Context.new(NormalizeEin) }
 
-      it 'is successful and raises errors by default' do
-        expect(context).to be_raise_error
+      it 'is successful and does not raises errors by default' do
+        expect(context).not_to be_raise_error
         expect(context).to be_successful
       end
 
       it 'has the return method' do
         context_instance_methods = (context.methods - Object.instance_methods).sort
-        expect(context_instance_methods).to eq(%i[ein ein= error error= fail! failure? raise_error? success?
-                                                  successful?])
+        expect(context_instance_methods).to eq(%i[class_attrs ein ein= error error= fail! failure? raise_errors? success?
+                                                  successful? to_h])
       end
 
-      context 'passed do_not_raise' do
-        let(:context) { GL::Context.new(NormalizeEin, do_not_raise: true) }
+      context 'passed raise_errors' do
+        let(:context) { GL::Context.new(NormalizeEin, raise_errors: true) }
 
-        it 'is successful and does not raise errors by default' do
-          expect(context).not_to be_raise_error
+        it 'is successful and raises errors' do
+          expect(context).to be_raise_error
           expect(context).to be_successful
         end
       end
 
       describe 'inspect' do
-        let(:target) { '<GL::Context \'NormalizeEin\' success: true, error: , returns: [:ein]>' }
+        let(:target) { '<GL::Context \'NormalizeEin\' success: true, error: , data: {:ein=>nil}>' }
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target

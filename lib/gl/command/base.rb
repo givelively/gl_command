@@ -9,26 +9,44 @@ module GL
         @returns ||= return_attrs
       end
 
+      def arguments_hash
+        return @arguments_hash if defined?(@arguments_hash)
+        arguments = {optional: [], required: []}
+        new(no_context: true).method(:call).parameters.each do |param|
+          case param[0]
+          when :key then arguments[:optional] << param[1]
+          when :keyreq then arguments[:required] << param[1]
+          else
+            raise "`call` only supports keyword arguments, not #{param}"
+          end
+        end
+        @arguments_hash = arguments
+      end
+
+      def arguments
+        arguments_hash.values.flatten
+      end
+
       def call(*posargs, **args)
         if posargs.any?
           raise ArgumentError, "`call` only supports keyword arguments, not positional - you passed: '#{posargs}'"
         end
 
-        opts = {
-          do_not_raise: args.delete(:do_not_raise)
-        }
-        new(opts).perform_call(args)
+        raise_errors = args.delete(:raise_errors)
+        opts = raise_errors != nil ? {raise_errors: raise_errors} : {}
+        new(**opts).perform_call(args)
       end
 
-      private
-
-      def priv_instance
-        @priv_instance ||= new
+      def call!(*posargs, **args)
+        call(*posargs, **args.merge(raise_errors: true))
       end
     end
 
-    def initialize(context_opts = {})
-      @context = GL::Context.new(self.class, **context_opts)
+    def initialize(raise_errors: false, no_context: false)
+      # no_context is a gross hack to prevent looping in #arguments
+      unless no_context
+        @context = GL::Context.new(self.class, raise_errors: raise_errors)
+      end
     end
 
     def perform_call(args)
@@ -36,7 +54,7 @@ module GL
       @context
     rescue StandardError => e
       rollback
-      raise e if @context.raise_error?
+      raise e if @context.raise_errors?
 
       @context.fail!(e)
     end
