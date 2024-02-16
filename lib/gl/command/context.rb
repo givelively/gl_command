@@ -8,7 +8,7 @@ module GL
     def initialize(klass, raise_errors: false)
       @klass = klass
       @error = nil
-      @raise_errors = !!raise_errors
+      @raise_errors = raise_errors.nil? ? false : raise_errors
       @class_attrs = klass.returns + klass.arguments
       @class_attrs.each do |arg|
         # It would be nice to have per-command context classes, and define attr_accessor on the class,
@@ -24,7 +24,7 @@ module GL
     def fail!(passed_error = nil)
       @failure = true
       self.error = passed_error if passed_error
-      self # Return self
+      self
     end
 
     def failure?
@@ -38,7 +38,7 @@ module GL
     alias_method :successful?, :success?
 
     def to_h
-      class_attrs.map { |cattr| [cattr, send(cattr)] }.to_h
+      class_attrs.index_with { |cattr| send(cattr) }
     end
 
     def inspect
@@ -46,44 +46,3 @@ module GL
     end
   end
 end
-
-
-# require 'ostruct'
-# module GL
-#   class NotAContextError < ArgumentError; end
-
-#   class Context < OpenStruct # rubocop:disable Style/OpenStructUse
-#     include ActiveModel::Validations
-
-#     attr_accessor :errors
-
-#     def self.factory(context = {})
-#       return context if context.is_a?(Context)
-#       raise NotAContextError, 'Arguments are not a Context.' unless context.respond_to?(:each_pair)
-
-#       Context.new(context)
-#     end
-
-#     def initialize(args)
-#       super(args)
-#       @errors = ActiveModel::Errors.new(self)
-#     end
-
-#     def fail!
-#       @failure = true
-#     end
-
-#     def failure?
-#       @failure || false
-#     end
-
-#     def success?
-#       !failure?
-#     end
-#     alias_method :successful?, :success?
-
-#     def inspect
-#       "<GL::Context success:#{success?} errors:#{@errors.full_messages} data:#{to_h}>"
-#     end
-#   end
-# end

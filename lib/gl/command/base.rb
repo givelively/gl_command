@@ -4,9 +4,6 @@ module GL
   class Command
     attr_reader :context
 
-    include ActiveSupport::Callbacks
-    define_callbacks :call
-
     class << self
       def returns(*return_attrs)
         @returns ||= return_attrs
@@ -24,7 +21,7 @@ module GL
         end
 
         raise_errors = args.delete(:raise_errors)
-        opts = raise_errors != nil ? {raise_errors: raise_errors} : {}
+        opts = raise_errors.nil? ? {} : { raise_errors: }
         new(**opts).perform_call(args)
       end
 
@@ -34,13 +31,11 @@ module GL
     end
 
     def initialize(raise_errors: false, no_context: false)
-      @context = GL::Context.new(self.class, raise_errors: raise_errors) unless no_context
+      @context = GL::Context.new(self.class, raise_errors:) unless no_context
     end
 
     def perform_call(args)
-      run_callbacks :call do
-        call(**args)
-      end
+      call(**args)
       @context
     rescue StandardError => e
       rollback
@@ -50,8 +45,5 @@ module GL
     end
 
     def rollback; end
-  end
-
-  class CommandChain < Command
   end
 end
