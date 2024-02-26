@@ -145,18 +145,48 @@ RSpec.describe GL::Command do
     end
   end
 
-  # describe 'rollback' do
-  #   it 'runs a rollback'
-  # end
+  describe 'rollback' do
+    class SquareRoot < GL::Command
+      returns :number, :root
 
-  # class CreateNonprofit < GL::CommandChain
-  #   def call_chain(ein:)
-  #     [NormalizeEin,
-  #      CreateNormalizedNonprofit]
-  #   end
-  # end
+      def call(number:)
+        context.number = number # TODO: automatically assign param if it is also returned
+        context.root = Math.sqrt(number)
+      end
 
-  # describe 'CreateNonprofit' do
-  #   it 'chains'
-  # end
+      private
+
+      def rollback
+        context.root = context.number
+      end
+    end
+
+    describe 'call' do
+      let(:number) { 4 }
+
+      it 'squares the number' do
+        result = SquareRoot.call(number:)
+        expect(result.root).to eq 2
+        expect(result).to be_successful
+      end
+    end
+
+    describe 'rollback' do
+      it 'runs rollback if there is a failure' do
+        result = SquareRoot.call(number: -4)
+        expect(result).to be_failure
+        expect(result.error).to be_present
+        expect(result.root).to eq result.number # Because of rollback
+      end
+
+      context 'call!' do
+        it 'runs rollback' do
+          # TODO: this test doesn't actually test anything
+          expect do
+            SquareRoot.call!(number: -4)
+          end.to raise_error(/Numerical argument is out of domain/)
+        end
+      end
+    end
+  end
 end

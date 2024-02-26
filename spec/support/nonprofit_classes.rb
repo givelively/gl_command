@@ -51,19 +51,14 @@ class NormalizeEin < GL::Command
   end
 end
 
-class CreateNormalizedNonprofit < GL::Command
+class CreateNonprofit < GL::Command
   def call(ein:, name:)
     Nonprofit.new(ein:, name:)
   end
-
-  def rollback
-    # do something!
-  end
 end
 
-class CreateNonprofit < GL::CommandChain
-  chain NormalizeEin,
-        CreateNormalizedNonprofit
+class CreateNormalizedNonprofit < GL::CommandChain
+  chain NormalizeEin, CreateNonprofit
 
   def call(ein:); end
 end
