@@ -19,7 +19,7 @@ RSpec.describe GL::Command do
         end.to change(Nonprofit.all, :count).by 1
       end
 
-      context 'missing ein' do
+      context 'with missing ein' do
         let(:nonprofit) { Nonprofit.new(ein: ' ') }
 
         it 'is invalid with missing ein' do
@@ -100,6 +100,9 @@ RSpec.describe GL::Command do
 
     describe 'context' do
       let(:context) { GL::Context.new(NormalizeEin) }
+      let(:target_methods) do
+        %i[class_attrs ein ein= error error= fail! failure? raise_errors? success? successful? to_h]
+      end
 
       it 'is successful and does not raises errors by default' do
         expect(context).not_to be_raise_error
@@ -108,11 +111,10 @@ RSpec.describe GL::Command do
 
       it 'has the return method' do
         context_instance_methods = (context.methods - Object.instance_methods).sort
-        expect(context_instance_methods).to eq(%i[class_attrs ein ein= error error= fail! failure? raise_errors? success?
-                                                  successful? to_h])
+        expect(context_instance_methods).to eq target_methods
       end
 
-      context 'passed raise_errors' do
+      context 'when passed raise_errors' do
         let(:context) { GL::Context.new(NormalizeEin, raise_errors: true) }
 
         it 'is successful and raises errors' do
@@ -142,16 +144,6 @@ RSpec.describe GL::Command do
       end.to raise_error(/only.*keyword/i)
     end
   end
-
-  # class CreateNormalizedNonprofit < GL::Command
-  #   def call(ein:, name:)
-  #     Nonprofit.new(ein:, name:)
-  #   end
-
-  #   def rollback
-  #     # do something!
-  #   end
-  # end
 
   # describe 'rollback' do
   #   it 'runs a rollback'

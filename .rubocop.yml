@@ -20,3 +20,6 @@ RSpec/NestedGroups:
 
 Gemspec/RequiredRubyVersion:
   Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 5

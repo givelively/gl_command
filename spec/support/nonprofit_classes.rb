@@ -50,3 +50,20 @@ class NormalizeEin < GL::Command
     [ein_int[0..1], ein_int[2..]].join('-')
   end
 end
+
+class CreateNormalizedNonprofit < GL::Command
+  def call(ein:, name:)
+    Nonprofit.new(ein:, name:)
+  end
+
+  def rollback
+    # do something!
+  end
+end
+
+class CreateNonprofit < GL::CommandChain
+  chain NormalizeEin,
+        CreateNormalizedNonprofit
+
+  def call(ein:); end
+end
