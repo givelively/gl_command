@@ -52,13 +52,19 @@ class NormalizeEin < GL::Command
 end
 
 class CreateNonprofit < GL::Command
-  def call(ein:, name:)
-    Nonprofit.new(ein:, name:)
+  returns :nonprofit
+
+  def call(ein:)
+    context.nonprofit = Nonprofit.new(ein:)
   end
 end
 
 class CreateNormalizedNonprofit < GL::CommandChain
   chain NormalizeEin, CreateNonprofit
 
-  def call(ein:); end
+  returns :nonprofit
+
+  def call(ein:)
+    super
+  end
 end

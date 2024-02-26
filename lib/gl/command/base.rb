@@ -15,6 +15,10 @@ module GL
         end
       end
 
+      def args_and_returns
+        returns + arguments
+      end
+
       def call(*posargs, **args)
         if posargs.any?
           raise ArgumentError, "`call` only supports keyword arguments, not positional - you passed: '#{posargs}'"
@@ -35,6 +39,8 @@ module GL
     end
 
     def perform_call(args)
+      # Assign the args to the
+      args.each { |k, v| @context.assign(k, v) }
       call(**args)
       @context
     rescue StandardError => e

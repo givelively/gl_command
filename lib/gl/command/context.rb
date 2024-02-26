@@ -9,7 +9,7 @@ module GL
       @klass = klass
       @error = nil
       @raise_errors = raise_errors.nil? ? false : raise_errors
-      @class_attrs = klass.returns + klass.arguments
+      @class_attrs = klass.args_and_returns
       @class_attrs.each do |arg|
         # It would be nice to have per-command context classes, and define attr_accessor on the class,
         # (rather than on each instance)
@@ -35,10 +35,16 @@ module GL
       !failure?
     end
 
+    def assign(cattr, val)
+      pp "#{cattr} -- #{defined?("#{cattr}=").to_sym}"
+      return unless defined?("#{cattr}=")
+      send("#{cattr}=", val)
+    end
+
     alias_method :successful?, :success?
 
     def to_h
-      class_attrs.index_with { |cattr| send(cattr) }
+      class_attrs.sort.index_with { |cattr| send(cattr) }
     end
 
     def inspect

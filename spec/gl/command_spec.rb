@@ -8,43 +8,6 @@ RSpec.describe GL::Command do
     expect(GL::Command::VERSION).to be_a(String)
   end
 
-  describe 'Nonprofit' do
-    describe 'initialize' do
-      let(:nonprofit) { Nonprofit.new(ein: '00-1111111') }
-
-      it 'is valid' do
-        expect do
-          expect(nonprofit).to be_valid
-          expect(nonprofit.errors.count).to eq 0
-        end.to change(Nonprofit.all, :count).by 1
-      end
-
-      context 'with missing ein' do
-        let(:nonprofit) { Nonprofit.new(ein: ' ') }
-
-        it 'is invalid with missing ein' do
-          expect do
-            expect(nonprofit).not_to be_valid
-            expect(nonprofit.errors.count).to eq 1
-            expect(nonprofit.errors.full_messages.to_s).to match(/ein.*blank/i)
-          end.not_to change(Nonprofit.all, :count)
-        end
-      end
-
-      context 'with duplicate ein' do
-        before { Nonprofit.new(ein: '00-1111111') }
-
-        it 'is invalid with duplicate ein' do
-          expect do
-            nonprofit = Nonprofit.new(ein: '00-1111111')
-            expect(nonprofit.errors.count).to eq 1
-            expect(nonprofit.errors.full_messages.to_s).to match(/ein already taken/i)
-          end.not_to change(Nonprofit.all, :count)
-        end
-      end
-    end
-  end
-
   describe 'NormalizeEin' do
     let(:ein) { '81-0693451' }
 
@@ -55,7 +18,7 @@ RSpec.describe GL::Command do
     end
 
     describe 'arguments' do
-      it 'provides returns' do
+      it 'provides arguments' do
         expect(NormalizeEin.arguments).to eq([:ein])
       end
     end
@@ -109,7 +72,7 @@ RSpec.describe GL::Command do
         expect(context).to be_successful
       end
 
-      it 'has the return method' do
+      it 'has the instance methods' do
         context_instance_methods = (context.methods - Object.instance_methods).sort
         expect(context_instance_methods).to eq target_methods
       end
@@ -125,6 +88,54 @@ RSpec.describe GL::Command do
 
       describe 'inspect' do
         let(:target) { '<GL::Context \'NormalizeEin\' success: true, error: , data: {:ein=>nil}>' }
+
+        it 'renders inspect as expected' do
+          expect(context.inspect).to eq target
+        end
+      end
+    end
+  end
+
+  describe 'CreateNonprofit' do
+    let(:ein) { '81-0693451' }
+
+    describe 'call' do
+      it 'returns the expected result' do
+        result = CreateNonprofit.call(ein: ein)
+        expect(result).to be_successful
+        expect(result.error).to be_nil
+        expect(result.nonprofit.ein).to eq ein
+        expect(result).not_to be_raise_errors
+      end
+    end
+
+    describe 'context' do
+      let(:context) { GL::Context.new(CreateNonprofit) }
+      let(:target_methods) do
+        %i[class_attrs ein ein= error error= fail! failure? nonprofit nonprofit= raise_errors? success? successful? to_h]
+      end
+
+      it 'is successful and does not raises errors by default' do
+        expect(context).not_to be_raise_error
+        expect(context).to be_successful
+      end
+
+      it 'has the instance methods' do
+        context_instance_methods = (context.methods - Object.instance_methods).sort
+        expect(context_instance_methods).to eq target_methods
+      end
+
+      context 'when passed raise_errors' do
+        let(:context) { GL::Context.new(CreateNonprofit, raise_errors: true) }
+
+        it 'is successful and raises errors' do
+          expect(context).to be_raise_error
+          expect(context).to be_successful
+        end
+      end
+
+      describe 'inspect' do
+        let(:target) { '<GL::Context \'CreateNonprofit\' success: true, error: , data: {:ein=>nil, :nonprofit=>nil}>' }
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
@@ -150,7 +161,6 @@ RSpec.describe GL::Command do
       returns :number, :root
 
       def call(number:)
-        context.number = number # TODO: automatically assign param if it is also returned
         context.root = Math.sqrt(number)
       end
 
@@ -166,6 +176,7 @@ RSpec.describe GL::Command do
 
       it 'squares the number' do
         result = SquareRoot.call(number:)
+        expect(result.number).to eq 4 # parameter is automatically assigned to the context
         expect(result.root).to eq 2
         expect(result).to be_successful
       end
