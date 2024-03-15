@@ -5,6 +5,10 @@ module GlCommand
     attr_reader :context
 
     class << self
+      def chain?
+        false
+      end
+
       def returns(*return_attrs)
         @returns ||= return_attrs
       end
@@ -40,7 +44,9 @@ module GlCommand
 
     def perform_call(args)
       assign_and_call(args)
+      @context
     rescue StandardError => e
+      chain_rollback if self.class.chain?
       rollback
       raise e if @context.raise_errors?
 
@@ -55,7 +61,6 @@ module GlCommand
       # Assign the args to the
       args.each { |k, v| @context.assign(k, v) }
       call(**args)
-      @context
     end
   end
 end

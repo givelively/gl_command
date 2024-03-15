@@ -9,6 +9,10 @@ RSpec.describe GlCommand::Chain do
       expect(CreateNormalizedNonprofit.commands).to eq([NormalizeEin, CreateNonprofit])
     end
 
+    it 'is chain?' do
+      expect(CreateNormalizedNonprofit).to be_chain
+    end
+
     describe 'call' do
       it 'calls' do
         result = CreateNormalizedNonprofit.call(ein: '810693451')
@@ -35,7 +39,7 @@ RSpec.describe GlCommand::Chain do
     describe 'context' do
       let(:context) { GlCommand::Context.new(CreateNormalizedNonprofit) }
       let(:target_methods) do
-        %i[arguments assign ein error error= fail! failure? nonprofit nonprofit= raise_errors? returns success? successful? to_h]
+        %i[arguments assign called called= ein ein= error error= fail! failure? nonprofit nonprofit= raise_errors? returns success? successful? to_h]
       end
 
       it 'is successful and does not raises errors by default' do
@@ -58,7 +62,7 @@ RSpec.describe GlCommand::Chain do
       end
 
       describe 'inspect' do
-        let(:target) { '<GlCommand::Context \'CreateNormalizedNonprofit\' success: true, error: nil, data: {:ein=>nil, :nonprofit=>nil}>' }
+        let(:target) { '<GlCommand::Context \'CreateNormalizedNonprofit\' success: true, error: nil, called: [], data: {:ein=>nil, :nonprofit=>nil}>' }
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target

@@ -7,11 +7,11 @@ module GlCommand
 
     def initialize(klass, raise_errors: false)
       @klass = klass
-      @error = nil
       @raise_errors = raise_errors.nil? ? false : raise_errors
-      if klass.is_a?(GlCommand::Chain)
-        pp 'ffff'
-        assign_args_and_returns(klass.arguments, klass.returns)
+      if klass.chain?
+        @called = []
+        singleton_class.class_eval { attr_accessor :called }
+        assign_args_and_returns(klass.chain_arguments, klass.chain_returns)
       else
         assign_args_and_returns(klass.arguments, klass.returns)
       end
@@ -48,7 +48,7 @@ module GlCommand
     end
 
     def inspect
-      "<GlCommand::Context '#{@klass}' success: #{success?}, error: #{error || 'nil'}, data: #{to_h}>"
+      "<GlCommand::Context '#{@klass}' success: #{success?}, error: #{error || 'nil'}, #{inspect_data}>"
     end
 
     def assign(cattr, val)
@@ -57,6 +57,11 @@ module GlCommand
     end
 
     private
+
+    def inspect_data
+      data = "data: #{to_h}"
+      @klass.chain? ? "called: #{called}, #{data}" : data
+    end
 
     def assign_args_and_returns(arguments, returns)
       @returns = returns

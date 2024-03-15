@@ -177,7 +177,6 @@ RSpec.describe GlCommand::Base do
 
       it 'squares the number' do
         result = SquareRoot.call(number:)
-        pp result.returns
         expect(result.number).to eq 4 # parameter is automatically assigned to the context
         expect(result.root).to eq 2
         expect(result).to be_successful
