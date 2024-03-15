@@ -88,7 +88,7 @@ RSpec.describe GlCommand::Base do
       end
 
       describe 'inspect' do
-        let(:target) { '<GlCommand::Context \'NormalizeEin\' success: true, error: , data: {:ein=>nil}>' }
+        let(:target) { '<GlCommand::Context \'NormalizeEin\' success: true, error: nil, data: {:ein=>nil}>' }
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
@@ -136,7 +136,7 @@ RSpec.describe GlCommand::Base do
       end
 
       describe 'inspect' do
-        let(:target) { '<GlCommand::Context \'CreateNonprofit\' success: true, error: , data: {:ein=>nil, :nonprofit=>nil}>' }
+        let(:target) { '<GlCommand::Context \'CreateNonprofit\' success: true, error: nil, data: {:ein=>nil, :nonprofit=>nil}>' }
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
@@ -177,6 +177,7 @@ RSpec.describe GlCommand::Base do
 
       it 'squares the number' do
         result = SquareRoot.call(number:)
+        pp result.returns
         expect(result.number).to eq 4 # parameter is automatically assigned to the context
         expect(result.root).to eq 2
         expect(result).to be_successful

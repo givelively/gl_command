@@ -16,10 +16,6 @@ module GlCommand
       end
     end
 
-    def call(args)
-      chain(**args)
-    end
-
     def chain(args)
       self.class.commands.each do |command|
         pp command.arguments
@@ -28,6 +24,16 @@ module GlCommand
         result = command.call(**cargs.merge(raise_errors: context.raise_errors?))
         # pp "result: ", result
       end
+    end
+
+    private
+
+    def assign_and_call(args)
+      pp 'ddddd'
+      # Assign the args to the
+      args.each { |k, v| @context.assign(k, v) }
+      call(**args)
+      @context
     end
   end
 end
