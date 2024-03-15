@@ -36,7 +36,7 @@ module GlCommand
         result = command.call(**cargs.merge(raise_errors: context.raise_errors?))
 
         command.returns.each do |creturn|
-          context.instance_variable_set("@#{creturn}", result.send(creturn))
+          context.send("#{creturn}=", result.send(creturn))
         end
         next if result.success?
 

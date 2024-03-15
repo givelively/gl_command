@@ -70,7 +70,8 @@ module GlCommand
         # (rather than on each instance)
         singleton_class.class_eval { attr_accessor arg }
       end
-      @arguments = arguments # TODO: Test for non chain
+      @arguments = arguments
+      # TODO: Test for non chain in arguments - returns
       (@arguments - @returns).each do |arg|
         singleton_class.class_eval { attr_reader arg }
       end
