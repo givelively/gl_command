@@ -65,6 +65,6 @@ class CreateNormalizedNonprofit < GlCommand::Chain
   returns :nonprofit
 
   def call(ein:)
-    # super # alternatively, could require calling super here...
+    # alternatively, could require calling super here...
   end
 end

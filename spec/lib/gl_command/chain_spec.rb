@@ -16,11 +16,19 @@ RSpec.describe GlCommand::Chain do
     describe 'call' do
       it 'calls' do
         result = CreateNormalizedNonprofit.call(ein: '810693451')
-        pp result
         expect(result).to be_successful
         expect(result.error).to be_nil
         expect(result.nonprofit.ein).to eq '81-0693451'
         expect(result).not_to be_raise_errors
+      end
+
+      it 'calls with bang' do
+        result = CreateNormalizedNonprofit.call!(ein: '810693451')
+        expect(result).to be_successful
+        expect(result.error).to be_nil
+        expect(result.nonprofit.ein).to eq '81-0693451'
+        expect(result.called).to eq(CreateNormalizedNonprofit.commands)
+        expect(result).to be_raise_errors
       end
     end
 

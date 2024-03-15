@@ -20,7 +20,7 @@ module GlCommand
       end
 
       def args_and_returns
-        returns + arguments
+        (returns + arguments).uniq
       end
 
       def call(*posargs, **args)

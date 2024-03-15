@@ -31,20 +31,28 @@ module GlCommand
     def chain(args)
       self.class.commands.each do |command|
         context.called << command
-        pp "#{command}, #{command.arguments}"
         cargs = command.arguments.map { |arg| [arg, context.send(arg)] }.to_h
-        # pp cargs, cargs.merge(raise_errors: context.raise_errors?)
+
         result = command.call(**cargs.merge(raise_errors: context.raise_errors?))
-        pp "result: #{result}"
+
         command.returns.each do |creturn|
           context.instance_variable_set("@#{creturn}", result.send(creturn))
         end
+        next if result.success?
+
       end
     end
 
     def chain_rollback
       # TODO: test this
-      context.called.reverse.each { |klass| klass.rollback }
+      context.called.reverse.each do |command|
+        c_instance = command.new
+
+        command.args_and_returns.each do |arg|
+          c_instance.context.send("#{arg}=", context.send(arg))
+        end
+        c_instance.rollback
+      end
     end
 
     def call(args)
