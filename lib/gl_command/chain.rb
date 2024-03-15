@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module GL
-  class CommandChain < GL::Command
+module GlCommand
+  class Chain < GlCommand::Base
     class << self
       def chain(*commands)
         @commands = commands.flatten

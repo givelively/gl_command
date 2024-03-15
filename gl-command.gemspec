@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require File.expand_path('lib/gl/command/version', __dir__)
+require File.expand_path('lib/gl_command/version', __dir__)
 
 Gem::Specification.new do |spec|
-  spec.name = 'gl-command'
-  spec.version = GL::Command::VERSION
+  spec.name = 'gl_command'
+  spec.version = GlCommand::VERSION
   spec.authors = ['Give Lively']
   spec.summary = 'Implementation of the Command Pattern'
   spec.homepage = 'https://github.com/givelively/gl-command'

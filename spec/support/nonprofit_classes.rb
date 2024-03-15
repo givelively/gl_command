@@ -35,7 +35,7 @@ class Nonprofit
   end
 end
 
-class NormalizeEin < GL::Command
+class NormalizeEin < GlCommand::Base
   returns :ein
 
   def call(ein:)
@@ -51,7 +51,7 @@ class NormalizeEin < GL::Command
   end
 end
 
-class CreateNonprofit < GL::Command
+class CreateNonprofit < GlCommand::Base
   returns :nonprofit
 
   def call(ein:)
@@ -59,7 +59,7 @@ class CreateNonprofit < GL::Command
   end
 end
 
-class CreateNormalizedNonprofit < GL::CommandChain
+class CreateNormalizedNonprofit < GlCommand::Chain
   chain NormalizeEin, CreateNonprofit
 
   returns :nonprofit

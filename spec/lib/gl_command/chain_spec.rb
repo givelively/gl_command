@@ -3,7 +3,7 @@
 require 'spec_helper'
 require_relative '../support/nonprofit_classes'
 
-RSpec.describe GL::CommandChain do
+RSpec.describe GlCommand::Chain do
   describe 'CreateNormalizedNonprofit' do
     it 'has the commands' do
       expect(CreateNormalizedNonprofit.commands).to eq([NormalizeEin, CreateNonprofit])
@@ -33,7 +33,7 @@ RSpec.describe GL::CommandChain do
     end
 
     describe 'context' do
-      let(:context) { GL::Context.new(CreateNormalizedNonprofit) }
+      let(:context) { GlCommand::Context.new(CreateNormalizedNonprofit) }
       let(:target_methods) do
         %i[class_attrs ein ein= error error= fail! failure? nonprofit nonprofit= raise_errors? success? successful? to_h]
       end
@@ -49,7 +49,7 @@ RSpec.describe GL::CommandChain do
       end
 
       context 'when passed raise_errors' do
-        let(:context) { GL::Context.new(CreateNormalizedNonprofit, raise_errors: true) }
+        let(:context) { GlCommand::Context.new(CreateNormalizedNonprofit, raise_errors: true) }
 
         it 'is successful and raises errors' do
           expect(context).to be_raise_error
@@ -58,7 +58,7 @@ RSpec.describe GL::CommandChain do
       end
 
       describe 'inspect' do
-        let(:target) { '<GL::Context \'CreateNormalizedNonprofit\' success: true, error: , data: {:ein=>nil, :nonprofit=>nil}>' }
+        let(:target) { '<GlCommand::Context \'CreateNormalizedNonprofit\' success: true, error: , data: {:ein=>nil, :nonprofit=>nil}>' }
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target

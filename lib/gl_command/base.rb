@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module GL
-  class Command
+module GlCommand
+  class Base
     attr_reader :context
 
     class << self
@@ -35,14 +35,11 @@ module GL
     end
 
     def initialize(raise_errors: false, no_context: false)
-      @context = GL::Context.new(self.class, raise_errors:) unless no_context
+      @context = GlCommand::Context.new(self.class, raise_errors:) unless no_context
     end
 
     def perform_call(args)
-      # Assign the args to the
-      args.each { |k, v| @context.assign(k, v) }
-      call(**args)
-      @context
+      assign_and_call(args)
     rescue StandardError => e
       rollback
       raise e if @context.raise_errors?
@@ -51,5 +48,14 @@ module GL
     end
 
     def rollback; end
+
+    private
+
+    def assign_and_call(args)
+      # Assign the args to the
+      args.each { |k, v| @context.assign(k, v) }
+      call(**args)
+      @context
+    end
   end
 end

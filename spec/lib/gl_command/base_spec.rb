@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require_relative '../support/nonprofit_classes'
+require_relative '../../support/nonprofit_classes'
 
-RSpec.describe GL::Command do
-  it 'has a version number' do
-    expect(GL::Command::VERSION).to be_a(String)
-  end
-
+RSpec.describe GlCommand::Base do
   describe 'NormalizeEin' do
     let(:ein) { '81-0693451' }
 
@@ -30,6 +26,11 @@ RSpec.describe GL::Command do
         expect(result.error).to be_nil
         expect(result.ein).to eq '00-1111111'
         expect(result).not_to be_raise_errors
+      end
+
+      it 'has a verified double with expected classes', skip: "Haven't figured out verified doubles yet" do
+        normalize_ein_double = instance_double(NormalizeEin::Context, ein: '00-1111111')
+        expect(normalize_ein_double).to be_successful
       end
     end
 
@@ -62,9 +63,9 @@ RSpec.describe GL::Command do
     end
 
     describe 'context' do
-      let(:context) { GL::Context.new(NormalizeEin) }
+      let(:context) { GlCommand::Context.new(NormalizeEin) }
       let(:target_methods) do
-        %i[class_attrs ein ein= error error= fail! failure? raise_errors? success? successful? to_h]
+        %i[arguments assign ein ein= error error= fail! failure? raise_errors? returns success? successful? to_h]
       end
 
       it 'is successful and does not raises errors by default' do
@@ -78,7 +79,7 @@ RSpec.describe GL::Command do
       end
 
       context 'when passed raise_errors' do
-        let(:context) { GL::Context.new(NormalizeEin, raise_errors: true) }
+        let(:context) { GlCommand::Context.new(NormalizeEin, raise_errors: true) }
 
         it 'is successful and raises errors' do
           expect(context).to be_raise_error
@@ -87,7 +88,7 @@ RSpec.describe GL::Command do
       end
 
       describe 'inspect' do
-        let(:target) { '<GL::Context \'NormalizeEin\' success: true, error: , data: {:ein=>nil}>' }
+        let(:target) { '<GlCommand::Context \'NormalizeEin\' success: true, error: , data: {:ein=>nil}>' }
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
@@ -110,9 +111,9 @@ RSpec.describe GL::Command do
     end
 
     describe 'context' do
-      let(:context) { GL::Context.new(CreateNonprofit) }
+      let(:context) { GlCommand::Context.new(CreateNonprofit) }
       let(:target_methods) do
-        %i[class_attrs ein ein= error error= fail! failure? nonprofit nonprofit= raise_errors? success? successful? to_h]
+        %i[arguments assign ein error error= fail! failure? nonprofit nonprofit= raise_errors? returns success? successful? to_h]
       end
 
       it 'is successful and does not raises errors by default' do
@@ -126,7 +127,7 @@ RSpec.describe GL::Command do
       end
 
       context 'when passed raise_errors' do
-        let(:context) { GL::Context.new(CreateNonprofit, raise_errors: true) }
+        let(:context) { GlCommand::Context.new(CreateNonprofit, raise_errors: true) }
 
         it 'is successful and raises errors' do
           expect(context).to be_raise_error
@@ -135,7 +136,7 @@ RSpec.describe GL::Command do
       end
 
       describe 'inspect' do
-        let(:target) { '<GL::Context \'CreateNonprofit\' success: true, error: , data: {:ein=>nil, :nonprofit=>nil}>' }
+        let(:target) { '<GlCommand::Context \'CreateNonprofit\' success: true, error: , data: {:ein=>nil, :nonprofit=>nil}>' }
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
@@ -145,7 +146,7 @@ RSpec.describe GL::Command do
   end
 
   describe 'command with positional_parameter' do
-    class TestCommand < GL::Command
+    class TestCommand < GlCommand::Base
       def call(something, another_thing:); end
     end
 
@@ -157,7 +158,7 @@ RSpec.describe GL::Command do
   end
 
   describe 'rollback' do
-    class SquareRoot < GL::Command
+    class SquareRoot < GlCommand::Base
       returns :number, :root
 
       def call(number:)
