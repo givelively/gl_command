@@ -23,8 +23,8 @@ module GlCommand
         @chain_returns ||= (returns + commands.map(&:returns)).flatten.uniq
       end
 
-      def args_and_returns
-        @args_and_returns ||= (returns + arguments + commands.map(&:args_and_returns)).flatten.uniq
+      def arguments_and_returns
+        @arguments_and_returns ||= (returns + arguments + commands.map(&:arguments_and_returns)).flatten.uniq
       end
     end
 
@@ -48,7 +48,7 @@ module GlCommand
       context.called.reverse.each do |command|
         c_instance = command.new
 
-        command.args_and_returns.each do |arg|
+        command.arguments_and_returns.each do |arg|
           c_instance.context.send("#{arg}=", context.send(arg))
         end
         c_instance.rollback

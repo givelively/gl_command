@@ -3,20 +3,24 @@
 module GlCommand
   class Context
     attr_accessor :error
-    attr_reader :arguments, :returns
+    attr_reader :klass, :arguments
+
+    delegate :chain?, to: :klass
 
     def initialize(klass, raise_errors: false)
       @klass = klass
       @raise_errors = raise_errors.nil? ? false : raise_errors
-      if klass.chain?
+      if chain?
         @called = []
         singleton_class.class_eval { attr_accessor :called }
-        assign_args_and_returns(klass.chain_arguments, klass.chain_returns)
+        assign_arguments_and_returns(@klass.chain_arguments, @klass.chain_returns)
       else
-        assign_args_and_returns(klass.arguments, klass.returns)
+        assign_arguments_and_returns(@klass.arguments, @klass.returns)
       end
-      # # I would love to only assign returns...
-      @class_attrs = klass.args_and_returns.uniq
+    end
+
+    def returns
+      klass.returns.map { |rattr| [rattr, send(rattr)] }.to_h
     end
 
     def raise_errors?
@@ -39,42 +43,33 @@ module GlCommand
 
     alias_method :successful?, :success?
 
-    def to_h
-      @class_attrs.sort.index_with { |cattr| send(cattr) }
-    end
-
     def to_s
       inspect
     end
 
     def inspect
-      "<GlCommand::Context '#{@klass}' success: #{success?}, error: #{error || 'nil'}, #{inspect_data}>"
-    end
-
-    def assign(cattr, val)
-      return unless @arguments.include?(cattr)
-      instance_variable_set("@#{cattr}", val)
+      "<GlCommand::Context '#{klass}' #{inspect_values}>"
     end
 
     private
 
-    def inspect_data
-      data = "data: #{to_h}"
-      @klass.chain? ? "called: #{called}, #{data}" : data
+    def inspect_values
+      [
+        "success: #{success?}",
+        "error: #{error || 'nil'}",
+        "arguments: #{arguments}",
+        "returns: #{returns}",
+        chain? ? "called: #{called}" : nil,
+      ].compact.join(', ')
     end
 
-    def assign_args_and_returns(arguments, returns)
-      @returns = returns
-      @returns.each do |arg|
+    def assign_arguments_and_returns(klass_arguments, klass_returns)
+      klass_returns.each do |arg|
         # It would be nice to have per-command context classes, and define attr_accessor on the class,
         # (rather than on each instance)
         singleton_class.class_eval { attr_accessor arg }
       end
-      @arguments = arguments
-      # TODO: Test for non chain in arguments - returns
-      (@arguments - @returns).each do |arg|
-        singleton_class.class_eval { attr_reader arg }
-      end
+      @arguments = Hash[klass_arguments.zip]
     end
   end
 end

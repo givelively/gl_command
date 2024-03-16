@@ -19,7 +19,7 @@ module GlCommand
         end
       end
 
-      def args_and_returns
+      def arguments_and_returns
         (returns + arguments).uniq
       end
 
@@ -43,6 +43,7 @@ module GlCommand
     end
 
     def perform_call(args)
+      @context.instance_variable_set("@arguments", args)
       assign_and_call(args)
       @context
     rescue StandardError => e
@@ -58,8 +59,6 @@ module GlCommand
     private
 
     def assign_and_call(args)
-      # Assign the args to the
-      args.each { |k, v| @context.assign(k, v) }
       call(**args)
     end
   end

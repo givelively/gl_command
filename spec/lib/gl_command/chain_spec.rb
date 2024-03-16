@@ -21,7 +21,9 @@ RSpec.describe GlCommand::Chain do
         expect(result.nonprofit.ein).to eq '81-0693451'
         expect(result).not_to be_raise_errors
       end
+    end
 
+    describe 'call!' do
       it 'calls with bang' do
         result = CreateNormalizedNonprofit.call!(ein: '810693451')
         expect(result).to be_successful
@@ -80,12 +82,22 @@ RSpec.describe GlCommand::Chain do
 
     describe 'rollback' do
       it 'calls rollback on each interactor when one fails'
+
+      context 'with call!' do
+        it 'calls rollback on each interactor when one fails'
+      end
     end
   end
 
-  describe 'call!' do
-    describe 'rollback' do
-      it 'calls rollback on each interactor when one fails'
+  describe "chain call that doesn't call chain"  do
+    class TestCommand < GlCommand::Chain
+      def call; end
+    end
+
+    it 'raises a legible error' do
+      expect do
+        TestCommand.call
+      end.to raise_error(/chain/i)
     end
   end
 end
