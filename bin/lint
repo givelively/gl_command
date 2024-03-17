@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 require 'rubygems'
 require 'gl_lint'
 
-GlLint.call_cli(app_root: File.expand_path('..', __dir__))
+GlLint.call_cli(app_root: File.expand_path('..', __dir__), linters: ['rubocop'])
