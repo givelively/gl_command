@@ -220,47 +220,53 @@ RSpec.describe GlCommand::Base do
   end
 
   describe 'rollback' do
-    let(:square_root_class) do
+    let(:array_add_class) do
       Class.new(GlCommand::Base) do
-        returns :number, :root
+        returns :new_array
 
-        def call(number:)
-          context.root = Math.sqrt(number)
+        def call(array:, item:)
+          context.new_array = array.push(item).dup
+          do_another_thing
         end
 
-        private
+        def do_another_thing; end
 
         def rollback
-          context.root = context.number
+          context.arguments[:array].pop
         end
       end
     end
 
-    describe 'call' do
-      let(:number) { 4 }
+    let(:array) { [1,2,3,4] }
 
+    describe 'call' do
       it 'squares the number' do
-        result = square_root_class.call(number:)
-        expect(result.arguments).to eq({number: 4})
-        expect(result.root).to eq 2
+        result = array_add_class.call(array:, item: 6)
         expect(result).to be_successful
+        expect(array).to eq([1,2,3,4,6])
+        expect(result.new_array).to eq array
       end
     end
 
     describe 'rollback' do
+      before { allow_any_instance_of(array_add_class).to receive(:do_another_thing) { fail "Test Error" } }
       it 'runs rollback if there is a failure' do
-        result = square_root_class.call(number: -4)
+        result = array_add_class.call(array:, item: 6)
         expect(result).to be_failure
         expect(result.error).to be_present
-        expect(result.root).to eq result.number # Because of rollback
+        expect(array).to eq([1,2,3,4])
+        expect(result.new_array).to eq([1,2,3,4,6])
       end
 
       context 'call!' do
-        it 'runs rollback' do
-          # TODO: this test doesn't actually test anything
+        it 'runs rollback and raises' do
           expect do
-            square_root_class.call!(number: -4)
-          end.to raise_error(/Numerical argument is out of domain/)
+            result = array_add_class.call!(array:, item: 6)
+            expect(result).to be_failure
+            expect(result.error).to be_present
+            expect(array).to eq([1,2,3,4])
+            expect(result.new_array).to eq([1,2,3,4,6])
+          end.to raise_error(/Test Error/)
         end
       end
     end
