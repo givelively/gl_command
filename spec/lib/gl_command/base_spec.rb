@@ -27,11 +27,6 @@ RSpec.describe GlCommand::Base do
         expect(result.ein).to eq '00-1111111'
         expect(result).not_to be_raise_errors
       end
-
-      it 'has a verified double with expected classes', skip: "Haven't figured out verified doubles yet" do
-        normalize_ein_double = instance_double(NormalizeEin::Context, ein: '00-1111111')
-        expect(normalize_ein_double).to be_successful
-      end
     end
 
     describe 'ArgumentError' do
@@ -63,7 +58,7 @@ RSpec.describe GlCommand::Base do
     end
 
     describe 'context' do
-      let(:context) { GlCommand::Context.new(NormalizeEin) }
+      let(:context) { NormalizeEin.context }
       let(:target_methods) do
         %i[arguments chain? ein ein= error error= fail! failure? klass raise_errors? returns success? successful?]
       end
@@ -79,7 +74,7 @@ RSpec.describe GlCommand::Base do
       end
 
       context 'when passed raise_errors' do
-        let(:context) { GlCommand::Context.new(NormalizeEin, raise_errors: true) }
+        let(:context) { NormalizeEin.context(raise_errors: true) }
 
         it 'is successful and raises errors' do
           expect(context).to be_raise_error
@@ -116,7 +111,7 @@ RSpec.describe GlCommand::Base do
     end
 
     describe 'context' do
-      let(:context) { GlCommand::Context.new(CreateNonprofit) }
+      let(:context) { CreateNonprofit.context }
       let(:target_methods) do
         %i[arguments chain? error error= fail! failure? klass nonprofit nonprofit= raise_errors? returns success? successful?]
       end
@@ -132,7 +127,7 @@ RSpec.describe GlCommand::Base do
       end
 
       context 'when passed raise_errors' do
-        let(:context) { GlCommand::Context.new(CreateNonprofit, raise_errors: true) }
+        let(:context) { CreateNonprofit.context(raise_errors: true) }
 
         it 'is successful and raises errors' do
           expect(context).to be_raise_error
@@ -164,8 +159,7 @@ RSpec.describe GlCommand::Base do
     end
   end
 
-  describe 'rollback' do
-    # class SquareRoot < GlCommand::Base
+  describe 'square_root_class' do
     let(:square_root_class) do
       Class.new(GlCommand::Base) do
         returns :number, :root
@@ -179,6 +173,20 @@ RSpec.describe GlCommand::Base do
         def rollback
           context.root = context.number
         end
+      end
+    end
+
+    describe '#context' do
+      it 'can be used to stub' do
+        result = square_root_class.context(number: 4, root: 16)
+        expect(result).to be_successful
+        expect(result.number).to eq 4
+        expect(result.root).to eq 16
+      end
+      it 'raises when passed an unknown argument or returns' do
+        expect do
+          square_root_class.context(some_weird_arg: false)
+        end.to raise_error(ArgumentError)
       end
     end
 
@@ -211,4 +219,51 @@ RSpec.describe GlCommand::Base do
       end
     end
   end
+
+  # describe 'rollback' do
+  #   let(:square_root_class) do
+  #     Class.new(GlCommand::Base) do
+  #       returns :number, :root
+
+  #       def call(number:)
+  #         context.root = Math.sqrt(number)
+  #       end
+
+  #       private
+
+  #       def rollback
+  #         context.root = context.number
+  #       end
+  #     end
+  #   end
+
+  #   describe 'call' do
+  #     let(:number) { 4 }
+
+  #     it 'squares the number' do
+  #       result = square_root_class.call(number:)
+  #       expect(result.arguments).to eq({number: 4})
+  #       expect(result.root).to eq 2
+  #       expect(result).to be_successful
+  #     end
+  #   end
+
+  #   describe 'rollback' do
+  #     it 'runs rollback if there is a failure' do
+  #       result = square_root_class.call(number: -4)
+  #       expect(result).to be_failure
+  #       expect(result.error).to be_present
+  #       expect(result.root).to eq result.number # Because of rollback
+  #     end
+
+  #     context 'call!' do
+  #       it 'runs rollback' do
+  #         # TODO: this test doesn't actually test anything
+  #         expect do
+  #           square_root_class.call!(number: -4)
+  #         end.to raise_error(/Numerical argument is out of domain/)
+  #       end
+  #     end
+  #   end
+  # end
 end

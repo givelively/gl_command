@@ -7,16 +7,18 @@ module GlCommand
 
     delegate :chain?, to: :klass
 
-    def initialize(klass, raise_errors: false)
+    def initialize(klass, raise_errors: false, skip_unknown_parameters: false, **args_and_returns)
       @klass = klass
       @raise_errors = raise_errors.nil? ? false : raise_errors
       if chain?
         @called = []
-        singleton_class.class_eval { attr_accessor :called }
-        assign_arguments_and_returns(@klass.chain_arguments, @klass.chain_returns)
+        singleton_class.class_eval { attr_accessor :called } # TODO: Put this up by attr_accessor?
+        arguments_and_returns_accessors(@klass.chain_arguments, @klass.chain_returns)
       else
-        assign_arguments_and_returns(@klass.arguments, @klass.returns)
+        arguments_and_returns_accessors(@klass.arguments, @klass.returns)
       end
+
+      assign_parameters(skip_unknown_parameters:, **args_and_returns)
     end
 
     def returns
@@ -53,6 +55,18 @@ module GlCommand
 
     private
 
+    def assign_parameters(skip_unknown_parameters:, **args_and_returns)
+      permitted_keys = @klass_arguments + @klass_returns
+      args_and_returns.each do |arg, val|
+        unless permitted_keys.include?(arg) || skip_unknown_parameters
+          raise ArgumentError, "Unknown argument or return attribute: '#{arg}'"
+        end
+
+        @arguments[arg] = val if @klass_arguments.include?(arg)
+        instance_variable_set("@#{arg}", val) if @klass_returns.include?(arg)
+      end
+    end
+
     def inspect_values
       [
         "success: #{success?}",
@@ -63,13 +77,15 @@ module GlCommand
       ].compact.join(', ')
     end
 
-    def assign_arguments_and_returns(klass_arguments, klass_returns)
-      klass_returns.each do |arg|
+    def arguments_and_returns_accessors(klass_arguments, klass_returns)
+      @klass_returns = klass_returns
+      @klass_returns.each do |arg|
         # It would be nice to have per-command context classes, and define attr_accessor on the class,
         # (rather than on each instance)
         singleton_class.class_eval { attr_accessor arg }
       end
-      @arguments = Hash[klass_arguments.zip]
+      @klass_arguments = klass_arguments
+      @arguments = Hash[@klass_arguments.zip]
     end
   end
 end

@@ -9,12 +9,16 @@ module GlCommand
         false
       end
 
+      def context(raise_errors: false, skip_unknown_parameters: false, **args_and_returns)
+        GlCommand::Context.new(self, raise_errors:, skip_unknown_parameters:, **args_and_returns)
+      end
+
       def returns(*return_attrs)
         @returns ||= return_attrs
       end
 
       def arguments
-        @arguments ||= new(no_context: true).method(:call).parameters.map do |param|
+        @arguments ||= new.method(:call).parameters.map do |param|
           param[1]
         end
       end
@@ -28,9 +32,11 @@ module GlCommand
           raise ArgumentError, "`call` only supports keyword arguments, not positional - you passed: '#{posargs}'"
         end
 
+        # skip_unknown_parameters: true so it raises on call (rather than in context initialize)
         raise_errors = args.delete(:raise_errors)
-        opts = raise_errors.nil? ? {} : { raise_errors: }
-        new(**opts).perform_call(args)
+        opts = args.merge(raise_errors.nil? ? {} : { raise_errors: })
+          .merge(skip_unknown_parameters: true)
+        new(context(**opts)).perform_call(args)
       end
 
       def call!(*posargs, **args)
@@ -38,12 +44,11 @@ module GlCommand
       end
     end
 
-    def initialize(raise_errors: false, no_context: false)
-      @context = GlCommand::Context.new(self.class, raise_errors:) unless no_context
+    def initialize(context=nil)
+      @context = context if context
     end
 
     def perform_call(args)
-      @context.instance_variable_set("@arguments", args)
       assign_and_call(args)
       @context
     rescue StandardError => e
