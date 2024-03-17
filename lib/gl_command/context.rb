@@ -70,7 +70,7 @@ module GlCommand
     def inspect_values
       [
         "success: #{success?}",
-        "error: #{error || 'nil'}",
+        "error: #{error && "\"#{error}\"" || 'nil'}",
         "arguments: #{arguments}",
         "returns: #{returns}",
         chain? ? "called: #{called}" : nil,

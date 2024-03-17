@@ -51,10 +51,11 @@ module GlCommand
     end
 
     def perform_call(args)
-      assign_and_call(args)
+      call_with_callbacks(args)
+      raise_unless_chained if self.class.chain? # defined in GlCommand::Chain
       @context
     rescue StandardError => e
-      chain_rollback if self.class.chain?
+      chain_rollback if self.class.chain? # defined in GlCommand::Chain
       rollback
       raise e if @context.raise_errors?
 
@@ -65,7 +66,7 @@ module GlCommand
 
     private
 
-    def assign_and_call(args)
+    def call_with_callbacks(args)
       call(**args)
     end
   end

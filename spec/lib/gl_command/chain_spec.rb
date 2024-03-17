@@ -49,7 +49,7 @@ RSpec.describe GlCommand::Chain do
     describe 'context' do
       let(:context) { GlCommand::Context.new(CreateNormalizedNonprofit) }
       let(:target_methods) do
-        %i[arguments assign called called= ein ein= error error= fail! failure? nonprofit nonprofit= raise_errors? returns success? successful? to_h]
+        %i[arguments called called= chain? ein ein= error error= fail! failure? klass nonprofit nonprofit= raise_errors? returns success? successful?]
       end
 
       it 'is successful and does not raises errors by default' do
@@ -72,7 +72,7 @@ RSpec.describe GlCommand::Chain do
       end
 
       describe 'inspect' do
-        let(:target) { '<GlCommand::Context \'CreateNormalizedNonprofit\' success: true, error: nil, called: [], data: {:ein=>nil, :nonprofit=>nil}>' }
+        let(:target) { '<GlCommand::Context \'CreateNormalizedNonprofit\' success: true, error: nil, arguments: {:ein=>nil}, returns: {:nonprofit=>nil}, called: []>' }
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
@@ -90,13 +90,15 @@ RSpec.describe GlCommand::Chain do
   end
 
   describe "chain call that doesn't call chain"  do
-    class TestCommand < GlCommand::Chain
-      def call; end
+    let(:test_class) do
+      Class.new(GlCommand::Chain) do
+        def call; end
+      end
     end
 
     it 'raises a legible error' do
       expect do
-        TestCommand.call
+        test_class.call!
       end.to raise_error(/chain/i)
     end
   end

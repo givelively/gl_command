@@ -29,6 +29,7 @@ module GlCommand
     end
 
     def chain(args)
+      @chain_called = true
       self.class.commands.each do |command|
         context.called << command
         cargs = command.arguments.map { |arg| [arg, context.send(arg)] }.to_h
@@ -39,7 +40,7 @@ module GlCommand
           context.send("#{creturn}=", result.send(creturn))
         end
         next if result.success?
-
+        # Need to add error to the parent here
       end
     end
 
@@ -61,11 +62,9 @@ module GlCommand
 
     private
 
-    def assign_and_call(args)
-      # Assign the args to the
-      args.each { |k, v| @context.assign(k, v) }
-      call(**args)
-      chain(**args)
+    def raise_unless_chained
+      return if @chain_called
+      raise "#chain method not called in GlCommand::Chain #call. The #call method *must* include 'chain(args)' or 'super' for chaining to take place!"
     end
   end
 end
