@@ -18,7 +18,7 @@ module GlCommand
       end
 
       def arguments
-        @arguments ||= new.method(:call).parameters.map do |param|
+        @arguments ||= new(nil).method(:call).parameters.map do |param|
           param[1]
         end
       end
@@ -36,6 +36,7 @@ module GlCommand
         raise_errors = args.delete(:raise_errors)
         opts = args.merge(raise_errors.nil? ? {} : { raise_errors: })
           .merge(skip_unknown_parameters: true)
+
         new(context(**opts)).perform_call(args)
       end
 
@@ -44,8 +45,9 @@ module GlCommand
       end
     end
 
-    def initialize(context=nil)
-      @context = context if context
+    # nil context passed in 'arguments' class method
+    def initialize(context)
+      @context = context
     end
 
     def perform_call(args)

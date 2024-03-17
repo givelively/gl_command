@@ -80,8 +80,6 @@ module GlCommand
     def arguments_and_returns_accessors(klass_arguments, klass_returns)
       @klass_returns = klass_returns
       @klass_returns.each do |arg|
-        # It would be nice to have per-command context classes, and define attr_accessor on the class,
-        # (rather than on each instance)
         singleton_class.class_eval { attr_accessor arg }
       end
       @klass_arguments = klass_arguments

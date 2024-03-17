@@ -201,6 +201,52 @@ RSpec.describe GlCommand::Base do
       end
     end
 
+    describe 'failure' do
+      it 'is a failure if there is an error' do
+        result = square_root_class.call(number: -4)
+        expect(result).to be_failure
+        expect(result.error).to be_present
+        expect(result.root).to eq result.number
+      end
+
+      context 'call!' do
+        it 'runs rollback' do
+          expect do
+            square_root_class.call!(number: -4)
+          end.to raise_error(/Numerical argument is out of domain/)
+        end
+      end
+    end
+  end
+
+  describe 'rollback' do
+    let(:square_root_class) do
+      Class.new(GlCommand::Base) do
+        returns :number, :root
+
+        def call(number:)
+          context.root = Math.sqrt(number)
+        end
+
+        private
+
+        def rollback
+          context.root = context.number
+        end
+      end
+    end
+
+    describe 'call' do
+      let(:number) { 4 }
+
+      it 'squares the number' do
+        result = square_root_class.call(number:)
+        expect(result.arguments).to eq({number: 4})
+        expect(result.root).to eq 2
+        expect(result).to be_successful
+      end
+    end
+
     describe 'rollback' do
       it 'runs rollback if there is a failure' do
         result = square_root_class.call(number: -4)
@@ -219,51 +265,4 @@ RSpec.describe GlCommand::Base do
       end
     end
   end
-
-  # describe 'rollback' do
-  #   let(:square_root_class) do
-  #     Class.new(GlCommand::Base) do
-  #       returns :number, :root
-
-  #       def call(number:)
-  #         context.root = Math.sqrt(number)
-  #       end
-
-  #       private
-
-  #       def rollback
-  #         context.root = context.number
-  #       end
-  #     end
-  #   end
-
-  #   describe 'call' do
-  #     let(:number) { 4 }
-
-  #     it 'squares the number' do
-  #       result = square_root_class.call(number:)
-  #       expect(result.arguments).to eq({number: 4})
-  #       expect(result.root).to eq 2
-  #       expect(result).to be_successful
-  #     end
-  #   end
-
-  #   describe 'rollback' do
-  #     it 'runs rollback if there is a failure' do
-  #       result = square_root_class.call(number: -4)
-  #       expect(result).to be_failure
-  #       expect(result.error).to be_present
-  #       expect(result.root).to eq result.number # Because of rollback
-  #     end
-
-  #     context 'call!' do
-  #       it 'runs rollback' do
-  #         # TODO: this test doesn't actually test anything
-  #         expect do
-  #           square_root_class.call!(number: -4)
-  #         end.to raise_error(/Numerical argument is out of domain/)
-  #       end
-  #     end
-  #   end
-  # end
 end
