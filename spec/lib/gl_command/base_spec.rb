@@ -221,7 +221,7 @@ RSpec.describe GlCommand::Base do
     end
   end
 
-  describe 'rollback' do
+  context 'array_add_class' do
     let(:array_add_class) do
       Class.new(GlCommand::Base) do
         returns :new_array
@@ -256,7 +256,8 @@ RSpec.describe GlCommand::Base do
       it 'runs rollback if there is a failure' do
         result = array_add_class.call(array:, item: 6)
         expect(result).to be_failure
-        expect(result.error).to be_present
+        pp result.error.to_s
+        expect(result.error.to_s).to match(/Test Error/)
         expect(array).to eq([1, 2, 3, 4])
         expect(result.new_array).to eq([1, 2, 3, 4, 6])
       end

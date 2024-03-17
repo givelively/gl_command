@@ -106,7 +106,7 @@ RSpec.describe GlCommand::Chain do
     end
   end
 
-  context 'array classes' do
+  context 'array_add_class chain' do
     class ArrayAddClass < GlCommand::Base
       returns :new_array
 
@@ -123,7 +123,7 @@ RSpec.describe GlCommand::Chain do
     end
 
     class ChainClass < GlCommand::Chain
-      chain ArrayAddClass
+      chain ArrayAddClass, ArrayAddClass
 
       def call(array:, item:)
         item += 5
@@ -137,8 +137,35 @@ RSpec.describe GlCommand::Chain do
       it 'adds to the array' do
         result = ChainClass.call!(array:, item: 6)
         expect(result).to be_successful
-        expect(array).to eq([1, 2, 3, 4, 11])
+        expect(array).to eq([1, 2, 3, 4, 11, 11])
         expect(result.new_array).to eq array
+        expect(result.called).to eq([ArrayAddClass, ArrayAddClass])
+      end
+    end
+
+    describe 'rollback' do
+      before { allow_any_instance_of(ArrayAddClass).to receive(:do_another_thing) { raise 'Test Error' } }
+
+      it 'runs rollback if there is a failure' do
+        result = ChainClass.call(array:, item: 6)
+        expect(result).to be_failure
+        expect(result.error.to_s).to match(/Test Error/)
+        expect(array).to eq([1, 2, 3, 4])
+        expect(result.new_array).to eq([1, 2, 3, 4, 11])
+        expect(result.called).to eq([ArrayAddClass])
+      end
+
+      context 'call!' do
+        it 'runs rollback and raises' do
+          expect do
+            result = ChainClass.call!(array:, item: 6)
+            expect(result).to be_failure
+            expect(result.error.to_s).to match(/Test Error/)
+            expect(array).to eq([1, 2, 3, 4])
+            expect(result.new_array).to eq([1, 2, 3, 4, 11])
+            expect(result.called).to eq([ArrayAddClass])
+          end.to raise_error(/Test Error/)
+        end
       end
     end
   end

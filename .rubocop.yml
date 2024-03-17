@@ -23,3 +23,6 @@ Gemspec/RequiredRubyVersion:
 
 RSpec/MultipleExpectations:
   Max: 5
+
+RSpec/AnyInstance:
+  Enabled: false

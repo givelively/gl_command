@@ -41,7 +41,9 @@ module GlCommand
           context.send(:"#{creturn}=", result.send(creturn))
         end
         next if result.success?
-        # Need to add error to the parent here
+
+        context.fail!(result.error)
+        break
       end
     end
 

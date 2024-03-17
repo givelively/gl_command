@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 
 group :development do
-  gem 'prettier', '~> 3.1.2'
+  gem 'gl_lint', require: false
 end
 
 group :development, :test do
