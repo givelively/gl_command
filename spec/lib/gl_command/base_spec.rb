@@ -60,7 +60,8 @@ RSpec.describe GlCommand::Base do
     describe 'context' do
       let(:context) { NormalizeEin.context }
       let(:target_methods) do
-        %i[arguments assign_parameters chain? ein ein= error error= fail! failure? klass raise_errors? return_or_argument returns success? successful?]
+        %i[arguments assign_parameters chain? ein ein= error error= fail! failure? klass raise_errors?
+           return_or_argument returns success? successful?]
       end
 
       it 'is successful and does not raises errors by default' do
@@ -117,7 +118,8 @@ RSpec.describe GlCommand::Base do
     describe 'context' do
       let(:context) { CreateNonprofit.context }
       let(:target_methods) do
-        %i[arguments assign_parameters chain? error error= fail! failure? klass nonprofit nonprofit= raise_errors? return_or_argument returns success? successful?]
+        %i[arguments assign_parameters chain? error error= fail! failure? klass nonprofit nonprofit= raise_errors?
+           return_or_argument returns success? successful?]
       end
 
       it 'is successful and does not raises errors by default' do

@@ -49,7 +49,8 @@ RSpec.describe GlCommand::Chain do
     describe 'context' do
       let(:context) { GlCommand::Context.new(CreateNormalizedNonprofit) }
       let(:target_methods) do
-        %i[arguments assign_parameters called called= chain? ein ein= error error= fail! failure? klass nonprofit nonprofit= raise_errors? return_or_argument returns success? successful?]
+        %i[arguments assign_parameters called called= chain? ein ein= error error= fail! failure? klass nonprofit
+           nonprofit= raise_errors? return_or_argument returns success? successful?]
       end
 
       it 'is successful and does not raises errors by default' do
