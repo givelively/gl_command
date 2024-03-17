@@ -22,7 +22,7 @@ module GlCommand
     end
 
     def returns
-      klass.returns.map { |rattr| [rattr, send(rattr)] }.to_h
+      klass.returns.index_with { |rattr| send(rattr) }
     end
 
     def raise_errors?
@@ -53,9 +53,11 @@ module GlCommand
       "<GlCommand::Context '#{klass}' #{inspect_values}>"
     end
 
-    private
+    def return_or_argument(arg)
+      @klass_returns.include?(arg) ? send(arg) : @arguments[arg]
+    end
 
-    def assign_parameters(skip_unknown_parameters:, **args_and_returns)
+    def assign_parameters(skip_unknown_parameters: false, **args_and_returns)
       permitted_keys = @klass_arguments + @klass_returns
       args_and_returns.each do |arg, val|
         unless permitted_keys.include?(arg) || skip_unknown_parameters
@@ -63,17 +65,19 @@ module GlCommand
         end
 
         @arguments[arg] = val if @klass_arguments.include?(arg)
-        instance_variable_set("@#{arg}", val) if @klass_returns.include?(arg)
+        instance_variable_set(:"@#{arg}", val) if @klass_returns.include?(arg)
       end
     end
+
+    private
 
     def inspect_values
       [
         "success: #{success?}",
-        "error: #{error && "\"#{error}\"" || 'nil'}",
+        "error: #{(error && "\"#{error}\"") || 'nil'}",
         "arguments: #{arguments}",
         "returns: #{returns}",
-        chain? ? "called: #{called}" : nil,
+        chain? ? "called: #{called}" : nil
       ].compact.join(', ')
     end
 
@@ -83,7 +87,7 @@ module GlCommand
         singleton_class.class_eval { attr_accessor arg }
       end
       @klass_arguments = klass_arguments
-      @arguments = Hash[@klass_arguments.zip]
+      @arguments = @klass_arguments.zip([]).to_h
     end
   end
 end

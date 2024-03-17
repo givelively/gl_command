@@ -49,7 +49,7 @@ RSpec.describe GlCommand::Chain do
     describe 'context' do
       let(:context) { GlCommand::Context.new(CreateNormalizedNonprofit) }
       let(:target_methods) do
-        %i[arguments called called= chain? ein ein= error error= fail! failure? klass nonprofit nonprofit= raise_errors? returns success? successful?]
+        %i[arguments assign_parameters called called= chain? ein ein= error error= fail! failure? klass nonprofit nonprofit= raise_errors? return_or_argument returns success? successful?]
       end
 
       it 'is successful and does not raises errors by default' do
@@ -72,7 +72,9 @@ RSpec.describe GlCommand::Chain do
       end
 
       describe 'inspect' do
-        let(:target) { '<GlCommand::Context \'CreateNormalizedNonprofit\' success: true, error: nil, arguments: {:ein=>nil}, returns: {:nonprofit=>nil}, called: []>' }
+        let(:target) do
+          '<GlCommand::Context \'CreateNormalizedNonprofit\' success: true, error: nil, arguments: {:ein=>nil}, returns: {:nonprofit=>nil}, called: []>'
+        end
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
@@ -89,7 +91,7 @@ RSpec.describe GlCommand::Chain do
     end
   end
 
-  describe "chain call that doesn't call chain"  do
+  describe "chain call that doesn't call chain" do
     let(:test_class) do
       Class.new(GlCommand::Chain) do
         def call; end
@@ -100,6 +102,43 @@ RSpec.describe GlCommand::Chain do
       expect do
         test_class.call!
       end.to raise_error(/chain/i)
+    end
+  end
+
+  context 'array classes' do
+    class ArrayAddClass < GlCommand::Base
+      returns :new_array
+
+      def call(array:, item:)
+        context.new_array = array.push(item).dup
+        do_another_thing
+      end
+
+      def do_another_thing; end
+
+      def rollback
+        context.arguments[:array].pop
+      end
+    end
+
+    class ChainClass < GlCommand::Chain
+      chain ArrayAddClass
+
+      def call(array:, item:)
+        item += 5
+        chain(array:, item:)
+      end
+    end
+
+    let(:array) { [1, 2, 3, 4] }
+
+    describe 'call' do
+      it 'adds to the array' do
+        result = ChainClass.call!(array:, item: 6)
+        expect(result).to be_successful
+        expect(array).to eq([1, 2, 3, 4, 11])
+        expect(result.new_array).to eq array
+      end
     end
   end
 end

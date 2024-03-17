@@ -35,7 +35,7 @@ module GlCommand
         # skip_unknown_parameters: true so it raises on call (rather than in context initialize)
         raise_errors = args.delete(:raise_errors)
         opts = args.merge(raise_errors.nil? ? {} : { raise_errors: })
-          .merge(skip_unknown_parameters: true)
+                   .merge(skip_unknown_parameters: true)
 
         new(context(**opts)).perform_call(args)
       end

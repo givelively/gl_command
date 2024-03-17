@@ -60,7 +60,7 @@ RSpec.describe GlCommand::Base do
     describe 'context' do
       let(:context) { NormalizeEin.context }
       let(:target_methods) do
-        %i[arguments chain? ein ein= error error= fail! failure? klass raise_errors? returns success? successful?]
+        %i[arguments assign_parameters chain? ein ein= error error= fail! failure? klass raise_errors? return_or_argument returns success? successful?]
       end
 
       it 'is successful and does not raises errors by default' do
@@ -83,7 +83,9 @@ RSpec.describe GlCommand::Base do
       end
 
       describe 'inspect' do
-        let(:target) { '<GlCommand::Context \'NormalizeEin\' success: true, error: nil, arguments: {:ein=>nil}, returns: {:ein=>nil}>' }
+        let(:target) do
+          '<GlCommand::Context \'NormalizeEin\' success: true, error: nil, arguments: {:ein=>nil}, returns: {:ein=>nil}>'
+        end
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
@@ -96,24 +98,26 @@ RSpec.describe GlCommand::Base do
     let(:ein) { '81-0693451' }
 
     describe 'call' do
-      let(:result) { CreateNonprofit.call(ein: ein) }
+      let(:result) { CreateNonprofit.call(ein:) }
+
       it 'returns the expected result' do
         expect(result).to be_successful
         expect(result.error).to be_nil
         expect(result.nonprofit.ein).to eq ein
         expect(result).not_to be_raise_errors
       end
+
       it 'has the returns and arguments' do
         expect(result).to be_successful
-        expect(result.arguments).to eq({ein: ein})
-        expect(result.returns).to eq({nonprofit: result.nonprofit})
+        expect(result.arguments).to eq({ ein: })
+        expect(result.returns).to eq({ nonprofit: result.nonprofit })
       end
     end
 
     describe 'context' do
       let(:context) { CreateNonprofit.context }
       let(:target_methods) do
-        %i[arguments chain? error error= fail! failure? klass nonprofit nonprofit= raise_errors? returns success? successful?]
+        %i[arguments assign_parameters chain? error error= fail! failure? klass nonprofit nonprofit= raise_errors? return_or_argument returns success? successful?]
       end
 
       it 'is successful and does not raises errors by default' do
@@ -136,7 +140,9 @@ RSpec.describe GlCommand::Base do
       end
 
       describe 'inspect' do
-        let(:target) { '<GlCommand::Context \'CreateNonprofit\' success: true, error: nil, arguments: {:ein=>nil}, returns: {:nonprofit=>nil}>' }
+        let(:target) do
+          '<GlCommand::Context \'CreateNonprofit\' success: true, error: nil, arguments: {:ein=>nil}, returns: {:nonprofit=>nil}>'
+        end
 
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
@@ -167,12 +173,6 @@ RSpec.describe GlCommand::Base do
         def call(number:)
           context.root = Math.sqrt(number)
         end
-
-        private
-
-        def rollback
-          context.root = context.number
-        end
       end
     end
 
@@ -183,6 +183,7 @@ RSpec.describe GlCommand::Base do
         expect(result.number).to eq 4
         expect(result.root).to eq 16
       end
+
       it 'raises when passed an unknown argument or returns' do
         expect do
           square_root_class.context(some_weird_arg: false)
@@ -195,7 +196,7 @@ RSpec.describe GlCommand::Base do
 
       it 'squares the number' do
         result = square_root_class.call(number:)
-        expect(result.arguments).to eq({number: 4})
+        expect(result.arguments).to eq({ number: 4 })
         expect(result.root).to eq 2
         expect(result).to be_successful
       end
@@ -206,11 +207,10 @@ RSpec.describe GlCommand::Base do
         result = square_root_class.call(number: -4)
         expect(result).to be_failure
         expect(result.error).to be_present
-        expect(result.root).to eq result.number
       end
 
       context 'call!' do
-        it 'runs rollback' do
+        it 'raises' do
           expect do
             square_root_class.call!(number: -4)
           end.to raise_error(/Numerical argument is out of domain/)
@@ -237,25 +237,26 @@ RSpec.describe GlCommand::Base do
       end
     end
 
-    let(:array) { [1,2,3,4] }
+    let(:array) { [1, 2, 3, 4] }
 
     describe 'call' do
-      it 'squares the number' do
+      it 'adds to the array' do
         result = array_add_class.call(array:, item: 6)
         expect(result).to be_successful
-        expect(array).to eq([1,2,3,4,6])
+        expect(array).to eq([1, 2, 3, 4, 6])
         expect(result.new_array).to eq array
       end
     end
 
     describe 'rollback' do
-      before { allow_any_instance_of(array_add_class).to receive(:do_another_thing) { fail "Test Error" } }
+      before { allow_any_instance_of(array_add_class).to receive(:do_another_thing) { raise 'Test Error' } }
+
       it 'runs rollback if there is a failure' do
         result = array_add_class.call(array:, item: 6)
         expect(result).to be_failure
         expect(result.error).to be_present
-        expect(array).to eq([1,2,3,4])
-        expect(result.new_array).to eq([1,2,3,4,6])
+        expect(array).to eq([1, 2, 3, 4])
+        expect(result.new_array).to eq([1, 2, 3, 4, 6])
       end
 
       context 'call!' do
@@ -264,8 +265,8 @@ RSpec.describe GlCommand::Base do
             result = array_add_class.call!(array:, item: 6)
             expect(result).to be_failure
             expect(result.error).to be_present
-            expect(array).to eq([1,2,3,4])
-            expect(result.new_array).to eq([1,2,3,4,6])
+            expect(array).to eq([1, 2, 3, 4])
+            expect(result.new_array).to eq([1, 2, 3, 4, 6])
           end.to raise_error(/Test Error/)
         end
       end
