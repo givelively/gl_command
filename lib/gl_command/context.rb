@@ -2,7 +2,7 @@
 
 module GlCommand
   class Context
-    attr_accessor :error
+    attr_accessor :errors
     attr_reader :klass, :arguments
 
     delegate :chain?, to: :klass
@@ -10,14 +10,13 @@ module GlCommand
     def initialize(klass, raise_errors: false, skip_unknown_parameters: false, **args_and_returns)
       @klass = klass
       @raise_errors = raise_errors.nil? ? false : raise_errors
+      @errors ||= []
       if chain?
         @called = []
         singleton_class.class_eval { attr_accessor :called } # TODO: Put this up by attr_accessor?
-        arguments_and_returns_accessors(@klass.chain_arguments, @klass.chain_returns)
-      else
-        arguments_and_returns_accessors(@klass.arguments, @klass.returns)
       end
 
+      set_arguments_and_returns_accessors
       assign_parameters(skip_unknown_parameters:, **args_and_returns)
     end
 
@@ -31,7 +30,7 @@ module GlCommand
 
     def fail!(passed_error = nil)
       @failure = true
-      self.error = passed_error if passed_error
+      errors << passed_error if passed_error && errors.last != passed_error
       self
     end
 
@@ -71,19 +70,18 @@ module GlCommand
     def inspect_values
       [
         "success: #{success?}",
-        "error: #{(error && "\"#{error}\"") || 'nil'}",
+        "errors: #{errors}",
         "arguments: #{arguments}",
         "returns: #{returns}",
         chain? ? "called: #{called}" : nil
       ].compact.join(', ')
     end
 
-    def arguments_and_returns_accessors(klass_arguments, klass_returns)
-      @klass_returns = klass_returns
-      @klass_returns.each do |arg|
-        singleton_class.class_eval { attr_accessor arg }
-      end
-      @klass_arguments = klass_arguments
+    def set_arguments_and_returns_accessors
+      @klass_returns = chain? ? @klass.chain_returns : @klass.returns
+      @klass_arguments = chain? ? @klass.chain_arguments : @klass.arguments
+
+      @klass_returns.each { |arg| singleton_class.class_eval { attr_accessor arg } }
       @arguments = @klass_arguments.zip([]).to_h
     end
   end

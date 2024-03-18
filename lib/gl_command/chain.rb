@@ -43,7 +43,7 @@ module GlCommand
         if result.success?
           context.called << command
         else
-          context.fail!(result.error)
+          context.fail!(result.errors)
           break
         end
       end

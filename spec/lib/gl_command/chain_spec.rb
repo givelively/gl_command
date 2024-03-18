@@ -18,7 +18,7 @@ RSpec.describe GlCommand::Chain do
 
       it 'calls' do
         expect(result).to be_successful
-        expect(result.error).to be_nil
+        expect(result.errors).to eq([])
         expect(result.nonprofit.ein).to eq '81-0693451'
         expect(result).not_to be_raise_errors
         expect(result.called).to eq([NormalizeEin, CreateNonprofit])
@@ -37,7 +37,7 @@ RSpec.describe GlCommand::Chain do
 
       it 'calls with bang' do
         expect(result).to be_successful
-        expect(result.error).to be_nil
+        expect(result.errors).to eq([])
         expect(result.nonprofit.ein).to eq '81-0693451'
         expect(result).to be_raise_errors
       end
@@ -66,7 +66,7 @@ RSpec.describe GlCommand::Chain do
     describe 'context' do
       let(:context) { GlCommand::Context.new(CreateNormalizedNonprofit) }
       let(:target_methods) do
-        %i[arguments assign_parameters called called= chain? ein ein= error error= fail! failure? klass nonprofit
+        %i[arguments assign_parameters called called= chain? ein ein= errors errors= fail! failure? klass nonprofit
            nonprofit= raise_errors? returns success? successful? to_h]
       end
 
@@ -92,7 +92,7 @@ RSpec.describe GlCommand::Chain do
       describe 'inspect' do
         let(:target) do
           '<GlCommand::Context \'CreateNormalizedNonprofit\' success: true, ' \
-            'error: nil, arguments: {:ein=>nil}, returns: {:nonprofit=>nil}, called: []>'
+            'errors: [], arguments: {:ein=>nil}, returns: {:nonprofit=>nil}, called: []>'
         end
 
         it 'renders inspect as expected' do
@@ -165,7 +165,7 @@ RSpec.describe GlCommand::Chain do
       before { allow_any_instance_of(ArrayAddClass).to receive(:do_another_thing) { raise 'Test Error' } }
 
       def failure_expectations(result)
-        expect(result.error.to_s).to match(/Test Error/)
+        expect(result.errors.to_s).to match(/Test Error/)
         expect(array).to eq([1, 2, 3, 4])
         expect(result.revised_item).to eq 8
         expect(result.new_array).to eq([1, 2, 3, 4, 11])

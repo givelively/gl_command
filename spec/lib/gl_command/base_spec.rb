@@ -23,7 +23,7 @@ RSpec.describe GlCommand::Base do
       it 'returns the expected result' do
         result = NormalizeEin.call(ein: '001111111')
         expect(result).to be_successful
-        expect(result.error).to be_nil
+        expect(result.errors).to eq([])
         expect(result.ein).to eq '00-1111111'
         expect(result).not_to be_raise_errors
       end
@@ -33,7 +33,7 @@ RSpec.describe GlCommand::Base do
       it "doesn't raise" do
         result = NormalizeEin.call(not_ein: ein)
         expect(result).not_to be_successful
-        expect(result.error.class).to match(ArgumentError)
+        expect(result.errors.first.class).to match(ArgumentError)
       end
 
       context 'with raise_errors: true' do
@@ -60,7 +60,7 @@ RSpec.describe GlCommand::Base do
     describe 'context' do
       let(:context) { NormalizeEin.context }
       let(:target_methods) do
-        %i[arguments assign_parameters chain? ein ein= error error= fail! failure? klass raise_errors?
+        %i[arguments assign_parameters chain? ein ein= errors errors= fail! failure? klass raise_errors?
            returns success? successful? to_h]
       end
 
@@ -86,7 +86,7 @@ RSpec.describe GlCommand::Base do
       describe 'inspect' do
         let(:target) do
           '<GlCommand::Context \'NormalizeEin\' success: true, ' \
-            'error: nil, arguments: {:ein=>nil}, returns: {:ein=>nil}>'
+            'errors: [], arguments: {:ein=>nil}, returns: {:ein=>nil}>'
         end
 
         it 'renders inspect as expected' do
@@ -104,7 +104,7 @@ RSpec.describe GlCommand::Base do
 
       it 'returns the expected result' do
         expect(result).to be_successful
-        expect(result.error).to be_nil
+        expect(result.errors).to eq([])
         expect(result.nonprofit.ein).to eq ein
         expect(result.to_h).to eq({ ein:, nonprofit: result.nonprofit })
         expect(result).not_to be_raise_errors
@@ -120,7 +120,7 @@ RSpec.describe GlCommand::Base do
     describe 'context' do
       let(:context) { CreateNonprofit.context }
       let(:target_methods) do
-        %i[arguments assign_parameters chain? error error= fail! failure? klass nonprofit nonprofit= raise_errors?
+        %i[arguments assign_parameters chain? errors errors= fail! failure? klass nonprofit nonprofit= raise_errors?
            returns success? successful? to_h]
       end
 
@@ -146,7 +146,7 @@ RSpec.describe GlCommand::Base do
       describe 'inspect' do
         let(:target) do
           '<GlCommand::Context \'CreateNonprofit\' success: true, ' \
-            'error: nil, arguments: {:ein=>nil}, returns: {:nonprofit=>nil}>'
+            'errors: [], arguments: {:ein=>nil}, returns: {:nonprofit=>nil}>'
         end
 
         it 'renders inspect as expected' do
@@ -212,7 +212,7 @@ RSpec.describe GlCommand::Base do
       it 'is a failure if there is an error' do
         result = square_root_class.call(number: -4)
         expect(result).to be_failure
-        expect(result.error).to be_present
+        expect(result.errors.count).to eq 1
       end
 
       context 'with call!' do
@@ -314,7 +314,7 @@ RSpec.describe GlCommand::Base do
 
       def failure_expectations(result)
         expect(result).to be_failure
-        expect(result.error.to_s).to match(/Test Error/)
+        expect(result.errors.to_s).to match(/Test Error/)
         expect(array).to eq([1, 2, 3, 4])
         expect(result.new_array).to eq([1, 2, 3, 4, 6])
       end
