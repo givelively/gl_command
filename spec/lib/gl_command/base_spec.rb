@@ -85,7 +85,8 @@ RSpec.describe GlCommand::Base do
 
       describe 'inspect' do
         let(:target) do
-          '<GlCommand::Context \'NormalizeEin\' success: true, error: nil, arguments: {:ein=>nil}, returns: {:ein=>nil}>'
+          '<GlCommand::Context \'NormalizeEin\' success: true, ' \
+            'error: nil, arguments: {:ein=>nil}, returns: {:ein=>nil}>'
         end
 
         it 'renders inspect as expected' do
@@ -144,7 +145,8 @@ RSpec.describe GlCommand::Base do
 
       describe 'inspect' do
         let(:target) do
-          '<GlCommand::Context \'CreateNonprofit\' success: true, error: nil, arguments: {:ein=>nil}, returns: {:nonprofit=>nil}>'
+          '<GlCommand::Context \'CreateNonprofit\' success: true, ' \
+            'error: nil, arguments: {:ein=>nil}, returns: {:nonprofit=>nil}>'
         end
 
         it 'renders inspect as expected' do
@@ -213,7 +215,7 @@ RSpec.describe GlCommand::Base do
         expect(result.error).to be_present
       end
 
-      context 'call!' do
+      context 'with call!' do
         it 'raises' do
           expect do
             square_root_class.call!(number: -4)
@@ -244,8 +246,11 @@ RSpec.describe GlCommand::Base do
       expect(array).to eq([1, 2, 3, 4])
       expect(result.new_array).to eq new_array
       expect(result.array).to eq new_array
+    end
+
+    it 'to_h clobbers the arguments' do
       expect(result.arguments[:array]).to eq array
-      expect(result.to_h).to eq({array: new_array, item: 6, new_array:})
+      expect(result.to_h).to eq({ array: new_array, item: 6, new_array: })
     end
   end
 
@@ -277,7 +282,7 @@ RSpec.describe GlCommand::Base do
     end
   end
 
-  context 'array_add_class' do
+  context 'with array_add_class' do
     class ArrayAddClass < GlCommand::Base
       returns :new_array
 
@@ -307,22 +312,25 @@ RSpec.describe GlCommand::Base do
     describe 'rollback' do
       before { allow_any_instance_of(ArrayAddClass).to receive(:do_another_thing) { raise 'Test Error' } }
 
-      it 'runs rollback if there is a failure' do
-        result = ArrayAddClass.call(array:, item: 6)
+      def failure_expectations(result)
         expect(result).to be_failure
         expect(result.error.to_s).to match(/Test Error/)
         expect(array).to eq([1, 2, 3, 4])
         expect(result.new_array).to eq([1, 2, 3, 4, 6])
       end
 
-      context 'call!' do
+      it 'runs rollback if there is a failure' do
+        result = ArrayAddClass.call(array:, item: 6)
+        failure_expectations(result)
+        expect(result).not_to be_raise_error
+      end
+
+      context 'with call!' do
         it 'runs rollback and raises' do
           expect do
             result = ArrayAddClass.call!(array:, item: 6)
-            expect(result).to be_failure
-            expect(result.error).to be_present
-            expect(array).to eq([1, 2, 3, 4])
-            expect(result.new_array).to eq([1, 2, 3, 4, 6])
+            failure_expectations(result)
+            expect(result).to be_raise_error
           end.to raise_error(/Test Error/)
         end
       end

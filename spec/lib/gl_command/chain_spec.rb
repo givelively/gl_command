@@ -14,27 +14,40 @@ RSpec.describe GlCommand::Chain do
     end
 
     describe 'call' do
+      let(:result) { CreateNormalizedNonprofit.call(ein: '810693451') }
+
       it 'calls' do
-        result = CreateNormalizedNonprofit.call(ein: '810693451')
         expect(result).to be_successful
+        expect(result.error).to be_nil
+        expect(result.nonprofit.ein).to eq '81-0693451'
+        expect(result).not_to be_raise_errors
+        expect(result.called).to eq([NormalizeEin, CreateNonprofit])
+      end
+
+      it 'updates the arguments' do
         expect(result.arguments.keys).to eq([:ein])
         expect(result.returns.keys).to eq([:nonprofit])
         # context.arguments are updated in the chain, from NormalizeEin
         expect(result.arguments).to eq({ ein: '81-0693451' })
-        expect(result.error).to be_nil
-        expect(result.nonprofit.ein).to eq '81-0693451'
-        expect(result).not_to be_raise_errors
       end
     end
 
     describe 'call!' do
+      let(:result) { CreateNormalizedNonprofit.call!(ein: '810693451') }
+
       it 'calls with bang' do
-        result = CreateNormalizedNonprofit.call!(ein: '810693451')
         expect(result).to be_successful
         expect(result.error).to be_nil
         expect(result.nonprofit.ein).to eq '81-0693451'
-        expect(result.called).to eq(CreateNormalizedNonprofit.commands)
         expect(result).to be_raise_errors
+      end
+
+      it 'updates the arguments' do
+        expect(result.arguments.keys).to eq([:ein])
+        expect(result.returns.keys).to eq([:nonprofit])
+        expect(result.called).to eq(CreateNormalizedNonprofit.commands)
+        # context.arguments are updated in the chain, from NormalizeEin
+        expect(result.arguments).to eq({ ein: '81-0693451' })
       end
     end
 
@@ -78,7 +91,8 @@ RSpec.describe GlCommand::Chain do
 
       describe 'inspect' do
         let(:target) do
-          '<GlCommand::Context \'CreateNormalizedNonprofit\' success: true, error: nil, arguments: {:ein=>nil}, returns: {:nonprofit=>nil}, called: []>'
+          '<GlCommand::Context \'CreateNormalizedNonprofit\' success: true, ' \
+            'error: nil, arguments: {:ein=>nil}, returns: {:nonprofit=>nil}, called: []>'
         end
 
         it 'renders inspect as expected' do
@@ -102,7 +116,7 @@ RSpec.describe GlCommand::Chain do
     end
   end
 
-  context 'array_add_class chain' do
+  context 'with array_add_class chain' do
     class ArrayAddClass < GlCommand::Base
       returns :new_array
 
@@ -136,8 +150,9 @@ RSpec.describe GlCommand::Chain do
     let(:array) { [1, 2, 3, 4] }
 
     describe 'call' do
+      let(:result) { ChainClass.call(array:, item: 6) }
+
       it 'adds to the array' do
-        result = ChainClass.call!(array:, item: 6)
         expect(result).to be_successful
         expect(array).to eq([1, 2, 3, 4, 11, 11])
         expect(result.new_array).to eq array
@@ -149,9 +164,7 @@ RSpec.describe GlCommand::Chain do
     describe 'rollback' do
       before { allow_any_instance_of(ArrayAddClass).to receive(:do_another_thing) { raise 'Test Error' } }
 
-      it 'runs rollback on each command if there is a failure' do
-        result = ChainClass.call(array:, item: 6)
-        expect(result).to be_failure
+      def failure_expectations(result)
         expect(result.error.to_s).to match(/Test Error/)
         expect(array).to eq([1, 2, 3, 4])
         expect(result.revised_item).to eq 8
@@ -159,16 +172,18 @@ RSpec.describe GlCommand::Chain do
         expect(result.called).to eq([])
       end
 
+      it 'command runs rollback if there is a failure' do
+        result = ChainClass.call(array:, item: 6)
+        expect(result).not_to be_raise_errors
+        failure_expectations(result)
+      end
+
       context 'call!' do
         it 'runs rollback on each command and raises' do
           expect do
             result = ChainClass.call!(array:, item: 6)
-            expect(result).to be_failure
-            expect(result.error.to_s).to match(/Test Error/)
-            expect(array).to eq([1, 2, 3, 4])
-            expect(result.new_array).to eq([1, 2, 3, 4, 11])
-            expect(result.revised_item).to eq 6
-            expect(result.called).to eq([ArrayAddClass])
+            expect(result).to be_raise_errors
+            failure_expectations(result)
           end.to raise_error(/Test Error/)
         end
       end

@@ -2,6 +2,9 @@
 
 module GlCommand
   class Chain < GlCommand::Base
+    UNCHAINED_MESSAGE = '#chain method not called in GlCommand::Chain #call. ' \
+                        "The #call method *must* include 'chain(args)' or 'super' for chaining to take place!"
+
     class << self
       def chain?
         true
@@ -28,6 +31,7 @@ module GlCommand
       end
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def chain(args)
       @chain_called = true
       context.assign_parameters(**args)
@@ -44,6 +48,7 @@ module GlCommand
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def chain_rollback
       context.called.reverse_each do |command|
@@ -61,7 +66,7 @@ module GlCommand
     def raise_unless_chained
       return if @chain_called
 
-      raise "#chain method not called in GlCommand::Chain #call. The #call method *must* include 'chain(args)' or 'super' for chaining to take place!"
+      raise UNCHAINED_MESSAGE
     end
   end
 end
