@@ -50,7 +50,7 @@ RSpec.describe GlCommand::Chain do
       let(:context) { GlCommand::Context.new(CreateNormalizedNonprofit) }
       let(:target_methods) do
         %i[arguments assign_parameters called called= chain? ein ein= error error= fail! failure? klass nonprofit
-           nonprofit= raise_errors? return_or_argument returns success? successful?]
+           nonprofit= raise_errors? return_or_argument returns success? successful? to_h]
       end
 
       it 'is successful and does not raises errors by default' do
@@ -80,14 +80,6 @@ RSpec.describe GlCommand::Chain do
         it 'renders inspect as expected' do
           expect(context.inspect).to eq target
         end
-      end
-    end
-
-    describe 'rollback' do
-      it 'calls rollback on each interactor when one fails'
-
-      context 'with call!' do
-        it 'calls rollback on each interactor when one fails'
       end
     end
   end
@@ -125,9 +117,15 @@ RSpec.describe GlCommand::Chain do
     class ChainClass < GlCommand::Chain
       chain ArrayAddClass, ArrayAddClass
 
+      returns :revised_item
+
       def call(array:, item:)
-        item += 5
-        chain(array:, item:)
+        context.revised_item = item + 5
+        chain(array:, item: context.revised_item)
+      end
+
+      def rollback
+        context.revised_item = context.arguments[:item] - 3
       end
     end
 
@@ -139,6 +137,7 @@ RSpec.describe GlCommand::Chain do
         expect(result).to be_successful
         expect(array).to eq([1, 2, 3, 4, 11, 11])
         expect(result.new_array).to eq array
+        expect(result.revised_item).to eq 11
         expect(result.called).to eq([ArrayAddClass, ArrayAddClass])
       end
     end
@@ -146,27 +145,35 @@ RSpec.describe GlCommand::Chain do
     describe 'rollback' do
       before { allow_any_instance_of(ArrayAddClass).to receive(:do_another_thing) { raise 'Test Error' } }
 
-      it 'runs rollback if there is a failure' do
+      it 'runs rollback on each command if there is a failure' do
         result = ChainClass.call(array:, item: 6)
         expect(result).to be_failure
         expect(result.error.to_s).to match(/Test Error/)
         expect(array).to eq([1, 2, 3, 4])
+        expect(result.revised_item).to eq 8
         expect(result.new_array).to eq([1, 2, 3, 4, 11])
-        expect(result.called).to eq([ArrayAddClass])
+        expect(result.called).to eq([])
       end
 
       context 'call!' do
-        it 'runs rollback and raises' do
+        it 'runs rollback on each command and raises' do
           expect do
             result = ChainClass.call!(array:, item: 6)
             expect(result).to be_failure
             expect(result.error.to_s).to match(/Test Error/)
             expect(array).to eq([1, 2, 3, 4])
             expect(result.new_array).to eq([1, 2, 3, 4, 11])
+            expect(result.revised_item).to eq 6
             expect(result.called).to eq([ArrayAddClass])
           end.to raise_error(/Test Error/)
         end
       end
     end
+  end
+
+  describe 'chain_rollback' do
+    it 'instantiates each command with the arguments that it has as the time'
+
+    it 'calls rollback on itself after chain_rollback'
   end
 end

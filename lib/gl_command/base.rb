@@ -53,10 +53,10 @@ module GlCommand
     def perform_call(args)
       call_with_callbacks(args)
       raise_unless_chained if self.class.chain? # defined in GlCommand::Chain
+      call_rollbacks if context.failure?
       @context
     rescue StandardError => e
-      chain_rollback if self.class.chain? # defined in GlCommand::Chain
-      rollback
+      call_rollbacks
       raise e if @context.raise_errors?
 
       @context.fail!(e)
@@ -66,8 +66,17 @@ module GlCommand
 
     private
 
+    # Separating this out so that it can be used to set callbacks
     def call_with_callbacks(args)
       call(**args)
+    end
+
+    def call_rollbacks
+      return if defined?(@rolled_back) # Not sure this is required
+      @rolled_back = true
+
+      chain_rollback if self.class.chain? # defined in GlCommand::Chain
+      rollback
     end
   end
 end

@@ -32,7 +32,6 @@ module GlCommand
       @chain_called = true
       context.assign_parameters(**args)
       self.class.commands.each do |command|
-        context.called << command
         cargs = command.arguments.index_with { |arg| context.return_or_argument(arg) }
 
         result = command.call(**cargs.merge(raise_errors: context.raise_errors?))
@@ -40,23 +39,19 @@ module GlCommand
         command.returns.each do |creturn|
           context.send(:"#{creturn}=", result.send(creturn))
         end
-        next if result.success?
-
-        context.fail!(result.error)
-        break
+        if result.success?
+          context.called << command
+        else
+          context.fail!(result.error)
+          break
+        end
       end
     end
 
     def chain_rollback
-      return
-      # TODO: test this
       context.called.reverse_each do |command|
-        c_instance = command.new
-
-        command.arguments_and_returns.each do |arg|
-          c_instance.context.send(:"#{arg}=", context.send(arg))
-        end
-        c_instance.rollback
+        c_context = command.context(**context.to_h.slice(command.arguments_and_returns))
+        command.new(c_context).rollback
       end
     end
 

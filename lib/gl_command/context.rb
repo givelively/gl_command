@@ -45,8 +45,8 @@ module GlCommand
 
     alias_method :successful?, :success?
 
-    def to_s
-      inspect
+    def to_h
+      arguments.merge(returns)
     end
 
     def inspect
