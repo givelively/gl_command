@@ -53,19 +53,16 @@ module GlCommand
       "<GlCommand::Context '#{klass}' #{inspect_values}>"
     end
 
-    def return_or_argument(arg)
-      @klass_returns.include?(arg) ? send(arg) : @arguments[arg]
-    end
-
     def assign_parameters(skip_unknown_parameters: false, **args_and_returns)
-      permitted_keys = @klass_arguments + @klass_returns
+      @permitted_keys ||= (@klass_arguments + @klass_returns).uniq
+
       args_and_returns.each do |arg, val|
-        unless permitted_keys.include?(arg) || skip_unknown_parameters
+        unless @permitted_keys.include?(arg) || skip_unknown_parameters
           raise ArgumentError, "Unknown argument or return attribute: '#{arg}'"
         end
 
         @arguments[arg] = val if @klass_arguments.include?(arg)
-        instance_variable_set(:"@#{arg}", val) if @klass_returns.include?(arg)
+        send(:"#{arg}=", val) if @klass_returns.include?(arg)
       end
     end
 

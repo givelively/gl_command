@@ -61,7 +61,7 @@ RSpec.describe GlCommand::Base do
       let(:context) { NormalizeEin.context }
       let(:target_methods) do
         %i[arguments assign_parameters chain? ein ein= error error= fail! failure? klass raise_errors?
-           return_or_argument returns success? successful? to_h]
+           returns success? successful? to_h]
       end
 
       it 'is successful and does not raises errors by default' do
@@ -120,7 +120,7 @@ RSpec.describe GlCommand::Base do
       let(:context) { CreateNonprofit.context }
       let(:target_methods) do
         %i[arguments assign_parameters chain? error error= fail! failure? klass nonprofit nonprofit= raise_errors?
-           return_or_argument returns success? successful? to_h]
+           returns success? successful? to_h]
       end
 
       it 'is successful and does not raises errors by default' do
@@ -220,6 +220,32 @@ RSpec.describe GlCommand::Base do
           end.to raise_error(/Numerical argument is out of domain/)
         end
       end
+    end
+  end
+
+  describe 'returns_clobber_class' do
+    let(:returns_clobber_class) do
+      Class.new(GlCommand::Base) do
+        returns :new_array, :array
+
+        def call(array:, item:)
+          context.new_array = array.dup.push(item)
+          context.array = context.new_array
+        end
+      end
+    end
+
+    let(:array) { [1, 2, 3, 4] }
+    let(:new_array) { [1, 2, 3, 4, 6] }
+    let(:result) { returns_clobber_class.call(array:, item: 6) }
+
+    it 'adds to the array' do
+      expect(result).to be_successful
+      expect(array).to eq([1, 2, 3, 4])
+      expect(result.new_array).to eq new_array
+      expect(result.array).to eq new_array
+      expect(result.arguments[:array]).to eq array
+      expect(result.to_h).to eq({array: new_array, item: 6, new_array:})
     end
   end
 

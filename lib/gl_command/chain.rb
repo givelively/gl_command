@@ -32,13 +32,10 @@ module GlCommand
       @chain_called = true
       context.assign_parameters(**args)
       self.class.commands.each do |command|
-        cargs = command.arguments.index_with { |arg| context.return_or_argument(arg) }
+        cargs = context.to_h.slice(*command.arguments).merge(raise_errors: context.raise_errors?)
+        result = command.call(**cargs)
+        context.assign_parameters(skip_unknown_parameters: true, **result.returns)
 
-        result = command.call(**cargs.merge(raise_errors: context.raise_errors?))
-
-        command.returns.each do |creturn|
-          context.send(:"#{creturn}=", result.send(creturn))
-        end
         if result.success?
           context.called << command
         else
