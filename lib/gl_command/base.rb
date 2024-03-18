@@ -73,6 +73,7 @@ module GlCommand
 
     def call_rollbacks
       return if defined?(@rolled_back) # Not sure this is required
+
       @rolled_back = true
 
       chain_rollback if self.class.chain? # defined in GlCommand::Chain

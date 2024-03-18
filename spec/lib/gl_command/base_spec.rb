@@ -105,7 +105,7 @@ RSpec.describe GlCommand::Base do
         expect(result).to be_successful
         expect(result.error).to be_nil
         expect(result.nonprofit.ein).to eq ein
-        expect(result.to_h).to eq({ein:, nonprofit: result.nonprofit})
+        expect(result.to_h).to eq({ ein:, nonprofit: result.nonprofit })
         expect(result).not_to be_raise_errors
       end
 
@@ -202,7 +202,7 @@ RSpec.describe GlCommand::Base do
         expect(result.arguments).to eq({ number: 4 })
         expect(result.root).to eq 2
         expect(result).to be_successful
-        expect(result.to_h).to eq({number:, root: 2})
+        expect(result.to_h).to eq({ number:, root: 2 })
       end
     end
 
