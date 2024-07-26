@@ -2,5 +2,5 @@
 
 ENV['RAILS_ENV'] = 'test'
 
-require 'gl/command'
+require 'gl_command'
 require 'active_record'

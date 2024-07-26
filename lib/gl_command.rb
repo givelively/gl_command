@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'g_l_command/context'
-require 'g_l_command/chainable_context'
-require 'g_l_command/callable'
-require 'g_l_command/chainable'
-require 'g_l_command/validatable'
+require 'gl_command/context_inspect'
+require 'gl_command/context'
+require 'gl_command/chainable_context'
+require 'gl_command/callable'
+require 'gl_command/chainable'
 
 module GLCommand
   class ArgumentTypeError < StandardError; end

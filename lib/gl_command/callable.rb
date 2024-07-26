@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'active_support/core_ext/module'
+require 'gl_command/validatable'
 
 module GLCommand
   class Callable

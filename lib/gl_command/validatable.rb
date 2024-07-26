@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'active_support/concern'
+require 'active_model'
+
 module GLCommand
   module Validatable
     extend ActiveSupport::Concern

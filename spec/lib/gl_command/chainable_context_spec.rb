@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require 'spec_helper'
 require_relative '../../test_command_classes'
 
 RSpec.describe GLCommand::ChainableContext do

@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-require 'g_l_command/context_inspect'
-
 require 'English'
+require 'active_support/core_ext/module'
+require 'gl_command/context_inspect'
+
 module GLCommand
   class Context
     def initialize(klass, raise_errors: false, skip_unknown_parameters: false,
