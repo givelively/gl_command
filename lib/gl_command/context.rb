@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'English'
+# TODO: can we use forwardable instead of ActiveSupport delegate ?
 require 'active_support/core_ext/module'
-require 'gl_command/context_inspect'
 
 module GLCommand
   class Context
