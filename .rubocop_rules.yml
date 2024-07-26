@@ -1,0 +1,2297 @@
+---
+RuboCop-version: 1.60.2 (using Parser 3.3.0.5, rubocop-ast 1.30.0, running on ruby
+  3.2.4)
+Bundler/DuplicatedGem:
+  Severity: warning
+  VersionAdded: '0.46'
+  VersionChanged: '1.40'
+  Include:
+  - "**/*.gemfile"
+  - "**/Gemfile"
+  - "**/gems.rb"
+Bundler/DuplicatedGroup:
+  Severity: warning
+  VersionAdded: '1.56'
+  Include:
+  - "**/*.gemfile"
+  - "**/Gemfile"
+  - "**/gems.rb"
+Bundler/GemFilename:
+  VersionAdded: '1.20'
+  EnforcedStyle: Gemfile
+  Include:
+  - "**/Gemfile"
+  - "**/gems.rb"
+  - "**/Gemfile.lock"
+  - "**/gems.locked"
+Bundler/InsecureProtocolSource:
+  Severity: warning
+  VersionAdded: '0.50'
+  VersionChanged: '1.40'
+  AllowHttpProtocol: true
+  Include:
+  - "**/*.gemfile"
+  - "**/Gemfile"
+  - "**/gems.rb"
+Bundler/OrderedGems:
+  VersionAdded: '0.46'
+  VersionChanged: '0.47'
+  TreatCommentsAsGroupSeparators: true
+  ConsiderPunctuation: false
+  Include:
+  - "**/*.gemfile"
+  - "**/Gemfile"
+  - "**/gems.rb"
+Capybara/CurrentPathExpectation:
+  VersionAdded: '1.18'
+  VersionChanged: '2.0'
+Capybara/VisibilityMatcher:
+  VersionAdded: '1.39'
+  VersionChanged: '2.0'
+FactoryBot/AttributeDefinedStatically:
+  VersionAdded: '1.28'
+  VersionChanged: '2.24'
+FactoryBot/CreateList:
+  Include:
+  - "**/*_spec.rb"
+  - "**/spec/**/*"
+  - "**/test/**/*"
+  - "**/features/support/factories/**/*.rb"
+  EnforcedStyle: create_list
+  ExplicitOnly: false
+  VersionAdded: '1.25'
+  VersionChanged: '2.24'
+FactoryBot/FactoryClassName:
+  VersionAdded: '1.37'
+  VersionChanged: '2.24'
+Gemspec/DuplicatedAssignment:
+  Severity: warning
+  VersionAdded: '0.52'
+  VersionChanged: '1.40'
+  Include:
+  - "**/*.gemspec"
+Gemspec/OrderedDependencies:
+  VersionAdded: '0.51'
+  TreatCommentsAsGroupSeparators: true
+  ConsiderPunctuation: false
+  Include:
+  - "**/*.gemspec"
+Gemspec/RubyVersionGlobalsUsage:
+  Severity: warning
+  VersionAdded: '0.72'
+  VersionChanged: '1.40'
+  Include:
+  - "**/*.gemspec"
+Layout/AccessModifierIndentation:
+  VersionAdded: '0.49'
+  EnforcedStyle: indent
+  IndentationWidth:
+Layout/ArgumentAlignment:
+  VersionAdded: '0.68'
+  VersionChanged: '0.77'
+  EnforcedStyle: with_first_argument
+  IndentationWidth:
+Layout/ArrayAlignment:
+  VersionAdded: '0.49'
+  VersionChanged: '0.77'
+  EnforcedStyle: with_first_element
+  IndentationWidth:
+Layout/AssignmentIndentation:
+  VersionAdded: '0.49'
+  VersionChanged: '1.45'
+  IndentationWidth:
+Layout/BeginEndAlignment:
+  VersionAdded: '0.91'
+  EnforcedStyleAlignWith: start_of_line
+  SupportedStylesAlignWith:
+  - start_of_line
+  - begin
+  Severity: warning
+Layout/BlockAlignment:
+  VersionAdded: '0.53'
+  EnforcedStyleAlignWith: either
+  SupportedStylesAlignWith:
+  - either
+  - start_of_block
+  - start_of_line
+Layout/BlockEndNewline:
+  VersionAdded: '0.49'
+Layout/CaseIndentation:
+  VersionAdded: '0.49'
+  VersionChanged: '1.16'
+  EnforcedStyle: case
+  IndentOneStep: false
+  IndentationWidth:
+Layout/ClosingHeredocIndentation:
+  VersionAdded: '0.57'
+Layout/ClosingParenthesisIndentation:
+  VersionAdded: '0.49'
+Layout/CommentIndentation:
+  AllowForAlignment: false
+  VersionAdded: '0.49'
+  VersionChanged: '1.24'
+Layout/ConditionPosition:
+  VersionAdded: '0.53'
+  VersionChanged: '0.83'
+Layout/DefEndAlignment:
+  VersionAdded: '0.53'
+  EnforcedStyleAlignWith: start_of_line
+  SupportedStylesAlignWith:
+  - start_of_line
+  - def
+  Severity: warning
+Layout/DotPosition:
+  VersionAdded: '0.49'
+  EnforcedStyle: leading
+Layout/ElseAlignment:
+  VersionAdded: '0.49'
+Layout/EmptyComment:
+  VersionAdded: '0.53'
+  AllowBorderComment: true
+  AllowMarginComment: true
+Layout/EmptyLineAfterGuardClause:
+  VersionAdded: '0.56'
+  VersionChanged: '0.59'
+Layout/EmptyLineAfterMagicComment:
+  VersionAdded: '0.49'
+Layout/EmptyLineBetweenDefs:
+  VersionAdded: '0.49'
+  VersionChanged: '1.23'
+  EmptyLineBetweenMethodDefs: true
+  EmptyLineBetweenClassDefs: true
+  EmptyLineBetweenModuleDefs: true
+  DefLikeMacros: []
+  AllowAdjacentOneLineDefs: true
+  NumberOfEmptyLines: 1
+Layout/EmptyLines:
+  VersionAdded: '0.49'
+Layout/EmptyLinesAroundAccessModifier:
+  VersionAdded: '0.49'
+  EnforcedStyle: around
+Layout/EmptyLinesAroundArguments:
+  VersionAdded: '0.52'
+Layout/EmptyLinesAroundAttributeAccessor:
+  VersionAdded: '0.83'
+  VersionChanged: '0.84'
+  AllowAliasSyntax: true
+  AllowedMethods:
+  - alias_method
+  - public
+  - protected
+  - private
+Layout/EmptyLinesAroundBeginBody:
+  VersionAdded: '0.49'
+Layout/EmptyLinesAroundBlockBody:
+  VersionAdded: '0.49'
+  EnforcedStyle: no_empty_lines
+Layout/EmptyLinesAroundClassBody:
+  VersionAdded: '0.49'
+  VersionChanged: '0.53'
+  EnforcedStyle: no_empty_lines
+Layout/EmptyLinesAroundExceptionHandlingKeywords:
+  VersionAdded: '0.49'
+Layout/EmptyLinesAroundMethodBody:
+  VersionAdded: '0.49'
+Layout/EmptyLinesAroundModuleBody:
+  VersionAdded: '0.49'
+  EnforcedStyle: no_empty_lines
+Layout/EndAlignment:
+  VersionAdded: '0.53'
+  EnforcedStyleAlignWith: keyword
+  SupportedStylesAlignWith:
+  - keyword
+  - variable
+  - start_of_line
+  Severity: warning
+Layout/EndOfLine:
+  VersionAdded: '0.49'
+  EnforcedStyle: native
+Layout/ExtraSpacing:
+  VersionAdded: '0.49'
+  AllowForAlignment: true
+  AllowBeforeTrailingComments: false
+  ForceEqualSignAlignment: false
+Layout/FirstArgumentIndentation:
+  VersionAdded: '0.68'
+  VersionChanged: '0.77'
+  EnforcedStyle: special_for_inner_method_call_in_parentheses
+  IndentationWidth:
+Layout/FirstArrayElementIndentation:
+  VersionAdded: '0.68'
+  VersionChanged: '0.77'
+  EnforcedStyle: special_inside_parentheses
+  IndentationWidth:
+Layout/FirstHashElementIndentation:
+  VersionAdded: '0.68'
+  VersionChanged: '0.77'
+  EnforcedStyle: special_inside_parentheses
+  IndentationWidth:
+Layout/FirstParameterIndentation:
+  VersionAdded: '0.49'
+  VersionChanged: '0.77'
+  EnforcedStyle: consistent
+  IndentationWidth:
+Layout/HashAlignment:
+  AllowMultipleStyles: true
+  VersionAdded: '0.49'
+  VersionChanged: '1.16'
+  EnforcedHashRocketStyle: key
+  SupportedHashRocketStyles:
+  - key
+  - separator
+  - table
+  EnforcedColonStyle: key
+  SupportedColonStyles:
+  - key
+  - separator
+  - table
+  EnforcedLastArgumentHashStyle: always_inspect
+  SupportedLastArgumentHashStyles:
+  - always_inspect
+  - always_ignore
+  - ignore_implicit
+  - ignore_explicit
+Layout/HeredocIndentation:
+  VersionAdded: '0.49'
+  VersionChanged: '0.85'
+Layout/IndentationConsistency:
+  VersionAdded: '0.49'
+  EnforcedStyle: normal
+Layout/IndentationStyle:
+  VersionAdded: '0.49'
+  VersionChanged: '0.82'
+  IndentationWidth:
+  EnforcedStyle: spaces
+Layout/IndentationWidth:
+  VersionAdded: '0.49'
+  Width: 2
+  AllowedPatterns: []
+Layout/InitialIndentation:
+  VersionAdded: '0.49'
+Layout/LeadingCommentSpace:
+  VersionAdded: '0.49'
+  VersionChanged: '0.73'
+  AllowDoxygenCommentStyle: false
+  AllowGemfileRubyComment: false
+Layout/LeadingEmptyLines:
+  VersionAdded: '0.57'
+  VersionChanged: '0.77'
+Layout/LineLength:
+  VersionAdded: '0.25'
+  VersionChanged: '1.4'
+  Max: 120
+  AllowHeredoc: true
+  AllowURI: true
+  URISchemes:
+  - http
+  - https
+  IgnoreCopDirectives: true
+  AllowedPatterns: []
+Layout/MultilineArrayBraceLayout:
+  VersionAdded: '0.49'
+  EnforcedStyle: symmetrical
+Layout/MultilineBlockLayout:
+  VersionAdded: '0.49'
+Layout/MultilineHashBraceLayout:
+  VersionAdded: '0.49'
+  EnforcedStyle: symmetrical
+Layout/MultilineMethodCallBraceLayout:
+  VersionAdded: '0.49'
+  EnforcedStyle: symmetrical
+Layout/MultilineMethodCallIndentation:
+  VersionAdded: '0.49'
+  EnforcedStyle: aligned
+  IndentationWidth:
+Layout/MultilineMethodDefinitionBraceLayout:
+  VersionAdded: '0.49'
+  EnforcedStyle: symmetrical
+Layout/MultilineOperationIndentation:
+  VersionAdded: '0.49'
+  EnforcedStyle: aligned
+  IndentationWidth:
+Layout/ParameterAlignment:
+  VersionAdded: '0.49'
+  VersionChanged: '0.77'
+  EnforcedStyle: with_first_parameter
+  IndentationWidth:
+Layout/RescueEnsureAlignment:
+  VersionAdded: '0.49'
+Layout/SpaceAfterColon:
+  VersionAdded: '0.49'
+Layout/SpaceAfterComma:
+  VersionAdded: '0.49'
+Layout/SpaceAfterMethodName:
+  VersionAdded: '0.49'
+Layout/SpaceAfterNot:
+  VersionAdded: '0.49'
+Layout/SpaceAfterSemicolon:
+  VersionAdded: '0.49'
+Layout/SpaceAroundBlockParameters:
+  VersionAdded: '0.49'
+  EnforcedStyleInsidePipes: no_space
+  SupportedStylesInsidePipes:
+  - space
+  - no_space
+Layout/SpaceAroundEqualsInParameterDefault:
+  VersionAdded: '0.49'
+  EnforcedStyle: space
+Layout/SpaceAroundKeyword:
+  VersionAdded: '0.49'
+Layout/SpaceAroundMethodCallOperator:
+  VersionAdded: '0.82'
+Layout/SpaceAroundOperators:
+  VersionAdded: '0.49'
+  AllowForAlignment: true
+  EnforcedStyleForExponentOperator: no_space
+  SupportedStylesForExponentOperator:
+  - space
+  - no_space
+  EnforcedStyleForRationalLiterals: no_space
+  SupportedStylesForRationalLiterals:
+  - space
+  - no_space
+Layout/SpaceBeforeBlockBraces:
+  VersionAdded: '0.49'
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: space
+  SupportedStylesForEmptyBraces:
+  - space
+  - no_space
+  VersionChanged: '0.52'
+Layout/SpaceBeforeComma:
+  VersionAdded: '0.49'
+Layout/SpaceBeforeComment:
+  VersionAdded: '0.49'
+Layout/SpaceBeforeFirstArg:
+  VersionAdded: '0.49'
+  AllowForAlignment: true
+Layout/SpaceBeforeSemicolon:
+  VersionAdded: '0.49'
+Layout/SpaceInLambdaLiteral:
+  VersionAdded: '0.49'
+  EnforcedStyle: require_no_space
+Layout/SpaceInsideArrayLiteralBrackets:
+  VersionAdded: '0.52'
+  EnforcedStyle: no_space
+  EnforcedStyleForEmptyBrackets: no_space
+  SupportedStylesForEmptyBrackets:
+  - space
+  - no_space
+Layout/SpaceInsideArrayPercentLiteral:
+  VersionAdded: '0.49'
+Layout/SpaceInsideBlockBraces:
+  VersionAdded: '0.49'
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: no_space
+  SupportedStylesForEmptyBraces:
+  - space
+  - no_space
+  SpaceBeforeBlockParameters: true
+Layout/SpaceInsideHashLiteralBraces:
+  VersionAdded: '0.49'
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: no_space
+  SupportedStylesForEmptyBraces:
+  - space
+  - no_space
+Layout/SpaceInsideParens:
+  VersionAdded: '0.49'
+  VersionChanged: '1.22'
+  EnforcedStyle: no_space
+Layout/SpaceInsidePercentLiteralDelimiters:
+  VersionAdded: '0.49'
+Layout/SpaceInsideRangeLiteral:
+  VersionAdded: '0.49'
+Layout/SpaceInsideReferenceBrackets:
+  VersionAdded: '0.52'
+  VersionChanged: '0.53'
+  EnforcedStyle: no_space
+  EnforcedStyleForEmptyBrackets: no_space
+  SupportedStylesForEmptyBrackets:
+  - space
+  - no_space
+Layout/SpaceInsideStringInterpolation:
+  VersionAdded: '0.49'
+  EnforcedStyle: no_space
+Layout/TrailingEmptyLines:
+  VersionAdded: '0.49'
+  VersionChanged: '0.77'
+  EnforcedStyle: final_newline
+Layout/TrailingWhitespace:
+  VersionAdded: '0.49'
+  VersionChanged: '1.0'
+  AllowInHeredoc: false
+Lint/AmbiguousBlockAssociation:
+  VersionAdded: '0.48'
+  VersionChanged: '1.13'
+  AllowedMethods: []
+  AllowedPatterns: []
+Lint/AmbiguousOperator:
+  VersionAdded: '0.17'
+  VersionChanged: '0.83'
+Lint/AmbiguousRegexpLiteral:
+  VersionAdded: '0.17'
+  VersionChanged: '0.83'
+Lint/AssignmentInCondition:
+  VersionAdded: '0.9'
+  VersionChanged: '1.45'
+  AllowSafeAssignment: true
+Lint/BigDecimalNew:
+  VersionAdded: '0.53'
+Lint/BinaryOperatorWithIdenticalOperands:
+  VersionAdded: '0.89'
+  VersionChanged: '1.7'
+Lint/BooleanSymbol:
+  VersionAdded: '0.50'
+  VersionChanged: '1.22'
+Lint/CircularArgumentReference:
+  VersionAdded: '0.33'
+Lint/ConstantDefinitionInBlock:
+  VersionAdded: '0.91'
+  VersionChanged: '1.3'
+  AllowedMethods:
+  - enums
+Lint/Debugger:
+  VersionAdded: '0.14'
+  VersionChanged: '1.46'
+  DebuggerMethods:
+    Kernel:
+    - binding.irb
+    - Kernel.binding.irb
+    Byebug:
+    - byebug
+    - remote_byebug
+    - Kernel.byebug
+    - Kernel.remote_byebug
+    Capybara:
+    - save_and_open_page
+    - save_and_open_screenshot
+    debug.rb:
+    - binding.b
+    - binding.break
+    - Kernel.binding.b
+    - Kernel.binding.break
+    Pry:
+    - binding.pry
+    - binding.remote_pry
+    - binding.pry_remote
+    - Kernel.binding.pry
+    - Kernel.binding.remote_pry
+    - Kernel.binding.pry_remote
+    - Pry.rescue
+    - pry
+    Rails:
+    - debugger
+    - Kernel.debugger
+    RubyJard:
+    - jard
+    WebConsole:
+    - binding.console
+Lint/DeprecatedClassMethods:
+  VersionAdded: '0.19'
+Lint/DeprecatedOpenSSLConstant:
+  VersionAdded: '0.84'
+Lint/DisjunctiveAssignmentInConstructor:
+  VersionAdded: '0.62'
+  VersionChanged: '0.88'
+Lint/DuplicateCaseCondition:
+  VersionAdded: '0.45'
+Lint/DuplicateElsifCondition:
+  VersionAdded: '0.88'
+Lint/DuplicateHashKey:
+  VersionAdded: '0.34'
+  VersionChanged: '0.77'
+Lint/DuplicateMethods:
+  VersionAdded: '0.29'
+Lint/DuplicateRequire:
+  VersionAdded: '0.90'
+  VersionChanged: '1.28'
+Lint/DuplicateRescueException:
+  VersionAdded: '0.89'
+Lint/EachWithObjectArgument:
+  VersionAdded: '0.31'
+Lint/ElseLayout:
+  VersionAdded: '0.17'
+  VersionChanged: '1.2'
+Lint/EmptyConditionalBody:
+  AllowComments: true
+  VersionAdded: '0.89'
+  VersionChanged: '1.34'
+Lint/EmptyEnsure:
+  VersionAdded: '0.10'
+  VersionChanged: '0.48'
+Lint/EmptyExpression:
+  VersionAdded: '0.45'
+Lint/EmptyFile:
+  AllowComments: true
+  VersionAdded: '0.90'
+Lint/EmptyInterpolation:
+  VersionAdded: '0.20'
+  VersionChanged: '0.45'
+Lint/EmptyWhen:
+  AllowComments: true
+  VersionAdded: '0.45'
+  VersionChanged: '0.83'
+Lint/EnsureReturn:
+  VersionAdded: '0.9'
+  VersionChanged: '0.83'
+Lint/ErbNewArguments:
+  VersionAdded: '0.56'
+Lint/FlipFlop:
+  VersionAdded: '0.16'
+Lint/FloatComparison:
+  VersionAdded: '0.89'
+Lint/FloatOutOfRange:
+  VersionAdded: '0.36'
+Lint/FormatParameterMismatch:
+  VersionAdded: '0.33'
+Lint/HashCompareByIdentity:
+  VersionAdded: '0.93'
+Lint/IdentityComparison:
+  VersionAdded: '0.91'
+Lint/ImplicitStringConcatenation:
+  VersionAdded: '0.36'
+Lint/IneffectiveAccessModifier:
+  VersionAdded: '0.36'
+Lint/InheritException:
+  VersionAdded: '0.41'
+  VersionChanged: '1.26'
+  EnforcedStyle: standard_error
+Lint/InterpolationCheck:
+  VersionAdded: '0.50'
+  VersionChanged: '1.40'
+Lint/LiteralAsCondition:
+  VersionAdded: '0.51'
+Lint/LiteralInInterpolation:
+  VersionAdded: '0.19'
+  VersionChanged: '0.32'
+Lint/Loop:
+  VersionAdded: '0.9'
+  VersionChanged: '1.3'
+Lint/MissingCopEnableDirective:
+  VersionAdded: '0.52'
+  MaximumRangeSize: .inf
+Lint/MissingSuper:
+  AllowedParentClasses: []
+  VersionAdded: '0.89'
+  VersionChanged: '1.4'
+Lint/MixedRegexpCaptureTypes:
+  VersionAdded: '0.85'
+Lint/MultipleComparison:
+  VersionAdded: '0.47'
+  VersionChanged: '1.1'
+Lint/NestedMethodDefinition:
+  AllowedMethods: []
+  AllowedPatterns: []
+  VersionAdded: '0.32'
+Lint/NestedPercentLiteral:
+  VersionAdded: '0.52'
+Lint/NextWithoutAccumulator:
+  VersionAdded: '0.36'
+Lint/NonDeterministicRequireOrder:
+  VersionAdded: '0.78'
+Lint/NonLocalExitFromIterator:
+  VersionAdded: '0.30'
+Lint/OrderedMagicComments:
+  VersionAdded: '0.53'
+  VersionChanged: '1.37'
+Lint/OutOfRangeRegexpRef:
+  VersionAdded: '0.89'
+Lint/ParenthesesAsGroupedExpression:
+  VersionAdded: '0.12'
+  VersionChanged: '0.83'
+Lint/PercentStringArray:
+  VersionAdded: '0.41'
+Lint/PercentSymbolArray:
+  VersionAdded: '0.41'
+Lint/RaiseException:
+  VersionAdded: '0.81'
+  VersionChanged: '0.86'
+  AllowedImplicitNamespaces:
+  - Gem
+Lint/RandOne:
+  VersionAdded: '0.36'
+Lint/RedundantCopDisableDirective:
+  VersionAdded: '0.76'
+Lint/RedundantCopEnableDirective:
+  VersionAdded: '0.76'
+Lint/RedundantRequireStatement:
+  VersionAdded: '0.76'
+  VersionChanged: '1.57'
+Lint/RedundantSafeNavigation:
+  VersionAdded: '0.93'
+  AllowedMethods:
+  - instance_of?
+  - kind_of?
+  - is_a?
+  - eql?
+  - respond_to?
+  - equal?
+Lint/RedundantSplatExpansion:
+  VersionAdded: '0.76'
+  VersionChanged: '1.7'
+  AllowPercentLiteralArrayArgument: true
+Lint/RedundantStringCoercion:
+  VersionAdded: '0.19'
+  VersionChanged: '0.77'
+Lint/RedundantWithIndex:
+  VersionAdded: '0.50'
+Lint/RedundantWithObject:
+  VersionAdded: '0.51'
+Lint/RegexpAsCondition:
+  VersionAdded: '0.51'
+  VersionChanged: '0.86'
+Lint/RequireParentheses:
+  VersionAdded: '0.18'
+Lint/RescueException:
+  VersionAdded: '0.9'
+  VersionChanged: '0.27'
+Lint/RescueType:
+  VersionAdded: '0.49'
+Lint/ReturnInVoidContext:
+  VersionAdded: '0.50'
+Lint/SafeNavigationChain:
+  VersionAdded: '0.47'
+  VersionChanged: '0.77'
+  AllowedMethods:
+  - present?
+  - blank?
+  - presence
+  - try
+  - try!
+  - in?
+Lint/SafeNavigationConsistency:
+  VersionAdded: '0.55'
+  VersionChanged: '0.77'
+  AllowedMethods:
+  - present?
+  - blank?
+  - presence
+  - try
+  - try!
+Lint/SafeNavigationWithEmpty:
+  VersionAdded: '0.62'
+  VersionChanged: '0.87'
+Lint/ScriptPermission:
+  VersionAdded: '0.49'
+  VersionChanged: '0.50'
+Lint/SelfAssignment:
+  VersionAdded: '0.89'
+Lint/SendWithMixinArgument:
+  VersionAdded: '0.75'
+Lint/ShadowedArgument:
+  VersionAdded: '0.52'
+  IgnoreImplicitReferences: false
+Lint/ShadowedException:
+  VersionAdded: '0.41'
+Lint/ShadowingOuterLocalVariable:
+  VersionAdded: '0.9'
+Lint/StructNewOverride:
+  VersionAdded: '0.81'
+Lint/SuppressedException:
+  AllowComments: true
+  AllowNil: true
+  VersionAdded: '0.9'
+  VersionChanged: '1.12'
+Lint/Syntax:
+  VersionAdded: '0.9'
+Lint/ToJSON:
+  VersionAdded: '0.66'
+Lint/TopLevelReturnWithArgument:
+  VersionAdded: '0.89'
+  Exclude:
+  - "/**/*.jb"
+Lint/TrailingCommaInAttributeDeclaration:
+  VersionAdded: '0.90'
+Lint/UnderscorePrefixedVariableName:
+  VersionAdded: '0.21'
+  AllowKeywordBlockArguments: false
+Lint/UnifiedInteger:
+  VersionAdded: '0.43'
+Lint/UnreachableCode:
+  VersionAdded: '0.9'
+Lint/UnreachableLoop:
+  VersionAdded: '0.89'
+  VersionChanged: '1.7'
+  AllowedPatterns:
+  - !ruby/regexp /(exactly|at_least|at_most)\(\d+\)\.times/
+Lint/UnusedBlockArgument:
+  VersionAdded: '0.21'
+  VersionChanged: '0.22'
+  IgnoreEmptyBlocks: true
+  AllowUnusedKeywordArguments: false
+Lint/UnusedMethodArgument:
+  VersionAdded: '0.21'
+  VersionChanged: '0.81'
+  AllowUnusedKeywordArguments: false
+  IgnoreEmptyMethods: true
+  IgnoreNotImplementedMethods: true
+Lint/UriEscapeUnescape:
+  VersionAdded: '0.50'
+Lint/UriRegexp:
+  VersionAdded: '0.50'
+Lint/UselessAccessModifier:
+  VersionAdded: '0.20'
+  VersionChanged: '0.83'
+  ContextCreatingMethods: []
+  MethodCreatingMethods: []
+Lint/UselessAssignment:
+  VersionAdded: '0.11'
+  VersionChanged: '1.51'
+Lint/UselessElseWithoutRescue:
+  VersionAdded: '0.17'
+  VersionChanged: '1.31'
+Lint/UselessMethodDefinition:
+  VersionAdded: '0.90'
+  VersionChanged: '0.91'
+Lint/UselessSetterCall:
+  VersionAdded: '0.13'
+  VersionChanged: '1.2'
+Lint/UselessTimes:
+  VersionAdded: '0.91'
+Lint/Void:
+  VersionAdded: '0.9'
+  CheckForMethodsWithNoSideEffects: false
+Metrics/AbcSize:
+  VersionAdded: '0.27'
+  VersionChanged: '1.5'
+  AllowedMethods: []
+  AllowedPatterns: []
+  CountRepeatedAttributes: true
+  Max: 17
+Metrics/BlockLength:
+  VersionAdded: '0.44'
+  VersionChanged: '1.5'
+  CountComments: false
+  Max: 25
+  CountAsOne: []
+  AllowedMethods:
+  - refine
+  AllowedPatterns: []
+  Exclude:
+  - "/**/*.gemspec"
+  - "**/*_spec.rb"
+  - "**/spec/**/*"
+  inherit_mode:
+    merge:
+    - Exclude
+Metrics/BlockNesting:
+  VersionAdded: '0.25'
+  VersionChanged: '0.47'
+  CountBlocks: false
+  Max: 3
+Metrics/ClassLength:
+  VersionAdded: '0.25'
+  VersionChanged: '0.87'
+  CountComments: false
+  Max: 100
+  CountAsOne: []
+Metrics/CyclomaticComplexity:
+  VersionAdded: '0.25'
+  VersionChanged: '0.81'
+  AllowedMethods: []
+  AllowedPatterns: []
+  Max: 7
+Metrics/MethodLength:
+  VersionAdded: '0.25'
+  VersionChanged: '1.5'
+  CountComments: false
+  Max: 10
+  CountAsOne: []
+  AllowedMethods: []
+  AllowedPatterns: []
+Metrics/ModuleLength:
+  VersionAdded: '0.31'
+  VersionChanged: '0.87'
+  CountComments: false
+  Max: 100
+  CountAsOne: []
+Metrics/ParameterLists:
+  VersionAdded: '0.25'
+  VersionChanged: '1.5'
+  Max: 5
+  CountKeywordArgs: true
+  MaxOptionalParameters: 3
+Metrics/PerceivedComplexity:
+  VersionAdded: '0.25'
+  VersionChanged: '0.81'
+  AllowedMethods: []
+  AllowedPatterns: []
+  Max: 8
+Migration/DepartmentName:
+  VersionAdded: '0.75'
+Naming/AccessorMethodName:
+  VersionAdded: '0.50'
+Naming/AsciiIdentifiers:
+  VersionAdded: '0.50'
+  VersionChanged: '0.87'
+  AsciiConstants: true
+Naming/BinaryOperatorParameterName:
+  VersionAdded: '0.50'
+  VersionChanged: '1.2'
+Naming/BlockParameterName:
+  VersionAdded: '0.53'
+  VersionChanged: '0.77'
+  MinNameLength: 1
+  AllowNamesEndingInNumbers: true
+  AllowedNames: []
+  ForbiddenNames: []
+Naming/ClassAndModuleCamelCase:
+  VersionAdded: '0.50'
+  VersionChanged: '0.85'
+  AllowedNames:
+  - module_parent
+Naming/ConstantName:
+  VersionAdded: '0.50'
+Naming/FileName:
+  VersionAdded: '0.50'
+  VersionChanged: '1.23'
+  Exclude: []
+  ExpectMatchingDefinition: false
+  CheckDefinitionPathHierarchy: true
+  CheckDefinitionPathHierarchyRoots:
+  - lib
+  - spec
+  - test
+  - src
+  Regex:
+  IgnoreExecutableScripts: true
+  AllowedAcronyms:
+  - CLI
+  - DSL
+  - ACL
+  - API
+  - ASCII
+  - CPU
+  - CSS
+  - DNS
+  - EOF
+  - GUID
+  - HTML
+  - HTTP
+  - HTTPS
+  - ID
+  - IP
+  - JSON
+  - LHS
+  - QPS
+  - RAM
+  - RHS
+  - RPC
+  - SLA
+  - SMTP
+  - SQL
+  - SSH
+  - TCP
+  - TLS
+  - TTL
+  - UDP
+  - UI
+  - UID
+  - UUID
+  - URI
+  - URL
+  - UTF8
+  - VM
+  - XML
+  - XMPP
+  - XSRF
+  - XSS
+Naming/HeredocDelimiterCase:
+  VersionAdded: '0.50'
+  VersionChanged: '1.2'
+  EnforcedStyle: uppercase
+Naming/HeredocDelimiterNaming:
+  VersionAdded: '0.50'
+  ForbiddenDelimiters:
+  - !ruby/regexp /(^|\s)(EO[A-Z]{1}|END)(\s|$)/i
+Naming/MemoizedInstanceVariableName:
+  VersionAdded: '0.53'
+  VersionChanged: '1.2'
+  EnforcedStyleForLeadingUnderscores: disallowed
+  SupportedStylesForLeadingUnderscores:
+  - disallowed
+  - required
+  - optional
+Naming/MethodName:
+  VersionAdded: '0.50'
+  EnforcedStyle: snake_case
+  AllowedPatterns: []
+Naming/MethodParameterName:
+  VersionAdded: '0.53'
+  VersionChanged: '0.77'
+  MinNameLength: 3
+  AllowNamesEndingInNumbers: true
+  AllowedNames:
+  - as
+  - at
+  - by
+  - cc
+  - db
+  - id
+  - if
+  - in
+  - io
+  - ip
+  - of
+  - 'on'
+  - os
+  - pp
+  - to
+  ForbiddenNames: []
+Naming/PredicateName:
+  VersionAdded: '0.50'
+  VersionChanged: '0.77'
+  NamePrefix:
+  - is_
+  - has_
+  - have_
+  ForbiddenPrefixes:
+  - is_
+  - has_
+  - have_
+  AllowedMethods:
+  - is_a?
+  MethodDefinitionMacros:
+  - define_method
+  - define_singleton_method
+  Exclude:
+  - "/spec/**/*"
+Naming/RescuedExceptionsVariableName:
+  VersionAdded: '0.67'
+  VersionChanged: '0.68'
+  PreferredName: e
+Naming/VariableName:
+  VersionAdded: '0.50'
+  VersionChanged: '1.8'
+  EnforcedStyle: snake_case
+  AllowedIdentifiers: []
+  AllowedPatterns: []
+Naming/VariableNumber:
+  VersionAdded: '0.50'
+  VersionChanged: '1.4'
+  EnforcedStyle: normalcase
+  CheckMethodNames: true
+  CheckSymbols: true
+  AllowedIdentifiers:
+  - capture3
+  - iso8601
+  - rfc1123_date
+  - rfc822
+  - rfc2822
+  - rfc3339
+  - x86_64
+  AllowedPatterns: []
+Performance/BindCall:
+  VersionAdded: '1.6'
+Performance/Caller:
+  VersionAdded: '0.49'
+  VersionChanged: '1.9'
+Performance/Casecmp:
+  VersionAdded: '0.36'
+Performance/CompareWithBlock:
+  VersionAdded: '0.46'
+Performance/Count:
+  VersionAdded: '0.31'
+  VersionChanged: '1.8'
+Performance/DeletePrefix:
+  SafeMultiline: true
+  VersionAdded: '1.6'
+  VersionChanged: '1.11'
+Performance/DeleteSuffix:
+  SafeMultiline: true
+  VersionAdded: '1.6'
+  VersionChanged: '1.11'
+Performance/Detect:
+  VersionAdded: '0.30'
+  VersionChanged: '1.8'
+Performance/DoubleStartEndWith:
+  VersionAdded: '0.36'
+  VersionChanged: '0.48'
+  IncludeActiveSupportAliases: false
+Performance/EndWith:
+  SafeMultiline: true
+  VersionAdded: '0.36'
+  VersionChanged: '1.10'
+Performance/FixedSize:
+  VersionAdded: '0.35'
+Performance/FlatMap:
+  VersionAdded: '0.30'
+  EnabledForFlattenWithoutParams: false
+Performance/InefficientHashSearch:
+  VersionAdded: '0.56'
+Performance/RangeInclude:
+  VersionAdded: '0.36'
+  VersionChanged: '1.7'
+Performance/RedundantBlockCall:
+  VersionAdded: '0.36'
+Performance/RedundantMatch:
+  VersionAdded: '0.36'
+Performance/RedundantMerge:
+  VersionAdded: '0.36'
+  VersionChanged: '1.11'
+  MaxKeyValuePairs: 2
+Performance/RegexpMatch:
+  VersionAdded: '0.47'
+Performance/ReverseEach:
+  VersionAdded: '0.30'
+Performance/Size:
+  VersionAdded: '0.30'
+Performance/StartWith:
+  SafeMultiline: true
+  VersionAdded: '0.36'
+  VersionChanged: '1.10'
+Performance/StringReplacement:
+  VersionAdded: '0.33'
+Performance/TimesMap:
+  VersionAdded: '0.36'
+  VersionChanged: '1.13'
+Performance/UnfreezeString:
+  VersionAdded: '0.50'
+  VersionChanged: '1.9'
+Performance/UriDefaultParser:
+  VersionAdded: '0.50'
+RSpec/AnyInstance:
+  VersionAdded: '1.4'
+RSpec/AroundBlock:
+  VersionAdded: '1.11'
+RSpec/Be:
+  VersionAdded: '1.25'
+RSpec/BeEql:
+  VersionAdded: '1.7'
+  VersionChanged: '2.16'
+RSpec/BeforeAfterAll:
+  Exclude:
+  - "**/spec/spec_helper.rb"
+  - "**/spec/rails_helper.rb"
+  - "**/spec/support/**/*.rb"
+  VersionAdded: '1.12'
+  VersionChanged: '2.23'
+RSpec/ContextMethod:
+  VersionAdded: '1.36'
+RSpec/ContextWording:
+  Prefixes:
+  - when
+  - with
+  - without
+  AllowedPatterns: []
+  VersionAdded: '1.20'
+  VersionChanged: '2.13'
+RSpec/DescribeClass:
+  Exclude:
+  - "**/spec/features/**/*"
+  - "**/spec/requests/**/*"
+  - "**/spec/routing/**/*"
+  - "**/spec/system/**/*"
+  - "**/spec/views/**/*"
+  IgnoredMetadata:
+    type:
+    - channel
+    - controller
+    - helper
+    - job
+    - mailer
+    - model
+    - request
+    - routing
+    - view
+    - feature
+    - system
+    - mailbox
+    - aruba
+    - task
+  VersionAdded: '1.0'
+  VersionChanged: '2.7'
+RSpec/DescribeMethod:
+  VersionAdded: '1.0'
+RSpec/DescribeSymbol:
+  VersionAdded: '1.15'
+RSpec/DescribedClass:
+  SkipBlocks: false
+  EnforcedStyle: described_class
+  VersionAdded: '1.0'
+  VersionChanged: '1.11'
+RSpec/EmptyExampleGroup:
+  VersionAdded: '1.7'
+  VersionChanged: '2.13'
+RSpec/EmptyHook:
+  VersionAdded: '1.39'
+RSpec/EmptyLineAfterExample:
+  AllowConsecutiveOneLiners: true
+  VersionAdded: '1.36'
+RSpec/EmptyLineAfterExampleGroup:
+  VersionAdded: '1.27'
+RSpec/EmptyLineAfterFinalLet:
+  VersionAdded: '1.14'
+RSpec/EmptyLineAfterHook:
+  VersionAdded: '1.27'
+  VersionChanged: '2.13'
+  AllowConsecutiveOneLiners: true
+RSpec/EmptyLineAfterSubject:
+  VersionAdded: '1.14'
+RSpec/ExampleLength:
+  Max: 5
+  CountAsOne: []
+  VersionAdded: '1.5'
+  VersionChanged: '2.3'
+RSpec/ExampleWithoutDescription:
+  EnforcedStyle: always_allow
+  VersionAdded: '1.22'
+RSpec/ExampleWording:
+  CustomTransform:
+    be: is
+    BE: IS
+    have: has
+    HAVE: HAS
+  IgnoredWords: []
+  DisallowedExamples:
+  - works
+  VersionAdded: '1.0'
+  VersionChanged: '2.13'
+RSpec/ExpectActual:
+  Exclude:
+  - "**/spec/routing/**/*"
+  VersionAdded: '1.7'
+  VersionChanged: '2.23'
+RSpec/ExpectChange:
+  EnforcedStyle: method_call
+  VersionAdded: '1.22'
+  VersionChanged: '2.5'
+RSpec/ExpectInHook:
+  VersionAdded: '1.16'
+RSpec/ExpectOutput:
+  VersionAdded: '1.10'
+RSpec/FilePath:
+  Include:
+  - "**/*_spec*rb*"
+  - "**/spec/**/*"
+  CustomTransform:
+    RuboCop: rubocop
+    RSpec: rspec
+  IgnoreMethods: false
+  SpecSuffixOnly: false
+  VersionAdded: '1.2'
+  VersionChanged: '2.24'
+RSpec/Focus:
+  VersionAdded: '1.5'
+  VersionChanged: '2.1'
+RSpec/HookArgument:
+  EnforcedStyle: implicit
+  VersionAdded: '1.7'
+RSpec/HooksBeforeExamples:
+  VersionAdded: '1.29'
+RSpec/ImplicitBlockExpectation:
+  VersionAdded: '1.35'
+RSpec/ImplicitExpect:
+  EnforcedStyle: is_expected
+  VersionAdded: '1.8'
+RSpec/ImplicitSubject:
+  EnforcedStyle: single_line_only
+  VersionAdded: '1.29'
+  VersionChanged: '2.13'
+RSpec/InstanceSpy:
+  VersionAdded: '1.12'
+RSpec/InstanceVariable:
+  AssignmentOnly: false
+  VersionAdded: '1.0'
+  VersionChanged: '1.7'
+RSpec/ItBehavesLike:
+  EnforcedStyle: it_behaves_like
+  VersionAdded: '1.13'
+RSpec/IteratedExpectation:
+  VersionAdded: '1.14'
+RSpec/LeadingSubject:
+  VersionAdded: '1.7'
+  VersionChanged: '1.14'
+RSpec/LeakyConstantDeclaration:
+  VersionAdded: '1.35'
+RSpec/LetBeforeExamples:
+  VersionAdded: '1.16'
+  VersionChanged: '1.22'
+RSpec/LetSetup:
+  VersionAdded: '1.7'
+RSpec/MessageChain:
+  VersionAdded: '1.7'
+RSpec/MessageSpies:
+  EnforcedStyle: have_received
+  VersionAdded: '1.9'
+RSpec/MissingExampleGroupArgument:
+  VersionAdded: '1.28'
+RSpec/MultipleDescribes:
+  VersionAdded: '1.0'
+RSpec/MultipleExpectations:
+  Max: 1
+  VersionAdded: '1.7'
+  VersionChanged: '1.21'
+RSpec/MultipleMemoizedHelpers:
+  AllowSubject: true
+  Max: 5
+  VersionAdded: '1.43'
+RSpec/MultipleSubjects:
+  VersionAdded: '1.16'
+RSpec/NamedSubject:
+  EnforcedStyle: always
+  IgnoreSharedExamples: true
+  VersionAdded: 1.5.3
+  VersionChanged: '2.15'
+RSpec/NestedGroups:
+  Max: 5
+  AllowedGroups: []
+  VersionAdded: '1.7'
+  VersionChanged: '2.13'
+RSpec/NotToNot:
+  EnforcedStyle: not_to
+  VersionAdded: '1.4'
+RSpec/OverwritingSetup:
+  VersionAdded: '1.14'
+RSpec/PredicateMatcher:
+  Strict: true
+  EnforcedStyle: inflected
+  AllowedExplicitMatchers: []
+  VersionAdded: '1.16'
+RSpec/ReceiveCounts:
+  VersionAdded: '1.26'
+RSpec/ReceiveNever:
+  VersionAdded: '1.28'
+RSpec/RepeatedDescription:
+  VersionAdded: '1.9'
+RSpec/RepeatedExample:
+  VersionAdded: '1.10'
+RSpec/RepeatedExampleGroupBody:
+  VersionAdded: '1.38'
+RSpec/RepeatedExampleGroupDescription:
+  VersionAdded: '1.38'
+RSpec/RepeatedIncludeExample:
+  VersionAdded: '1.44'
+RSpec/ReturnFromStub:
+  EnforcedStyle: and_return
+  VersionAdded: '1.16'
+  VersionChanged: '1.22'
+RSpec/ScatteredLet:
+  VersionAdded: '1.14'
+  VersionChanged: '1.39'
+RSpec/ScatteredSetup:
+  VersionAdded: '1.10'
+RSpec/SharedContext:
+  VersionAdded: '1.13'
+RSpec/SharedExamples:
+  EnforcedStyle: string
+  VersionAdded: '1.25'
+  VersionChanged: '2.26'
+RSpec/SingleArgumentMessageChain:
+  VersionAdded: '1.9'
+  VersionChanged: '1.10'
+RSpec/StubbedMock:
+  VersionAdded: '1.44'
+RSpec/SubjectStub:
+  VersionAdded: '1.7'
+  VersionChanged: '2.8'
+RSpec/UnspecifiedException:
+  VersionAdded: '1.30'
+RSpec/VariableDefinition:
+  EnforcedStyle: symbols
+  VersionAdded: '1.40'
+RSpec/VariableName:
+  EnforcedStyle: snake_case
+  AllowedPatterns: []
+  VersionAdded: '1.40'
+  VersionChanged: '2.13'
+RSpec/VerifiedDoubles:
+  IgnoreNameless: true
+  IgnoreSymbolicNames: false
+  VersionAdded: 1.2.1
+  VersionChanged: '1.5'
+RSpec/VoidExpect:
+  VersionAdded: '1.16'
+RSpec/Yield:
+  VersionAdded: '1.32'
+RSpec/Capybara/FeatureMethods:
+  EnabledMethods: []
+  VersionAdded: '1.17'
+  VersionChanged: '2.0'
+RSpec/Rails/HttpStatus:
+  EnforcedStyle: symbolic
+  VersionAdded: '1.23'
+  VersionChanged: '2.20'
+Rails/ActionFilter:
+  VersionAdded: '0.19'
+  EnforcedStyle: action
+  Include:
+  - app/controllers/**/*.rb
+  - app/mailers/**/*.rb
+Rails/ActiveRecordAliases:
+  VersionAdded: '0.53'
+Rails/ActiveRecordOverride:
+  VersionAdded: '0.67'
+  Include:
+  - app/models/**/*.rb
+Rails/ActiveSupportAliases:
+  VersionAdded: '0.48'
+Rails/ApplicationController:
+  VersionAdded: '2.4'
+  VersionChanged: '2.5'
+Rails/ApplicationJob:
+  VersionAdded: '0.49'
+  VersionChanged: '2.5'
+Rails/ApplicationMailer:
+  VersionAdded: '2.4'
+  VersionChanged: '2.5'
+Rails/ApplicationRecord:
+  VersionAdded: '0.49'
+  VersionChanged: '2.5'
+Rails/ArelStar:
+  VersionAdded: '2.9'
+Rails/AssertNot:
+  VersionAdded: '0.56'
+  Include:
+  - "**/test/**/*"
+Rails/BelongsTo:
+  VersionAdded: '0.62'
+Rails/Blank:
+  VersionAdded: '0.48'
+  VersionChanged: '2.10'
+  NilOrEmpty: true
+  NotPresent: true
+  UnlessPresent: true
+Rails/BulkChangeTable:
+  VersionAdded: '0.57'
+  Database:
+  SupportedDatabases:
+  - mysql
+  - postgresql
+  Include:
+  - db/migrate/*.rb
+Rails/ContentTag:
+  VersionAdded: '2.6'
+  VersionChanged: '2.12'
+  Exclude:
+  - "/app/models/**/*.rb"
+  - "/config/**/*.rb"
+Rails/CreateTableWithTimestamps:
+  VersionAdded: '0.52'
+  Include:
+  - db/migrate/*.rb
+  Exclude:
+  - "/db/migrate/*_create_active_storage_tables.active_storage.rb"
+Rails/Date:
+  VersionAdded: '0.30'
+  VersionChanged: '2.11'
+  EnforcedStyle: flexible
+  AllowToTime: true
+Rails/Delegate:
+  VersionAdded: '0.21'
+  VersionChanged: '0.50'
+  EnforceForPrefixed: true
+Rails/DelegateAllowBlank:
+  VersionAdded: '0.44'
+Rails/DynamicFindBy:
+  VersionAdded: '0.44'
+  VersionChanged: '2.10'
+  Whitelist:
+  - find_by_sql
+  AllowedMethods:
+  - find_by_sql
+  AllowedReceivers:
+  - Gem::Specification
+Rails/EnumHash:
+  VersionAdded: '2.3'
+  Include:
+  - app/models/**/*.rb
+Rails/EnumUniqueness:
+  VersionAdded: '0.46'
+  Include:
+  - app/models/**/*.rb
+Rails/EnvironmentComparison:
+  VersionAdded: '0.52'
+Rails/Exit:
+  VersionAdded: '0.41'
+  Include:
+  - app/**/*.rb
+  - config/**/*.rb
+  - lib/**/*.rb
+  Exclude:
+  - "/lib/**/*.rake"
+Rails/FilePath:
+  VersionAdded: '0.47'
+  VersionChanged: '2.4'
+  EnforcedStyle: slashes
+Rails/FindBy:
+  VersionAdded: '0.30'
+  VersionChanged: '2.11'
+  IgnoreWhereFirst: true
+  Include:
+  - app/models/**/*.rb
+Rails/FindEach:
+  VersionAdded: '0.30'
+  VersionChanged: '2.9'
+  Include:
+  - app/models/**/*.rb
+  IgnoredMethods:
+  - order
+  - limit
+  - select
+  - lock
+Rails/HasAndBelongsToMany:
+  VersionAdded: '0.12'
+  Include:
+  - app/models/**/*.rb
+Rails/HasManyOrHasOneDependent:
+  VersionAdded: '0.50'
+  Include:
+  - app/models/**/*.rb
+Rails/HelperInstanceVariable:
+  VersionAdded: '2.0'
+  Include:
+  - app/helpers/**/*.rb
+Rails/HttpPositionalArguments:
+  VersionAdded: '0.44'
+  Include:
+  - spec/**/*
+  - test/**/*
+Rails/HttpStatus:
+  VersionAdded: '0.54'
+  VersionChanged: '2.11'
+  EnforcedStyle: symbolic
+Rails/IgnoredSkipActionFilterOption:
+  VersionAdded: '0.63'
+  Include:
+  - app/controllers/**/*.rb
+  - app/mailers/**/*.rb
+Rails/IndexBy:
+  VersionAdded: '2.5'
+  VersionChanged: '2.8'
+Rails/IndexWith:
+  VersionAdded: '2.5'
+  VersionChanged: '2.8'
+Rails/InverseOf:
+  VersionAdded: '0.52'
+  IgnoreScopes: false
+  Include:
+  - app/models/**/*.rb
+Rails/LexicallyScopedActionFilter:
+  VersionAdded: '0.52'
+  Include:
+  - app/controllers/**/*.rb
+  - app/mailers/**/*.rb
+Rails/LinkToBlank:
+  VersionAdded: '0.62'
+Rails/NotNullColumn:
+  VersionAdded: '0.43'
+  Include:
+  - db/migrate/*.rb
+Rails/Output:
+  VersionAdded: '0.15'
+  VersionChanged: '0.19'
+  Include:
+  - app/**/*.rb
+  - config/**/*.rb
+  - db/**/*.rb
+  - lib/**/*.rb
+Rails/OutputSafety:
+  VersionAdded: '0.41'
+Rails/Pick:
+  VersionAdded: '2.6'
+Rails/PluralizationGrammar:
+  VersionAdded: '0.35'
+Rails/Presence:
+  VersionAdded: '0.52'
+Rails/Present:
+  VersionAdded: '0.48'
+  VersionChanged: '0.67'
+  NotNilAndNotEmpty: true
+  NotBlank: true
+  UnlessBlank: true
+Rails/RakeEnvironment:
+  VersionAdded: '2.4'
+  VersionChanged: '2.6'
+  Include:
+  - "**/Rakefile"
+  - "**/*.rake"
+  Exclude:
+  - "/lib/capistrano/tasks/**/*.rake"
+Rails/ReadWriteAttribute:
+  VersionAdded: '0.20'
+  VersionChanged: '0.29'
+  Include:
+  - app/models/**/*.rb
+Rails/RedundantAllowNil:
+  VersionAdded: '0.67'
+  Include:
+  - app/models/**/*.rb
+Rails/RedundantForeignKey:
+  VersionAdded: '2.6'
+Rails/RedundantReceiverInWithOptions:
+  VersionAdded: '0.52'
+Rails/ReflectionClassName:
+  VersionAdded: '0.64'
+  VersionChanged: '2.10'
+Rails/RefuteMethods:
+  VersionAdded: '0.56'
+  EnforcedStyle: assert_not
+  Include:
+  - "**/test/**/*"
+Rails/RelativeDateConstant:
+  VersionAdded: '0.48'
+  VersionChanged: '2.13'
+Rails/RequestReferer:
+  VersionAdded: '0.41'
+  EnforcedStyle: referer
+Rails/ReversibleMigration:
+  VersionAdded: '0.47'
+  VersionChanged: '2.13'
+  Include:
+  - db/**/*.rb
+Rails/SafeNavigation:
+  VersionAdded: '0.43'
+  ConvertTry: false
+Rails/SafeNavigationWithBlank:
+  VersionAdded: '2.4'
+Rails/ScopeArgs:
+  VersionAdded: '0.19'
+  VersionChanged: '2.12'
+  Include:
+  - app/models/**/*.rb
+Rails/SkipsModelValidations:
+  VersionAdded: '0.47'
+  VersionChanged: '2.7'
+  ForbiddenMethods:
+  - decrement!
+  - decrement_counter
+  - increment!
+  - increment_counter
+  - insert
+  - insert!
+  - insert_all
+  - insert_all!
+  - toggle!
+  - touch
+  - touch_all
+  - update_all
+  - update_attribute
+  - update_column
+  - update_columns
+  - update_counters
+  - upsert
+  - upsert_all
+  AllowedMethods: []
+Rails/TimeZone:
+  VersionAdded: '0.30'
+  VersionChanged: '2.13'
+  EnforcedStyle: flexible
+  Exclude:
+  - "/**/*.gemspec"
+Rails/UniqBeforePluck:
+  VersionAdded: '0.40'
+  VersionChanged: '2.13'
+  EnforcedStyle: conservative
+Rails/UniqueValidationWithoutIndex:
+  VersionAdded: '2.5'
+  Include:
+  - app/models/**/*.rb
+Rails/UnknownEnv:
+  VersionAdded: '0.51'
+  Environments:
+  - development
+  - test
+  - production
+Rails/Validation:
+  VersionAdded: '0.9'
+  VersionChanged: '0.41'
+  Include:
+  - app/models/**/*.rb
+Rake/ClassDefinitionInTask:
+  VersionAdded: 0.3.0
+Rake/Desc:
+  VersionAdded: 0.1.0
+Rake/DuplicateNamespace:
+  VersionAdded: 0.5.0
+Rake/DuplicateTask:
+  VersionAdded: 0.4.0
+Rake/MethodDefinitionInTask:
+  VersionAdded: 0.2.0
+Security/Eval:
+  VersionAdded: '0.47'
+Security/JSONLoad:
+  VersionAdded: '0.43'
+  VersionChanged: '1.22'
+Security/MarshalLoad:
+  VersionAdded: '0.47'
+Security/Open:
+  VersionAdded: '0.53'
+  VersionChanged: '1.0'
+Security/YAMLLoad:
+  VersionAdded: '0.47'
+Style/AccessModifierDeclarations:
+  VersionAdded: '0.57'
+  VersionChanged: '0.81'
+  EnforcedStyle: group
+  AllowModifiersOnSymbols: true
+Style/AccessorGrouping:
+  VersionAdded: '0.87'
+  EnforcedStyle: grouped
+Style/Alias:
+  VersionAdded: '0.9'
+  VersionChanged: '0.36'
+  EnforcedStyle: prefer_alias_method
+Style/AndOr:
+  VersionAdded: '0.9'
+  VersionChanged: '1.21'
+  EnforcedStyle: conditionals
+Style/ArrayJoin:
+  VersionAdded: '0.20'
+  VersionChanged: '0.31'
+Style/Attr:
+  VersionAdded: '0.9'
+  VersionChanged: '0.12'
+Style/BarePercentLiterals:
+  VersionAdded: '0.25'
+  EnforcedStyle: bare_percent
+Style/BeginBlock:
+  VersionAdded: '0.9'
+Style/BisectedAttrAccessor:
+  VersionAdded: '0.87'
+Style/BlockComments:
+  VersionAdded: '0.9'
+  VersionChanged: '0.23'
+Style/BlockDelimiters:
+  VersionAdded: '0.30'
+  VersionChanged: '0.35'
+  EnforcedStyle: line_count_based
+  ProceduralMethods:
+  - benchmark
+  - bm
+  - bmbm
+  - create
+  - each_with_object
+  - measure
+  - new
+  - realtime
+  - tap
+  - with_object
+  FunctionalMethods:
+  - let
+  - let!
+  - subject
+  - watch
+  AllowedMethods:
+  - lambda
+  - proc
+  - it
+  AllowedPatterns: []
+  AllowBracesOnProceduralOneLiners: false
+  BracesRequiredMethods: []
+Style/CaseEquality:
+  VersionAdded: '0.9'
+  VersionChanged: '0.89'
+  AllowOnConstant: false
+  AllowOnSelfClass: false
+Style/CaseLikeIf:
+  VersionAdded: '0.88'
+  VersionChanged: '1.48'
+  MinBranchesCount: 3
+Style/CharacterLiteral:
+  VersionAdded: '0.9'
+Style/ClassAndModuleChildren:
+  VersionAdded: '0.19'
+  EnforcedStyle: nested
+Style/ClassCheck:
+  VersionAdded: '0.24'
+  EnforcedStyle: is_a?
+Style/ClassEqualityComparison:
+  VersionAdded: '0.93'
+  VersionChanged: '1.57'
+  AllowedMethods:
+  - "=="
+  - equal?
+  - eql?
+  AllowedPatterns: []
+Style/ClassMethods:
+  VersionAdded: '0.9'
+  VersionChanged: '0.20'
+Style/ClassVars:
+  VersionAdded: '0.13'
+Style/ColonMethodCall:
+  VersionAdded: '0.9'
+Style/ColonMethodDefinition:
+  VersionAdded: '0.52'
+Style/CombinableLoops:
+  VersionAdded: '0.90'
+Style/CommandLiteral:
+  VersionAdded: '0.30'
+  EnforcedStyle: backticks
+  AllowInnerBackticks: false
+Style/CommentAnnotation:
+  VersionAdded: '0.10'
+  VersionChanged: '1.20'
+  Keywords:
+  - TODO
+  - FIXME
+  - OPTIMIZE
+  - HACK
+  - REVIEW
+  - NOTE
+  RequireColon: true
+Style/CommentedKeyword:
+  VersionAdded: '0.51'
+  VersionChanged: '1.19'
+Style/ConditionalAssignment:
+  VersionAdded: '0.36'
+  VersionChanged: '0.47'
+  EnforcedStyle: assign_to_condition
+  SingleLineConditionsOnly: true
+  IncludeTernaryExpressions: true
+Style/DefWithParentheses:
+  VersionAdded: '0.9'
+  VersionChanged: '0.12'
+Style/Dir:
+  VersionAdded: '0.50'
+Style/DoubleCopDisableDirective:
+  VersionAdded: '0.73'
+Style/DoubleNegation:
+  VersionAdded: '0.19'
+  VersionChanged: '1.2'
+  EnforcedStyle: allowed_in_returns
+Style/EachForSimpleLoop:
+  VersionAdded: '0.41'
+Style/EachWithObject:
+  VersionAdded: '0.22'
+  VersionChanged: '0.42'
+Style/EmptyBlockParameter:
+  VersionAdded: '0.52'
+Style/EmptyCaseCondition:
+  VersionAdded: '0.40'
+Style/EmptyElse:
+  VersionAdded: '0.28'
+  VersionChanged: '0.32'
+  EnforcedStyle: both
+  AllowComments: false
+Style/EmptyLambdaParameter:
+  VersionAdded: '0.52'
+Style/EmptyLiteral:
+  VersionAdded: '0.9'
+  VersionChanged: '0.12'
+Style/EmptyMethod:
+  VersionAdded: '0.46'
+  EnforcedStyle: compact
+Style/Encoding:
+  VersionAdded: '0.9'
+  VersionChanged: '0.50'
+Style/EndBlock:
+  VersionAdded: '0.9'
+  VersionChanged: '0.81'
+Style/EvalWithLocation:
+  VersionAdded: '0.52'
+Style/EvenOdd:
+  VersionAdded: '0.12'
+  VersionChanged: '0.29'
+Style/ExpandPathArguments:
+  VersionAdded: '0.53'
+Style/ExplicitBlockArgument:
+  VersionAdded: '0.89'
+  VersionChanged: '1.8'
+Style/ExponentialNotation:
+  VersionAdded: '0.82'
+  EnforcedStyle: scientific
+Style/FloatDivision:
+  VersionAdded: '0.72'
+  VersionChanged: '1.9'
+  EnforcedStyle: single_coerce
+Style/For:
+  VersionAdded: '0.13'
+  VersionChanged: '1.26'
+  EnforcedStyle: each
+Style/FormatString:
+  VersionAdded: '0.19'
+  VersionChanged: '0.49'
+  EnforcedStyle: format
+Style/FormatStringToken:
+  EnforcedStyle: annotated
+  MaxUnannotatedPlaceholdersAllowed: 1
+  VersionAdded: '0.49'
+  VersionChanged: '1.0'
+  AllowedMethods: []
+  AllowedPatterns: []
+Style/FrozenStringLiteralComment:
+  VersionAdded: '0.36'
+  VersionChanged: '0.79'
+  EnforcedStyle: always
+Style/GlobalStdStream:
+  VersionAdded: '0.89'
+Style/GlobalVars:
+  VersionAdded: '0.13'
+  AllowedVariables: []
+Style/GuardClause:
+  VersionAdded: '0.20'
+  VersionChanged: '1.31'
+  MinBodyLength: 1
+  AllowConsecutiveConditionals: false
+Style/HashAsLastArrayItem:
+  VersionAdded: '0.88'
+  EnforcedStyle: braces
+Style/HashEachMethods:
+  VersionAdded: '0.80'
+  VersionChanged: '1.16'
+  AllowedReceivers:
+  - Thread.current
+Style/HashLikeCase:
+  VersionAdded: '0.88'
+  MinBranchesCount: 3
+Style/HashSyntax:
+  VersionAdded: '0.9'
+  VersionChanged: '1.24'
+  EnforcedStyle: ruby19
+  EnforcedShorthandSyntax: always
+  SupportedShorthandSyntax:
+  - always
+  - never
+  - either
+  - consistent
+  UseHashRocketsWithSymbolValues: false
+  PreferHashRocketsForNonAlnumEndingSymbols: false
+Style/HashTransformKeys:
+  VersionAdded: '0.80'
+  VersionChanged: '0.90'
+Style/HashTransformValues:
+  VersionAdded: '0.80'
+  VersionChanged: '0.90'
+Style/IdenticalConditionalBranches:
+  VersionAdded: '0.36'
+  VersionChanged: '1.19'
+Style/IfInsideElse:
+  AllowIfModifier: false
+  VersionAdded: '0.36'
+  VersionChanged: '1.3'
+Style/IfUnlessModifier:
+  VersionAdded: '0.9'
+  VersionChanged: '0.30'
+Style/IfUnlessModifierOfIfUnless:
+  VersionAdded: '0.39'
+  VersionChanged: '0.87'
+Style/IfWithSemicolon:
+  VersionAdded: '0.9'
+  VersionChanged: '0.83'
+Style/InfiniteLoop:
+  VersionAdded: '0.26'
+  VersionChanged: '0.61'
+Style/InverseMethods:
+  VersionAdded: '0.48'
+  InverseMethods:
+    :any?: :none?
+    :even?: :odd?
+    :==: :!=
+    :=~: :!~
+    :<: :>=
+    :>: :<=
+  InverseBlocks:
+    :select: :reject
+    :select!: :reject!
+Style/KeywordParametersOrder:
+  VersionAdded: '0.90'
+  VersionChanged: '1.7'
+Style/Lambda:
+  VersionAdded: '0.9'
+  VersionChanged: '0.40'
+  EnforcedStyle: line_count_dependent
+Style/LambdaCall:
+  VersionAdded: '0.13'
+  VersionChanged: '0.14'
+  EnforcedStyle: call
+Style/LineEndConcatenation:
+  VersionAdded: '0.18'
+  VersionChanged: '0.64'
+Style/MethodCallWithoutArgsParentheses:
+  AllowedMethods: []
+  AllowedPatterns: []
+  VersionAdded: '0.47'
+  VersionChanged: '0.55'
+Style/MethodDefParentheses:
+  VersionAdded: '0.16'
+  VersionChanged: '1.7'
+  EnforcedStyle: require_parentheses
+Style/MinMax:
+  VersionAdded: '0.50'
+Style/MissingRespondToMissing:
+  VersionAdded: '0.56'
+Style/MixinGrouping:
+  VersionAdded: '0.48'
+  VersionChanged: '0.49'
+  EnforcedStyle: separated
+Style/MixinUsage:
+  VersionAdded: '0.51'
+Style/ModuleFunction:
+  VersionAdded: '0.11'
+  VersionChanged: '0.65'
+  EnforcedStyle: module_function
+  Autocorrect: false
+Style/MultilineBlockChain:
+  VersionAdded: '0.13'
+Style/MultilineIfModifier:
+  VersionAdded: '0.45'
+Style/MultilineIfThen:
+  VersionAdded: '0.9'
+  VersionChanged: '0.26'
+Style/MultilineMemoization:
+  VersionAdded: '0.44'
+  VersionChanged: '0.48'
+  EnforcedStyle: keyword
+Style/MultilineTernaryOperator:
+  VersionAdded: '0.9'
+  VersionChanged: '0.86'
+Style/MultilineWhenThen:
+  VersionAdded: '0.73'
+Style/MultipleComparison:
+  VersionAdded: '0.49'
+  VersionChanged: '1.1'
+  AllowMethodComparison: true
+  ComparisonsThreshold: 2
+Style/MutableConstant:
+  VersionAdded: '0.34'
+  VersionChanged: '1.8'
+  EnforcedStyle: literals
+Style/NegatedIf:
+  VersionAdded: '0.20'
+  VersionChanged: '0.48'
+  EnforcedStyle: both
+Style/NegatedUnless:
+  VersionAdded: '0.69'
+  EnforcedStyle: both
+Style/NegatedWhile:
+  VersionAdded: '0.20'
+Style/NestedModifier:
+  VersionAdded: '0.35'
+Style/NestedParenthesizedCalls:
+  VersionAdded: '0.36'
+  VersionChanged: '0.77'
+  AllowedMethods:
+  - be
+  - be_a
+  - be_an
+  - be_between
+  - be_falsey
+  - be_kind_of
+  - be_instance_of
+  - be_truthy
+  - be_within
+  - eq
+  - eql
+  - end_with
+  - include
+  - match
+  - raise_error
+  - respond_to
+  - start_with
+Style/NestedTernaryOperator:
+  VersionAdded: '0.9'
+  VersionChanged: '0.86'
+Style/Next:
+  VersionAdded: '0.22'
+  VersionChanged: '0.35'
+  EnforcedStyle: skip_modifier_ifs
+  MinBodyLength: 3
+Style/NilComparison:
+  VersionAdded: '0.12'
+  VersionChanged: '0.59'
+  EnforcedStyle: predicate
+Style/NonNilCheck:
+  VersionAdded: '0.20'
+  VersionChanged: '0.22'
+  IncludeSemanticChanges: false
+Style/Not:
+  VersionAdded: '0.9'
+  VersionChanged: '0.20'
+Style/NumericLiteralPrefix:
+  VersionAdded: '0.41'
+  EnforcedOctalStyle: zero_with_o
+  SupportedOctalStyles:
+  - zero_with_o
+  - zero_only
+Style/NumericLiterals:
+  VersionAdded: '0.9'
+  VersionChanged: '0.48'
+  MinDigits: 5
+  Strict: false
+  AllowedNumbers: []
+  AllowedPatterns: []
+Style/NumericPredicate:
+  VersionAdded: '0.42'
+  VersionChanged: '0.59'
+  EnforcedStyle: predicate
+  AllowedMethods: []
+  AllowedPatterns: []
+  Exclude:
+  - "/spec/**/*"
+Style/OneLineConditional:
+  AlwaysCorrectToMultiline: false
+  VersionAdded: '0.9'
+  VersionChanged: '0.90'
+Style/OptionalArguments:
+  VersionAdded: '0.33'
+  VersionChanged: '0.83'
+Style/OptionalBooleanParameter:
+  VersionAdded: '0.89'
+  AllowedMethods:
+  - respond_to_missing?
+Style/OrAssignment:
+  VersionAdded: '0.50'
+Style/ParallelAssignment:
+  VersionAdded: '0.32'
+Style/ParenthesesAroundCondition:
+  VersionAdded: '0.9'
+  VersionChanged: '0.56'
+  AllowSafeAssignment: true
+  AllowInMultilineConditions: false
+Style/PercentLiteralDelimiters:
+  VersionAdded: '0.19'
+  PreferredDelimiters:
+    default: "()"
+    "%i": "[]"
+    "%I": "[]"
+    "%r": "{}"
+    "%w": "[]"
+    "%W": "[]"
+  VersionChanged: '0.48'
+Style/PercentQLiterals:
+  VersionAdded: '0.25'
+  EnforcedStyle: lower_case_q
+Style/PerlBackrefs:
+  VersionAdded: '0.13'
+Style/PreferredHashMethods:
+  VersionAdded: '0.41'
+  VersionChanged: '0.70'
+  EnforcedStyle: short
+Style/Proc:
+  VersionAdded: '0.9'
+  VersionChanged: '0.18'
+Style/RaiseArgs:
+  VersionAdded: '0.14'
+  VersionChanged: '1.2'
+  EnforcedStyle: exploded
+  AllowedCompactTypes: []
+Style/RandomWithOffset:
+  VersionAdded: '0.52'
+Style/RedundantAssignment:
+  VersionAdded: '0.87'
+Style/RedundantBegin:
+  VersionAdded: '0.10'
+  VersionChanged: '0.21'
+Style/RedundantCapitalW:
+  VersionAdded: '0.76'
+Style/RedundantCondition:
+  VersionAdded: '0.76'
+Style/RedundantConditional:
+  VersionAdded: '0.50'
+Style/RedundantException:
+  VersionAdded: '0.14'
+  VersionChanged: '0.29'
+Style/RedundantFetchBlock:
+  SafeForConstants: false
+  VersionAdded: '0.86'
+Style/RedundantFileExtensionInRequire:
+  VersionAdded: '0.88'
+Style/RedundantFreeze:
+  VersionAdded: '0.34'
+  VersionChanged: '0.66'
+Style/RedundantInterpolation:
+  VersionAdded: '0.76'
+  VersionChanged: '1.30'
+Style/RedundantParentheses:
+  VersionAdded: '0.36'
+Style/RedundantPercentQ:
+  VersionAdded: '0.76'
+Style/RedundantRegexpCharacterClass:
+  VersionAdded: '0.85'
+Style/RedundantRegexpEscape:
+  VersionAdded: '0.85'
+Style/RedundantReturn:
+  VersionAdded: '0.10'
+  VersionChanged: '0.14'
+  AllowMultipleReturnValues: false
+Style/RedundantSelf:
+  VersionAdded: '0.10'
+  VersionChanged: '0.13'
+Style/RedundantSelfAssignment:
+  VersionAdded: '0.90'
+Style/RedundantSort:
+  VersionAdded: '0.76'
+  VersionChanged: '1.22'
+Style/RedundantSortBy:
+  VersionAdded: '0.36'
+Style/RegexpLiteral:
+  VersionAdded: '0.9'
+  VersionChanged: '0.30'
+  EnforcedStyle: slashes
+  AllowInnerSlashes: false
+Style/RescueModifier:
+  VersionAdded: '0.9'
+  VersionChanged: '0.34'
+Style/RescueStandardError:
+  VersionAdded: '0.52'
+  EnforcedStyle: explicit
+Style/SafeNavigation:
+  VersionAdded: '0.43'
+  VersionChanged: '1.27'
+  ConvertCodeThatCanStartToReturnNil: false
+  AllowedMethods:
+  - present?
+  - blank?
+  - presence
+  - try
+  - try!
+  MaxChainLength: 2
+Style/Sample:
+  VersionAdded: '0.30'
+Style/SelfAssignment:
+  VersionAdded: '0.19'
+  VersionChanged: '0.29'
+Style/Semicolon:
+  VersionAdded: '0.9'
+  VersionChanged: '0.19'
+  AllowAsExpressionSeparator: false
+Style/SignalException:
+  VersionAdded: '0.11'
+  VersionChanged: '0.37'
+  EnforcedStyle: only_raise
+Style/SingleArgumentDig:
+  VersionAdded: '0.89'
+Style/SingleLineMethods:
+  VersionAdded: '0.9'
+  VersionChanged: '1.8'
+  AllowIfMethodIsEmpty: true
+Style/SlicingWithRange:
+  VersionAdded: '0.83'
+Style/SoleNestedConditional:
+  VersionAdded: '0.89'
+  VersionChanged: '1.5'
+  AllowModifier: false
+Style/SpecialGlobalVars:
+  VersionAdded: '0.13'
+  VersionChanged: '0.36'
+  RequireEnglish: true
+  EnforcedStyle: use_english_names
+Style/StabbyLambdaParentheses:
+  VersionAdded: '0.35'
+  EnforcedStyle: require_parentheses
+Style/StderrPuts:
+  VersionAdded: '0.51'
+Style/StringConcatenation:
+  VersionAdded: '0.89'
+  VersionChanged: '1.18'
+  Mode: aggressive
+Style/StringLiterals:
+  VersionAdded: '0.9'
+  VersionChanged: '0.36'
+  EnforcedStyle: single_quotes
+  ConsistentQuotesInMultiline: false
+Style/StringLiteralsInInterpolation:
+  VersionAdded: '0.27'
+  EnforcedStyle: single_quotes
+Style/Strip:
+  VersionAdded: '0.36'
+Style/StructInheritance:
+  VersionAdded: '0.29'
+  VersionChanged: '1.20'
+Style/SymbolArray:
+  VersionAdded: '0.9'
+  VersionChanged: '0.49'
+  EnforcedStyle: percent
+  MinSize: 2
+Style/SymbolLiteral:
+  VersionAdded: '0.30'
+Style/SymbolProc:
+  VersionAdded: '0.26'
+  VersionChanged: '1.40'
+  AllowMethodsWithArguments: false
+  AllowedMethods:
+  - define_method
+  AllowedPatterns: []
+  AllowComments: false
+Style/TernaryParentheses:
+  VersionAdded: '0.42'
+  VersionChanged: '0.46'
+  EnforcedStyle: require_no_parentheses
+  AllowSafeAssignment: true
+Style/TrailingBodyOnClass:
+  VersionAdded: '0.53'
+Style/TrailingBodyOnMethodDefinition:
+  VersionAdded: '0.52'
+Style/TrailingBodyOnModule:
+  VersionAdded: '0.53'
+Style/TrailingCommaInArguments:
+  VersionAdded: '0.36'
+  EnforcedStyleForMultiline: no_comma
+  SupportedStylesForMultiline:
+  - comma
+  - consistent_comma
+  - no_comma
+Style/TrailingCommaInArrayLiteral:
+  VersionAdded: '0.53'
+  EnforcedStyleForMultiline: no_comma
+  SupportedStylesForMultiline:
+  - comma
+  - consistent_comma
+  - no_comma
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: no_comma
+  SupportedStylesForMultiline:
+  - comma
+  - consistent_comma
+  - no_comma
+  VersionAdded: '0.53'
+Style/TrailingMethodEndStatement:
+  VersionAdded: '0.52'
+Style/TrailingUnderscoreVariable:
+  AllowNamedUnderscoreVariables: true
+  VersionAdded: '0.31'
+  VersionChanged: '0.35'
+Style/TrivialAccessors:
+  VersionAdded: '0.9'
+  VersionChanged: '1.15'
+  ExactNameMatch: true
+  AllowPredicates: true
+  AllowDSLWriters: true
+  IgnoreClassMethods: false
+  AllowedMethods:
+  - to_ary
+  - to_a
+  - to_c
+  - to_enum
+  - to_h
+  - to_hash
+  - to_i
+  - to_int
+  - to_io
+  - to_open
+  - to_path
+  - to_proc
+  - to_r
+  - to_regexp
+  - to_str
+  - to_s
+  - to_sym
+Style/UnlessElse:
+  VersionAdded: '0.9'
+Style/UnpackFirst:
+  VersionAdded: '0.54'
+Style/VariableInterpolation:
+  VersionAdded: '0.9'
+  VersionChanged: '0.20'
+Style/WhenThen:
+  VersionAdded: '0.9'
+Style/WhileUntilDo:
+  VersionAdded: '0.9'
+Style/WhileUntilModifier:
+  VersionAdded: '0.9'
+  VersionChanged: '0.30'
+Style/WordArray:
+  VersionAdded: '0.9'
+  VersionChanged: '1.19'
+  EnforcedStyle: percent
+  MinSize: 2
+  WordRegex: !ruby/regexp /\A(?:\p{Word}|\p{Word}-\p{Word}|\n|\t)+\z/
+Style/YodaCondition:
+  EnforcedStyle: forbid_for_all_comparison_operators
+  VersionAdded: '0.49'
+  VersionChanged: '0.75'
+Style/ZeroLengthPredicate:
+  VersionAdded: '0.37'
+  VersionChanged: '0.39'
