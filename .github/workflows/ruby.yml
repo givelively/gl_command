@@ -24,8 +24,6 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
       - run: bundle install
       # Run tests
-      - run: bundle install
-      # Run tests
       - name: Run tests
         run: bundle exec rspec
       - name: Lint

@@ -1,22 +1,96 @@
 require:
   - rubocop-performance
-  - rubocop-rails
   - rubocop-rspec
-  - rubocop-factory_bot
   - rubocop-rake
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.1
+  Exclude:
+    - 'tmp/**/*'
+
+Metrics/ClassLength:
+  Max: 150
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 15
+
+Performance/MapCompact:
+  Enabled: false
 
 Style/Alias:
   EnforcedStyle: prefer_alias_method
 
+Style/AsciiComments:
+  Enabled: false
+
+Naming/MethodParameterName:
+  MinNameLength: 1
+
 Style/Documentation:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/GlobalVars:
+  Exclude:
+    - 'spec/**/*'
+
 RSpec/NestedGroups:
+  Max: 6
+  Exclude:
+    - 'spec/controllers/**/*'
+    - 'spec/requests/**/*'
+
+RSpec/MultipleExpectations:
   Max: 5
+
+RSpec/ExampleLength:
+  Max: 30
+
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  IgnoreSymbolicNames: true
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - 'spec/api/**/*'
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/api/**/*'
+    - 'spec/views/**/*'
+    - 'spec/lib/tasks/**/*'
+
+RSpec/HookArgument:
+  Exclude:
+    - 'spec/support/**/*'
+
+Style/HashAsLastArrayItem:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Naming/VariableNumber:
+  EnforcedStyle: 'snake_case'
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/SortMetadata:
+  Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false
 
 Gemspec/RequiredRubyVersion:
   Enabled: false

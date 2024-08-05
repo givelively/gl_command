@@ -1,10 +1,12 @@
 # frozen_string_literal: true
+
 require 'active_support/core_ext/module'
+require 'gl_exception_notifier'
+require 'sentry-ruby' # Remove once gl_exception_notifier is 1.0.2
 require 'gl_command/validatable'
 
 module GLCommand
   class Callable
-    TRACKABLE_KEYS = %i[order cart nonprofit].freeze # Specific to charity-api
     DEFAULT_OPTS = { raise_errors: false, skip_unknown_parameters: true }.freeze
     RESERVED_WORDS = (DEFAULT_OPTS.keys + GLCommand::ChainableContext.reserved_words).sort.freeze
 
@@ -160,27 +162,13 @@ module GLCommand
     end
     # rubocop:enable Metrics/AbcSize
 
-    # track_trackable_keys is specific to charity-api and will not be included in the gem
-    def track_trackable_keys
-      return if context.blank?
-
-      TRACKABLE_KEYS.each do |key|
-        item = context.to_h[key]
-        GLExceptionNotifier.add_context(:tags_context, key => item.id) if item.present?
-      end
-    end
-
     # rubocop:disable Metrics/AbcSize
     def call_with_callbacks
       GLExceptionNotifier.breadcrumbs(data: { context: context.inspect }, message: self.class.to_s)
-      track_trackable_keys
       validate_validatable! # defined in GLCommand::Validatable
 
-      # Sentry.with_child_span is specific to charity-api and won't be included in the gem
-      Sentry.with_child_span(op: "command.#{self.class.to_s.underscore}") do
-        # This is the where the call actually happens
-        assign_returns(call)
-      end
+      # This is the where the call actually happens
+      assign_returns(call)
     rescue StandardError => e
       handler = self.class.error_handlers[e.class]
       handler ? send(handler, e) : raise(e)
@@ -199,7 +187,6 @@ module GLCommand
     def call_rollbacks
       return if defined?(@rolled_back) # Not sure this is required
 
-      track_trackable_keys
       @rolled_back = true
 
       chain_rollback if self.class.chain? # defined in GLCommand::Chainable

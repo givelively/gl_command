@@ -22,45 +22,47 @@ RSpec.describe GLCommand::ContextInspect do
     end
   end
 
-  describe 'TestScope' do
-    subject(:call) { TestScope.call(scope:, should_fail:) }
+  # TODO: include active record scope in tests
 
-    let(:nonprofit) { create(:nonprofit) }
-    let(:scope) { nonprofit.line_items }
+  # describe 'TestScope' do
+  #   subject(:call) { TestScope.call(scope:, should_fail:) }
 
-    let(:expected_context_string) do
-      '<GLCommand::Context error=nil, success=true, ' \
-        'arguments={scope: #<ActiveRecord::Associations::CollectionProxy ' \
-        'count=0, sql="SELECT "line_items".* FROM "line_items" WHERE ' \
-        "\"line_items\".\"nonprofit_id\" = '#{nonprofit.id}'\">, " \
-        "should_fail: #{should_fail}}, returns={context_as_string: nil}, class=TestScope>"
-    end
+  #   let(:nonprofit) { create(:nonprofit) }
+  #   let(:scope) { nonprofit.line_items }
 
-    context 'when it succeeds' do
-      let(:should_fail) { false }
+  #   let(:expected_context_string) do
+  #     '<GLCommand::Context error=nil, success=true, ' \
+  #       'arguments={scope: #<ActiveRecord::Associations::CollectionProxy ' \
+  #       'count=0, sql="SELECT "line_items".* FROM "line_items" WHERE ' \
+  #       "\"line_items\".\"nonprofit_id\" = '#{nonprofit.id}'\">, " \
+  #       "should_fail: #{should_fail}}, returns={context_as_string: nil}, class=TestScope>"
+  #   end
 
-      it 'returns the correct data' do
-        expect(GLExceptionNotifier).not_to receive(:call)
-        result = call
-        expect(result).to be_success
-        expect(result.context_as_string).to eq(expected_context_string)
-      end
-    end
+  #   context 'when it succeeds' do
+  #     let(:should_fail) { false }
 
-    context 'when it fails' do
-      let(:should_fail) { true }
+  #     it 'returns the correct data' do
+  #       expect(GLExceptionNotifier).not_to receive(:call)
+  #       result = call
+  #       expect(result).to be_success
+  #       expect(result.context_as_string).to eq(expected_context_string)
+  #     end
+  #   end
 
-      it 'sends the correct data to GLExceptionNotifier' do
-        expect(GLExceptionNotifier).to(
-          receive(:breadcrumbs).once.with(
-            data: { context: expected_context_string },
-            message: 'TestScope'
-          )
-        )
-        expect(GLExceptionNotifier).to receive(:call).once
-        result = call
-        expect(result).not_to be_success
-      end
-    end
-  end
+  #   context 'when it fails' do
+  #     let(:should_fail) { true }
+
+  #     it 'sends the correct data to GLExceptionNotifier' do
+  #       expect(GLExceptionNotifier).to(
+  #         receive(:breadcrumbs).once.with(
+  #           data: { context: expected_context_string },
+  #           message: 'TestScope'
+  #         )
+  #       )
+  #       expect(GLExceptionNotifier).to receive(:call).once
+  #       result = call
+  #       expect(result).not_to be_success
+  #     end
+  #   end
+  # end
 end

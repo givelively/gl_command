@@ -1,6 +1,6 @@
 ---
-RuboCop-version: 1.60.2 (using Parser 3.3.0.5, rubocop-ast 1.30.0, running on ruby
-  3.2.4)
+RuboCop-version: 1.65.1 (using Parser 3.3.4.0, rubocop-ast 1.32.0, running on ruby
+  3.2.5)
 Bundler/DuplicatedGem:
   Severity: warning
   VersionAdded: '0.46'
@@ -42,28 +42,6 @@ Bundler/OrderedGems:
   - "**/*.gemfile"
   - "**/Gemfile"
   - "**/gems.rb"
-Capybara/CurrentPathExpectation:
-  VersionAdded: '1.18'
-  VersionChanged: '2.0'
-Capybara/VisibilityMatcher:
-  VersionAdded: '1.39'
-  VersionChanged: '2.0'
-FactoryBot/AttributeDefinedStatically:
-  VersionAdded: '1.28'
-  VersionChanged: '2.24'
-FactoryBot/CreateList:
-  Include:
-  - "**/*_spec.rb"
-  - "**/spec/**/*"
-  - "**/test/**/*"
-  - "**/features/support/factories/**/*.rb"
-  EnforcedStyle: create_list
-  ExplicitOnly: false
-  VersionAdded: '1.25'
-  VersionChanged: '2.24'
-FactoryBot/FactoryClassName:
-  VersionAdded: '1.37'
-  VersionChanged: '2.24'
 Gemspec/DuplicatedAssignment:
   Severity: warning
   VersionAdded: '0.52'
@@ -146,7 +124,9 @@ Layout/DotPosition:
 Layout/ElseAlignment:
   VersionAdded: '0.49'
 Layout/EmptyComment:
+  AutoCorrect: contextual
   VersionAdded: '0.53'
+  VersionChanged: '1.61'
   AllowBorderComment: true
   AllowMarginComment: true
 Layout/EmptyLineAfterGuardClause:
@@ -453,7 +433,7 @@ Lint/ConstantDefinitionInBlock:
   - enums
 Lint/Debugger:
   VersionAdded: '0.14'
-  VersionChanged: '1.46'
+  VersionChanged: '1.63'
   DebuggerMethods:
     Kernel:
     - binding.irb
@@ -464,8 +444,14 @@ Lint/Debugger:
     - Kernel.byebug
     - Kernel.remote_byebug
     Capybara:
+    - page.save_and_open_page
+    - page.save_and_open_screenshot
+    - page.save_page
+    - page.save_screenshot
     - save_and_open_page
     - save_and_open_screenshot
+    - save_page
+    - save_screenshot
     debug.rb:
     - binding.b
     - binding.break
@@ -487,6 +473,10 @@ Lint/Debugger:
     - jard
     WebConsole:
     - binding.console
+  DebuggerRequires:
+    debug.rb:
+    - debug/open
+    - debug/start
 Lint/DeprecatedClassMethods:
   VersionAdded: '0.19'
 Lint/DeprecatedOpenSSLConstant:
@@ -514,20 +504,23 @@ Lint/ElseLayout:
   VersionAdded: '0.17'
   VersionChanged: '1.2'
 Lint/EmptyConditionalBody:
+  AutoCorrect: contextual
   AllowComments: true
   VersionAdded: '0.89'
-  VersionChanged: '1.34'
+  VersionChanged: '1.61'
 Lint/EmptyEnsure:
+  AutoCorrect: contextual
   VersionAdded: '0.10'
-  VersionChanged: '0.48'
+  VersionChanged: '1.61'
 Lint/EmptyExpression:
   VersionAdded: '0.45'
 Lint/EmptyFile:
   AllowComments: true
   VersionAdded: '0.90'
 Lint/EmptyInterpolation:
+  AutoCorrect: contextual
   VersionAdded: '0.20'
-  VersionChanged: '0.45'
+  VersionChanged: '1.61'
 Lint/EmptyWhen:
   AllowComments: true
   VersionAdded: '0.45'
@@ -702,7 +695,9 @@ Lint/TopLevelReturnWithArgument:
   Exclude:
   - "/**/*.jb"
 Lint/TrailingCommaInAttributeDeclaration:
+  AutoCorrect: contextual
   VersionAdded: '0.90'
+  VersionChanged: '1.61'
 Lint/UnderscorePrefixedVariableName:
   VersionAdded: '0.21'
   AllowKeywordBlockArguments: false
@@ -716,13 +711,15 @@ Lint/UnreachableLoop:
   AllowedPatterns:
   - !ruby/regexp /(exactly|at_least|at_most)\(\d+\)\.times/
 Lint/UnusedBlockArgument:
+  AutoCorrect: contextual
   VersionAdded: '0.21'
-  VersionChanged: '0.22'
+  VersionChanged: '1.61'
   IgnoreEmptyBlocks: true
   AllowUnusedKeywordArguments: false
 Lint/UnusedMethodArgument:
+  AutoCorrect: contextual
   VersionAdded: '0.21'
-  VersionChanged: '0.81'
+  VersionChanged: '1.61'
   AllowUnusedKeywordArguments: false
   IgnoreEmptyMethods: true
   IgnoreNotImplementedMethods: true
@@ -731,26 +728,33 @@ Lint/UriEscapeUnescape:
 Lint/UriRegexp:
   VersionAdded: '0.50'
 Lint/UselessAccessModifier:
+  AutoCorrect: contextual
   VersionAdded: '0.20'
-  VersionChanged: '0.83'
+  VersionChanged: '1.61'
   ContextCreatingMethods: []
   MethodCreatingMethods: []
 Lint/UselessAssignment:
+  AutoCorrect: contextual
   VersionAdded: '0.11'
-  VersionChanged: '1.51'
+  VersionChanged: '1.61'
 Lint/UselessElseWithoutRescue:
   VersionAdded: '0.17'
   VersionChanged: '1.31'
 Lint/UselessMethodDefinition:
+  AutoCorrect: contextual
   VersionAdded: '0.90'
-  VersionChanged: '0.91'
+  VersionChanged: '1.61'
 Lint/UselessSetterCall:
   VersionAdded: '0.13'
   VersionChanged: '1.2'
 Lint/UselessTimes:
+  AutoCorrect: contextual
   VersionAdded: '0.91'
+  VersionChanged: '1.61'
 Lint/Void:
+  AutoCorrect: contextual
   VersionAdded: '0.9'
+  VersionChanged: '1.61'
   CheckForMethodsWithNoSideEffects: false
 Metrics/AbcSize:
   VersionAdded: '0.27'
@@ -777,14 +781,15 @@ Metrics/BlockLength:
     - Exclude
 Metrics/BlockNesting:
   VersionAdded: '0.25'
-  VersionChanged: '0.47'
+  VersionChanged: '1.65'
   CountBlocks: false
+  CountModifierForms: false
   Max: 3
 Metrics/ClassLength:
   VersionAdded: '0.25'
   VersionChanged: '0.87'
   CountComments: false
-  Max: 100
+  Max: 150
   CountAsOne: []
 Metrics/CyclomaticComplexity:
   VersionAdded: '0.25'
@@ -796,7 +801,7 @@ Metrics/MethodLength:
   VersionAdded: '0.25'
   VersionChanged: '1.5'
   CountComments: false
-  Max: 10
+  Max: 15
   CountAsOne: []
   AllowedMethods: []
   AllowedPatterns: []
@@ -806,12 +811,6 @@ Metrics/ModuleLength:
   CountComments: false
   Max: 100
   CountAsOne: []
-Metrics/ParameterLists:
-  VersionAdded: '0.25'
-  VersionChanged: '1.5'
-  Max: 5
-  CountKeywordArgs: true
-  MaxOptionalParameters: 3
 Metrics/PerceivedComplexity:
   VersionAdded: '0.25'
   VersionChanged: '0.81'
@@ -846,7 +845,8 @@ Naming/ConstantName:
 Naming/FileName:
   VersionAdded: '0.50'
   VersionChanged: '1.23'
-  Exclude: []
+  Exclude:
+  - "/Rakefile.rb"
   ExpectMatchingDefinition: false
   CheckDefinitionPathHierarchy: true
   CheckDefinitionPathHierarchyRoots:
@@ -920,7 +920,7 @@ Naming/MethodName:
 Naming/MethodParameterName:
   VersionAdded: '0.53'
   VersionChanged: '0.77'
-  MinNameLength: 3
+  MinNameLength: 1
   AllowNamesEndingInNumbers: true
   AllowedNames:
   - as
@@ -970,7 +970,7 @@ Naming/VariableName:
 Naming/VariableNumber:
   VersionAdded: '0.50'
   VersionChanged: '1.4'
-  EnforcedStyle: normalcase
+  EnforcedStyle: snake_case
   CheckMethodNames: true
   CheckSymbols: true
   AllowedIdentifiers:
@@ -987,8 +987,6 @@ Performance/BindCall:
 Performance/Caller:
   VersionAdded: '0.49'
   VersionChanged: '1.9'
-Performance/Casecmp:
-  VersionAdded: '0.36'
 Performance/CompareWithBlock:
   VersionAdded: '0.46'
 Performance/Count:
@@ -1051,15 +1049,24 @@ Performance/UnfreezeString:
   VersionChanged: '1.9'
 Performance/UriDefaultParser:
   VersionAdded: '0.50'
-RSpec/AnyInstance:
-  VersionAdded: '1.4'
 RSpec/AroundBlock:
   VersionAdded: '1.11'
 RSpec/Be:
   VersionAdded: '1.25'
+RSpec/BeEmpty:
+  AutoCorrect: contextual
+  VersionAdded: '2.20'
+  VersionChanged: '2.31'
+RSpec/BeEq:
+  VersionAdded: 2.9.0
+  VersionChanged: '2.16'
 RSpec/BeEql:
   VersionAdded: '1.7'
   VersionChanged: '2.16'
+RSpec/BeNil:
+  EnforcedStyle: be_nil
+  VersionAdded: 2.9.0
+  VersionChanged: 2.10.0
 RSpec/BeforeAfterAll:
   Exclude:
   - "**/spec/spec_helper.rb"
@@ -1067,6 +1074,15 @@ RSpec/BeforeAfterAll:
   - "**/spec/support/**/*.rb"
   VersionAdded: '1.12'
   VersionChanged: '2.23'
+RSpec/ChangeByZero:
+  VersionAdded: '2.11'
+  VersionChanged: '2.14'
+  NegatedMatcher:
+RSpec/ClassCheck:
+  VersionAdded: '2.13'
+  EnforcedStyle: be_a
+RSpec/ContainExactly:
+  VersionAdded: '2.19'
 RSpec/ContextMethod:
   VersionAdded: '1.36'
 RSpec/ContextWording:
@@ -1079,11 +1095,9 @@ RSpec/ContextWording:
   VersionChanged: '2.13'
 RSpec/DescribeClass:
   Exclude:
-  - "**/spec/features/**/*"
-  - "**/spec/requests/**/*"
-  - "**/spec/routing/**/*"
-  - "**/spec/system/**/*"
-  - "**/spec/views/**/*"
+  - "/spec/api/**/*"
+  - "/spec/views/**/*"
+  - "/spec/lib/tasks/**/*"
   IgnoredMetadata:
     type:
     - channel
@@ -1109,13 +1123,21 @@ RSpec/DescribeSymbol:
 RSpec/DescribedClass:
   SkipBlocks: false
   EnforcedStyle: described_class
+  OnlyStaticConstants: true
   VersionAdded: '1.0'
-  VersionChanged: '1.11'
+  VersionChanged: '2.27'
+RSpec/DuplicatedMetadata:
+  VersionAdded: '2.16'
 RSpec/EmptyExampleGroup:
+  AutoCorrect: contextual
   VersionAdded: '1.7'
-  VersionChanged: '2.13'
+  VersionChanged: '2.31'
+  Exclude:
+  - "/spec/api/**/*"
 RSpec/EmptyHook:
+  AutoCorrect: contextual
   VersionAdded: '1.39'
+  VersionChanged: '2.31'
 RSpec/EmptyLineAfterExample:
   AllowConsecutiveOneLiners: true
   VersionAdded: '1.36'
@@ -1129,8 +1151,16 @@ RSpec/EmptyLineAfterHook:
   AllowConsecutiveOneLiners: true
 RSpec/EmptyLineAfterSubject:
   VersionAdded: '1.14'
+RSpec/EmptyMetadata:
+  AutoCorrect: contextual
+  VersionAdded: '2.24'
+  VersionChanged: '2.31'
+RSpec/EmptyOutput:
+  VersionAdded: '2.29'
+RSpec/Eq:
+  VersionAdded: '2.24'
 RSpec/ExampleLength:
-  Max: 5
+  Max: 30
   CountAsOne: []
   VersionAdded: '1.5'
   VersionChanged: '2.3'
@@ -1148,6 +1178,8 @@ RSpec/ExampleWording:
   - works
   VersionAdded: '1.0'
   VersionChanged: '2.13'
+RSpec/ExcessiveDocstringSpacing:
+  VersionAdded: '2.5'
 RSpec/ExpectActual:
   Exclude:
   - "**/spec/routing/**/*"
@@ -1159,27 +1191,25 @@ RSpec/ExpectChange:
   VersionChanged: '2.5'
 RSpec/ExpectInHook:
   VersionAdded: '1.16'
+RSpec/ExpectInLet:
+  VersionAdded: '2.30'
 RSpec/ExpectOutput:
   VersionAdded: '1.10'
-RSpec/FilePath:
-  Include:
-  - "**/*_spec*rb*"
-  - "**/spec/**/*"
-  CustomTransform:
-    RuboCop: rubocop
-    RSpec: rspec
-  IgnoreMethods: false
-  SpecSuffixOnly: false
-  VersionAdded: '1.2'
-  VersionChanged: '2.24'
 RSpec/Focus:
+  AutoCorrect: contextual
   VersionAdded: '1.5'
-  VersionChanged: '2.1'
+  VersionChanged: '2.31'
 RSpec/HookArgument:
   EnforcedStyle: implicit
   VersionAdded: '1.7'
+  Exclude:
+  - "/spec/support/**/*"
 RSpec/HooksBeforeExamples:
+  AutoCorrect: contextual
   VersionAdded: '1.29'
+  VersionChanged: '2.31'
+RSpec/IdenticalEqualityAssertion:
+  VersionAdded: '2.4'
 RSpec/ImplicitBlockExpectation:
   VersionAdded: '1.35'
 RSpec/ImplicitExpect:
@@ -1195,6 +1225,8 @@ RSpec/InstanceVariable:
   AssignmentOnly: false
   VersionAdded: '1.0'
   VersionChanged: '1.7'
+RSpec/IsExpectedSpecify:
+  VersionAdded: '2.27'
 RSpec/ItBehavesLike:
   EnforcedStyle: it_behaves_like
   VersionAdded: '1.13'
@@ -1206,27 +1238,28 @@ RSpec/LeadingSubject:
 RSpec/LeakyConstantDeclaration:
   VersionAdded: '1.35'
 RSpec/LetBeforeExamples:
+  AutoCorrect: contextual
   VersionAdded: '1.16'
-  VersionChanged: '1.22'
+  VersionChanged: '2.31'
 RSpec/LetSetup:
   VersionAdded: '1.7'
+RSpec/MatchArray:
+  VersionAdded: '2.19'
 RSpec/MessageChain:
   VersionAdded: '1.7'
-RSpec/MessageSpies:
-  EnforcedStyle: have_received
-  VersionAdded: '1.9'
+RSpec/MetadataStyle:
+  EnforcedStyle: symbol
+  VersionAdded: '2.24'
 RSpec/MissingExampleGroupArgument:
   VersionAdded: '1.28'
+RSpec/MissingExpectationTargetMethod:
+  VersionAdded: '3.0'
 RSpec/MultipleDescribes:
   VersionAdded: '1.0'
 RSpec/MultipleExpectations:
-  Max: 1
+  Max: 5
   VersionAdded: '1.7'
   VersionChanged: '1.21'
-RSpec/MultipleMemoizedHelpers:
-  AllowSubject: true
-  Max: 5
-  VersionAdded: '1.43'
 RSpec/MultipleSubjects:
   VersionAdded: '1.16'
 RSpec/NamedSubject:
@@ -1235,15 +1268,26 @@ RSpec/NamedSubject:
   VersionAdded: 1.5.3
   VersionChanged: '2.15'
 RSpec/NestedGroups:
-  Max: 5
+  Max: 6
   AllowedGroups: []
   VersionAdded: '1.7'
   VersionChanged: '2.13'
+  Exclude:
+  - "/spec/controllers/**/*"
+  - "/spec/requests/**/*"
+RSpec/NoExpectationExample:
+  VersionAdded: '2.13'
+  VersionChanged: '2.14'
+  AllowedPatterns:
+  - "^expect_"
+  - "^assert_"
 RSpec/NotToNot:
   EnforcedStyle: not_to
   VersionAdded: '1.4'
 RSpec/OverwritingSetup:
   VersionAdded: '1.14'
+RSpec/PendingWithoutReason:
+  VersionAdded: '2.16'
 RSpec/PredicateMatcher:
   Strict: true
   EnforcedStyle: inflected
@@ -1251,8 +1295,16 @@ RSpec/PredicateMatcher:
   VersionAdded: '1.16'
 RSpec/ReceiveCounts:
   VersionAdded: '1.26'
+RSpec/ReceiveMessages:
+  VersionAdded: '2.23'
 RSpec/ReceiveNever:
   VersionAdded: '1.28'
+RSpec/RedundantAround:
+  VersionAdded: '2.19'
+RSpec/RedundantPredicateMatcher:
+  VersionAdded: '2.26'
+RSpec/RemoveConst:
+  VersionAdded: '2.26'
 RSpec/RepeatedDescription:
   VersionAdded: '1.9'
 RSpec/RepeatedExample:
@@ -1263,15 +1315,20 @@ RSpec/RepeatedExampleGroupDescription:
   VersionAdded: '1.38'
 RSpec/RepeatedIncludeExample:
   VersionAdded: '1.44'
+RSpec/RepeatedSubjectCall:
+  VersionAdded: '2.27'
 RSpec/ReturnFromStub:
   EnforcedStyle: and_return
   VersionAdded: '1.16'
   VersionChanged: '1.22'
 RSpec/ScatteredLet:
+  AutoCorrect: contextual
   VersionAdded: '1.14'
-  VersionChanged: '1.39'
+  VersionChanged: '2.31'
 RSpec/ScatteredSetup:
+  AutoCorrect: contextual
   VersionAdded: '1.10'
+  VersionChanged: '2.31'
 RSpec/SharedContext:
   VersionAdded: '1.13'
 RSpec/SharedExamples:
@@ -1281,11 +1338,34 @@ RSpec/SharedExamples:
 RSpec/SingleArgumentMessageChain:
   VersionAdded: '1.9'
   VersionChanged: '1.10'
+RSpec/SkipBlockInsideExample:
+  VersionAdded: '2.19'
+RSpec/SpecFilePathFormat:
+  Include:
+  - "**/*_spec.rb"
+  Exclude:
+  - "**/spec/routing/**/*"
+  CustomTransform:
+    RuboCop: rubocop
+    RSpec: rspec
+  IgnoreMethods: false
+  IgnoreMetadata:
+    type: routing
+  VersionAdded: '2.24'
+RSpec/SpecFilePathSuffix:
+  VersionAdded: '2.24'
+  Include:
+  - "**/*_spec*rb*"
+  - "**/spec/**/*"
 RSpec/StubbedMock:
   VersionAdded: '1.44'
+RSpec/SubjectDeclaration:
+  VersionAdded: '2.5'
 RSpec/SubjectStub:
   VersionAdded: '1.7'
   VersionChanged: '2.8'
+RSpec/UndescriptiveLiteralsDescription:
+  VersionAdded: '2.29'
 RSpec/UnspecifiedException:
   VersionAdded: '1.30'
 RSpec/VariableDefinition:
@@ -1296,309 +1376,19 @@ RSpec/VariableName:
   AllowedPatterns: []
   VersionAdded: '1.40'
   VersionChanged: '2.13'
+RSpec/VerifiedDoubleReference:
+  EnforcedStyle: constant
+  VersionAdded: 2.10.0
+  VersionChanged: '2.12'
 RSpec/VerifiedDoubles:
   IgnoreNameless: true
-  IgnoreSymbolicNames: false
+  IgnoreSymbolicNames: true
   VersionAdded: 1.2.1
   VersionChanged: '1.5'
 RSpec/VoidExpect:
   VersionAdded: '1.16'
 RSpec/Yield:
   VersionAdded: '1.32'
-RSpec/Capybara/FeatureMethods:
-  EnabledMethods: []
-  VersionAdded: '1.17'
-  VersionChanged: '2.0'
-RSpec/Rails/HttpStatus:
-  EnforcedStyle: symbolic
-  VersionAdded: '1.23'
-  VersionChanged: '2.20'
-Rails/ActionFilter:
-  VersionAdded: '0.19'
-  EnforcedStyle: action
-  Include:
-  - app/controllers/**/*.rb
-  - app/mailers/**/*.rb
-Rails/ActiveRecordAliases:
-  VersionAdded: '0.53'
-Rails/ActiveRecordOverride:
-  VersionAdded: '0.67'
-  Include:
-  - app/models/**/*.rb
-Rails/ActiveSupportAliases:
-  VersionAdded: '0.48'
-Rails/ApplicationController:
-  VersionAdded: '2.4'
-  VersionChanged: '2.5'
-Rails/ApplicationJob:
-  VersionAdded: '0.49'
-  VersionChanged: '2.5'
-Rails/ApplicationMailer:
-  VersionAdded: '2.4'
-  VersionChanged: '2.5'
-Rails/ApplicationRecord:
-  VersionAdded: '0.49'
-  VersionChanged: '2.5'
-Rails/ArelStar:
-  VersionAdded: '2.9'
-Rails/AssertNot:
-  VersionAdded: '0.56'
-  Include:
-  - "**/test/**/*"
-Rails/BelongsTo:
-  VersionAdded: '0.62'
-Rails/Blank:
-  VersionAdded: '0.48'
-  VersionChanged: '2.10'
-  NilOrEmpty: true
-  NotPresent: true
-  UnlessPresent: true
-Rails/BulkChangeTable:
-  VersionAdded: '0.57'
-  Database:
-  SupportedDatabases:
-  - mysql
-  - postgresql
-  Include:
-  - db/migrate/*.rb
-Rails/ContentTag:
-  VersionAdded: '2.6'
-  VersionChanged: '2.12'
-  Exclude:
-  - "/app/models/**/*.rb"
-  - "/config/**/*.rb"
-Rails/CreateTableWithTimestamps:
-  VersionAdded: '0.52'
-  Include:
-  - db/migrate/*.rb
-  Exclude:
-  - "/db/migrate/*_create_active_storage_tables.active_storage.rb"
-Rails/Date:
-  VersionAdded: '0.30'
-  VersionChanged: '2.11'
-  EnforcedStyle: flexible
-  AllowToTime: true
-Rails/Delegate:
-  VersionAdded: '0.21'
-  VersionChanged: '0.50'
-  EnforceForPrefixed: true
-Rails/DelegateAllowBlank:
-  VersionAdded: '0.44'
-Rails/DynamicFindBy:
-  VersionAdded: '0.44'
-  VersionChanged: '2.10'
-  Whitelist:
-  - find_by_sql
-  AllowedMethods:
-  - find_by_sql
-  AllowedReceivers:
-  - Gem::Specification
-Rails/EnumHash:
-  VersionAdded: '2.3'
-  Include:
-  - app/models/**/*.rb
-Rails/EnumUniqueness:
-  VersionAdded: '0.46'
-  Include:
-  - app/models/**/*.rb
-Rails/EnvironmentComparison:
-  VersionAdded: '0.52'
-Rails/Exit:
-  VersionAdded: '0.41'
-  Include:
-  - app/**/*.rb
-  - config/**/*.rb
-  - lib/**/*.rb
-  Exclude:
-  - "/lib/**/*.rake"
-Rails/FilePath:
-  VersionAdded: '0.47'
-  VersionChanged: '2.4'
-  EnforcedStyle: slashes
-Rails/FindBy:
-  VersionAdded: '0.30'
-  VersionChanged: '2.11'
-  IgnoreWhereFirst: true
-  Include:
-  - app/models/**/*.rb
-Rails/FindEach:
-  VersionAdded: '0.30'
-  VersionChanged: '2.9'
-  Include:
-  - app/models/**/*.rb
-  IgnoredMethods:
-  - order
-  - limit
-  - select
-  - lock
-Rails/HasAndBelongsToMany:
-  VersionAdded: '0.12'
-  Include:
-  - app/models/**/*.rb
-Rails/HasManyOrHasOneDependent:
-  VersionAdded: '0.50'
-  Include:
-  - app/models/**/*.rb
-Rails/HelperInstanceVariable:
-  VersionAdded: '2.0'
-  Include:
-  - app/helpers/**/*.rb
-Rails/HttpPositionalArguments:
-  VersionAdded: '0.44'
-  Include:
-  - spec/**/*
-  - test/**/*
-Rails/HttpStatus:
-  VersionAdded: '0.54'
-  VersionChanged: '2.11'
-  EnforcedStyle: symbolic
-Rails/IgnoredSkipActionFilterOption:
-  VersionAdded: '0.63'
-  Include:
-  - app/controllers/**/*.rb
-  - app/mailers/**/*.rb
-Rails/IndexBy:
-  VersionAdded: '2.5'
-  VersionChanged: '2.8'
-Rails/IndexWith:
-  VersionAdded: '2.5'
-  VersionChanged: '2.8'
-Rails/InverseOf:
-  VersionAdded: '0.52'
-  IgnoreScopes: false
-  Include:
-  - app/models/**/*.rb
-Rails/LexicallyScopedActionFilter:
-  VersionAdded: '0.52'
-  Include:
-  - app/controllers/**/*.rb
-  - app/mailers/**/*.rb
-Rails/LinkToBlank:
-  VersionAdded: '0.62'
-Rails/NotNullColumn:
-  VersionAdded: '0.43'
-  Include:
-  - db/migrate/*.rb
-Rails/Output:
-  VersionAdded: '0.15'
-  VersionChanged: '0.19'
-  Include:
-  - app/**/*.rb
-  - config/**/*.rb
-  - db/**/*.rb
-  - lib/**/*.rb
-Rails/OutputSafety:
-  VersionAdded: '0.41'
-Rails/Pick:
-  VersionAdded: '2.6'
-Rails/PluralizationGrammar:
-  VersionAdded: '0.35'
-Rails/Presence:
-  VersionAdded: '0.52'
-Rails/Present:
-  VersionAdded: '0.48'
-  VersionChanged: '0.67'
-  NotNilAndNotEmpty: true
-  NotBlank: true
-  UnlessBlank: true
-Rails/RakeEnvironment:
-  VersionAdded: '2.4'
-  VersionChanged: '2.6'
-  Include:
-  - "**/Rakefile"
-  - "**/*.rake"
-  Exclude:
-  - "/lib/capistrano/tasks/**/*.rake"
-Rails/ReadWriteAttribute:
-  VersionAdded: '0.20'
-  VersionChanged: '0.29'
-  Include:
-  - app/models/**/*.rb
-Rails/RedundantAllowNil:
-  VersionAdded: '0.67'
-  Include:
-  - app/models/**/*.rb
-Rails/RedundantForeignKey:
-  VersionAdded: '2.6'
-Rails/RedundantReceiverInWithOptions:
-  VersionAdded: '0.52'
-Rails/ReflectionClassName:
-  VersionAdded: '0.64'
-  VersionChanged: '2.10'
-Rails/RefuteMethods:
-  VersionAdded: '0.56'
-  EnforcedStyle: assert_not
-  Include:
-  - "**/test/**/*"
-Rails/RelativeDateConstant:
-  VersionAdded: '0.48'
-  VersionChanged: '2.13'
-Rails/RequestReferer:
-  VersionAdded: '0.41'
-  EnforcedStyle: referer
-Rails/ReversibleMigration:
-  VersionAdded: '0.47'
-  VersionChanged: '2.13'
-  Include:
-  - db/**/*.rb
-Rails/SafeNavigation:
-  VersionAdded: '0.43'
-  ConvertTry: false
-Rails/SafeNavigationWithBlank:
-  VersionAdded: '2.4'
-Rails/ScopeArgs:
-  VersionAdded: '0.19'
-  VersionChanged: '2.12'
-  Include:
-  - app/models/**/*.rb
-Rails/SkipsModelValidations:
-  VersionAdded: '0.47'
-  VersionChanged: '2.7'
-  ForbiddenMethods:
-  - decrement!
-  - decrement_counter
-  - increment!
-  - increment_counter
-  - insert
-  - insert!
-  - insert_all
-  - insert_all!
-  - toggle!
-  - touch
-  - touch_all
-  - update_all
-  - update_attribute
-  - update_column
-  - update_columns
-  - update_counters
-  - upsert
-  - upsert_all
-  AllowedMethods: []
-Rails/TimeZone:
-  VersionAdded: '0.30'
-  VersionChanged: '2.13'
-  EnforcedStyle: flexible
-  Exclude:
-  - "/**/*.gemspec"
-Rails/UniqBeforePluck:
-  VersionAdded: '0.40'
-  VersionChanged: '2.13'
-  EnforcedStyle: conservative
-Rails/UniqueValidationWithoutIndex:
-  VersionAdded: '2.5'
-  Include:
-  - app/models/**/*.rb
-Rails/UnknownEnv:
-  VersionAdded: '0.51'
-  Environments:
-  - development
-  - test
-  - production
-Rails/Validation:
-  VersionAdded: '0.9'
-  VersionChanged: '0.41'
-  Include:
-  - app/models/**/*.rb
 Rake/ClassDefinitionInTask:
   VersionAdded: 0.3.0
 Rake/Desc:
@@ -1626,6 +1416,7 @@ Style/AccessModifierDeclarations:
   VersionChanged: '0.81'
   EnforcedStyle: group
   AllowModifiersOnSymbols: true
+  AllowModifiersOnAttrs: true
 Style/AccessorGrouping:
   VersionAdded: '0.87'
   EnforcedStyle: grouped
@@ -1761,8 +1552,9 @@ Style/EmptyBlockParameter:
 Style/EmptyCaseCondition:
   VersionAdded: '0.40'
 Style/EmptyElse:
+  AutoCorrect: contextual
   VersionAdded: '0.28'
-  VersionChanged: '0.32'
+  VersionChanged: '1.61'
   EnforcedStyle: both
   AllowComments: false
 Style/EmptyLambdaParameter:
@@ -1771,7 +1563,9 @@ Style/EmptyLiteral:
   VersionAdded: '0.9'
   VersionChanged: '0.12'
 Style/EmptyMethod:
+  AutoCorrect: contextual
   VersionAdded: '0.46'
+  VersionChanged: '1.61'
   EnforcedStyle: compact
 Style/Encoding:
   VersionAdded: '0.9'
@@ -1811,23 +1605,18 @@ Style/FormatStringToken:
   VersionChanged: '1.0'
   AllowedMethods: []
   AllowedPatterns: []
-Style/FrozenStringLiteralComment:
-  VersionAdded: '0.36'
-  VersionChanged: '0.79'
-  EnforcedStyle: always
 Style/GlobalStdStream:
   VersionAdded: '0.89'
 Style/GlobalVars:
   VersionAdded: '0.13'
   AllowedVariables: []
+  Exclude:
+  - "/spec/**/*"
 Style/GuardClause:
   VersionAdded: '0.20'
   VersionChanged: '1.31'
   MinBodyLength: 1
   AllowConsecutiveConditionals: false
-Style/HashAsLastArrayItem:
-  VersionAdded: '0.88'
-  EnforcedStyle: braces
 Style/HashEachMethods:
   VersionAdded: '0.80'
   VersionChanged: '1.16'
@@ -1846,6 +1635,7 @@ Style/HashSyntax:
   - never
   - either
   - consistent
+  - either_consistent
   UseHashRocketsWithSymbolValues: false
   PreferHashRocketsForNonAlnumEndingSymbols: false
 Style/HashTransformKeys:
@@ -1923,8 +1713,6 @@ Style/ModuleFunction:
   VersionChanged: '0.65'
   EnforcedStyle: module_function
   Autocorrect: false
-Style/MultilineBlockChain:
-  VersionAdded: '0.13'
 Style/MultilineIfModifier:
   VersionAdded: '0.45'
 Style/MultilineIfThen:
@@ -2064,7 +1852,7 @@ Style/Proc:
   VersionChanged: '0.18'
 Style/RaiseArgs:
   VersionAdded: '0.14'
-  VersionChanged: '1.2'
+  VersionChanged: '1.61'
   EnforcedStyle: exploded
   AllowedCompactTypes: []
 Style/RandomWithOffset:
@@ -2199,7 +1987,7 @@ Style/SymbolLiteral:
   VersionAdded: '0.30'
 Style/SymbolProc:
   VersionAdded: '0.26'
-  VersionChanged: '1.40'
+  VersionChanged: '1.64'
   AllowMethodsWithArguments: false
   AllowedMethods:
   - define_method

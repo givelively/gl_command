@@ -92,9 +92,7 @@ module GLCommand
         if exception?(passed_error)
           # This catches errors within GLCommand::Context and prevents self referential error display
           # $ERROR_INFO (aka $!), stores the last Ruby error
-          if $ERROR_INFO.to_s.include?('for <GLCommand::Context')
-            @full_error_message ||= $ERROR_INFO.to_s
-          end
+          @full_error_message ||= $ERROR_INFO.to_s if $ERROR_INFO.to_s.include?('for <GLCommand::Context')
           # If something raised ActiveRecord::RecordInvalid, assign its errors to #errors
           merge_errors(passed_error.record.errors) if
             passed_error.is_a?(ActiveRecord::RecordInvalid) && defined?(passed_error.record.errors)
