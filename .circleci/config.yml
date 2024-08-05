@@ -12,11 +12,8 @@ jobs:
       - checkout
       - run:
           gem install bundler
-      #     name: Which bundler?
-      #     command: bundle -v
-      # - ruby/install-deps:
-      #     with-cache: false
-      #     # include-branch-in-cache-key: true
+      - run:
+          bundle install
       - run:
           name: rspec
           command: bundle exec rspec
