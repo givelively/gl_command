@@ -14,6 +14,7 @@ jobs:
           name: Which bundler?
           command: bundle -v
       - ruby/install-deps
+          include-branch-in-cache-key: true
       - run:
           name: rspec
           command: bundle exec rspec
