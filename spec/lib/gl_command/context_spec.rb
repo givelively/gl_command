@@ -161,8 +161,8 @@ RSpec.describe GLCommand::Context do
           user_or_whatever = Struct.new('UserOrWhatever', :uuid, :email, :name,
                                         :created_at, :updated_at, keyword_init: true)
           user_or_whatever.new(uuid: 'ff9c64dd-9a0d-4ce4-a72f-b54037bcc28e',
-                               email: 'f@f.f', name: 'g', created_at: Time.current,
-                               updated_at: Time.current)
+                               email: 'f@f.f', name: 'g', created_at: Time.now,
+                               updated_at: Time.now)
         end
         let(:context) { test_class.build_context(something:, new_thing:) }
         let(:target) do
