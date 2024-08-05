@@ -10,12 +10,13 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
-      # - run:
+      - run:
+          gem install bundler
       #     name: Which bundler?
       #     command: bundle -v
-      - ruby/install-deps:
-          with-cache: false
-          # include-branch-in-cache-key: true
+      # - ruby/install-deps:
+      #     with-cache: false
+      #     # include-branch-in-cache-key: true
       - run:
           name: rspec
           command: bundle exec rspec
