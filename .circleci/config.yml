@@ -10,9 +10,9 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
-      - run:
-          name: Which bundler?
-          command: bundle -v
+      # - run:
+      #     name: Which bundler?
+      #     command: bundle -v
       - ruby/install-deps:
           with-cache: false
           # include-branch-in-cache-key: true
