@@ -2,7 +2,6 @@
 
 require 'active_support/core_ext/module'
 require 'gl_exception_notifier'
-require 'sentry-ruby' # Remove once gl_exception_notifier is 1.0.2
 require 'gl_command/validatable'
 
 module GLCommand

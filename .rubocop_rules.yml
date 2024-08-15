@@ -1,5 +1,5 @@
 ---
-RuboCop-version: 1.65.1 (using Parser 3.3.4.0, rubocop-ast 1.32.0, running on ruby
+RuboCop-version: 1.65.1 (using Parser 3.3.4.2, rubocop-ast 1.32.0, running on ruby
   3.2.5)
 Bundler/DuplicatedGem:
   Severity: warning

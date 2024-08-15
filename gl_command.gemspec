@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.files = %w[gl_command.gemspec README.md LICENSE] + `git ls-files | grep -E '^(lib)'`.split("\n")
 
   spec.add_dependency 'activerecord', '>= 3.2.0'
-  spec.add_dependency 'gl_exception_notifier'
+  spec.add_dependency 'gl_exception_notifier', '>= 1.0.2'
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 end
