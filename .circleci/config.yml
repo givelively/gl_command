@@ -11,9 +11,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Which bundler?
-          command: bundle -v
-      - ruby/install-deps
+          gem install bundler
+      - run:
+          bundle install
       - run:
           name: rspec
           command: bundle exec rspec

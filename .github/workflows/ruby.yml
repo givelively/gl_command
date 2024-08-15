@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        # NOTE: when updating the ruby versions, consider re-writing the rubocop_rules.yml
+        # and updating rules_version in spec/rubocop_rules_spec.rb
         ruby-version: ['3.3', '3.2', '3.1']
     env:
       RAILS_ENV: test
@@ -24,18 +26,5 @@ jobs:
       # Run tests
       - name: Run tests
         run: bundle exec rspec
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Install Ruby and gems
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-          ruby-version: '3.2.3'
-      - run: bundle install
-      # Add or replace any other lints here
-      - name: Lint Ruby files
-        run: bin/rubocop --parallel
+      - name: Lint
+        run: bin/lint --all --no-fix
