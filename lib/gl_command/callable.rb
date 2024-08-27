@@ -6,7 +6,7 @@ require 'gl_command/validatable'
 
 module GLCommand
   class Callable
-    DEFAULT_OPTS = { raise_errors: false, skip_unknown_parameters: true }.freeze
+    DEFAULT_OPTS = { raise_errors: false, skip_unknown_parameters: true, in_chain: false }.freeze
     RESERVED_WORDS = (DEFAULT_OPTS.keys + GLCommand::ChainableContext.reserved_words).sort.freeze
 
     class << self

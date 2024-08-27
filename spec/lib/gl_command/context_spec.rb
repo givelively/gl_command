@@ -24,6 +24,8 @@ RSpec.describe GLCommand::Context do
       expect(context.send(:arguments)).to eq({})
       expect(context.returns).to eq({})
       expect(context.to_h).to eq({})
+      expect(context.chain?).to be_falsey
+      expect(context.in_chain?).to be_falsey
     end
 
     it 'only has the base methods' do

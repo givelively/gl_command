@@ -31,6 +31,8 @@ RSpec.describe GLCommand::Chainable do
         expect(result.test_npo.ein).to eq '81-0693451'
         expect(result).not_to be_raise_errors
         expect(result.called).to eq([TestNormalizeEin, CreateTestNpo])
+        expect(result.chain?).to be_truthy
+        expect(result.in_chain?).to be_falsey
       end
 
       it 'updates the arguments' do
