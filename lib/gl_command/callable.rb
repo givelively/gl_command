@@ -70,7 +70,7 @@ module GLCommand
         (arguments + returns).uniq
       end
 
-      # Used internally by GLCommand (probably don't reference them in your own GLCommands)
+      # Used internally by GLCommand (probably don't reference in your own GLCommands)
       # is true in GLCommand::Chainable
       def chain?
         false
@@ -132,6 +132,10 @@ module GLCommand
     end
 
     private
+    # trigger: [:before_call, :before_rollback], inside_chain: [true, false]
+    def instrument_command(trigger)
+      # Override where gem is used if you want to instrument commands
+    end
 
     # rubocop:disable Metrics/AbcSize
     def handle_failure(e = nil)
@@ -159,11 +163,10 @@ module GLCommand
     rescue GLCommand::CommandNoNotifyError
       raise context.error # makes CommandNoNotifyError the cause
     end
-    # rubocop:enable Metrics/AbcSize
 
-    # rubocop:disable Metrics/AbcSize
     def call_with_callbacks
       GLExceptionNotifier.breadcrumbs(data: { context: context.inspect }, message: self.class.to_s)
+      instrument_command(:before_call)
       validate_validatable! # defined in GLCommand::Validatable
 
       # This is the where the call actually happens
@@ -185,6 +188,8 @@ module GLCommand
 
     def call_rollbacks
       return if defined?(@rolled_back) # Not sure this is required
+
+      instrument_command(:before_rollback)
 
       @rolled_back = true
 
