@@ -132,7 +132,8 @@ module GLCommand
     end
 
     private
-    # trigger: [:before_call, :before_rollback], inside_chain: [true, false]
+
+    # trigger: [:before_call, :before_rollback]
     def instrument_command(trigger)
       # Override where gem is used if you want to instrument commands
     end

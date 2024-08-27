@@ -42,7 +42,7 @@ RSpec.describe GLCommand::Callable do
         it 'runs rollback and raises' do
           expect do
             expect_any_instance_of(ArrayAdd).to receive(:instrument_command).with(:before_call).once
-          expect_any_instance_of(ArrayAdd).to receive(:instrument_command).with(:before_rollback).once
+            expect_any_instance_of(ArrayAdd).to receive(:instrument_command).with(:before_rollback).once
             expect(GLExceptionNotifier).not_to receive(:call)
             result = ArrayAdd.call!(array:, item: 6)
             failure_expectations(result)
