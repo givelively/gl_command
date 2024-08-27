@@ -8,6 +8,7 @@ RSpec.describe GLCommand::Callable do
     describe 'call' do
       it 'adds to the array' do
         expect_any_instance_of(ArrayAdd).to receive(:instrument_command).with(:before_call).once
+        expect_any_instance_of(ArrayAdd).to receive(:instrument_command).with(:after_call).once
         result = ArrayAdd.call(array:, item: 6)
         expect(result).to be_successful
         expect(array).to eq([1, 2, 3, 4, 6])

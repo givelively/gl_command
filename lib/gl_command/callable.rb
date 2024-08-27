@@ -107,7 +107,9 @@ module GLCommand
 
     def perform_call(args)
       raise_for_invalid_args!(**args)
+      instrument_command(:before_call)
       call_with_callbacks
+      instrument_command(:after_call)
       raise_unless_chained_or_skipped if self.class.chain? # defined in GLCommand::Chainable
       context.failure? ? handle_failure : context
     rescue StandardError => e
@@ -134,7 +136,7 @@ module GLCommand
 
     private
 
-    # trigger: [:before_call, :before_rollback]
+    # trigger: [:before_call, :after_call, :before_rollback]
     def instrument_command(trigger)
       # Override where gem is used if you want to instrument commands
     end
@@ -168,7 +170,6 @@ module GLCommand
 
     def call_with_callbacks
       GLExceptionNotifier.breadcrumbs(data: { context: context.inspect }, message: self.class.to_s)
-      instrument_command(:before_call)
       validate_validatable! # defined in GLCommand::Validatable
 
       # This is the where the call actually happens
