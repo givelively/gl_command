@@ -191,6 +191,7 @@ RSpec.describe GLCommand::Chainable do
         expect(result.new_array).to eq array + [11]
         expect(result.revised_item).to eq 11
         expect(result.called).to eq([ArrayAdd, ArrayPop])
+        expect(result.is_in_chain).to be_truthy
       end
     end
 

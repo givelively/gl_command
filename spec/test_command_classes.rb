@@ -29,7 +29,7 @@ end
 class ArrayPop < GLCommand::Callable
   requires :array
 
-  returns :popped_array, :popped_item
+  returns :popped_array, :popped_item, :is_in_chain
 
   validates :array, presence: true
 
@@ -38,6 +38,7 @@ class ArrayPop < GLCommand::Callable
   def call
     context.popped_item = array.pop
     context.popped_array = array.dup
+    context.is_in_chain = context.in_chain?
   end
 end
 
@@ -45,7 +46,7 @@ class ArrayChain < GLCommand::Chainable
   requires :array, :item
   chain ArrayAdd, ArrayPop
 
-  returns :new_array, :popped_array, :revised_item
+  returns :new_array, :popped_array, :revised_item, :is_in_chain
 
   def call
     context.revised_item = item + 5
