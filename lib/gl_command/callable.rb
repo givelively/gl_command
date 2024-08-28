@@ -6,7 +6,7 @@ require 'gl_command/validatable'
 
 module GLCommand
   class Callable
-    DEFAULT_OPTS = { raise_errors: false, skip_unknown_parameters: true }.freeze
+    DEFAULT_OPTS = { raise_errors: false, skip_unknown_parameters: true, in_chain: false }.freeze
     RESERVED_WORDS = (DEFAULT_OPTS.keys + GLCommand::ChainableContext.reserved_words).sort.freeze
 
     class << self
@@ -25,7 +25,8 @@ module GLCommand
 
         # DEFAULT_OPTS contains skip_unknown_parameters: true - so it raises on call
         # (rather than in context initialize) to make errors more legible
-        opts = DEFAULT_OPTS.merge(raise_errors: args.delete(:raise_errors)).compact
+        opts = DEFAULT_OPTS.merge(raise_errors: args.delete(:raise_errors),
+                                  in_chain: args.delete(:in_chain)).compact
         # args are passed in in perform_call(args) so that invalid args raise in a legible place
         new(build_context(**args.merge(opts))).perform_call(args)
       end
@@ -70,7 +71,7 @@ module GLCommand
         (arguments + returns).uniq
       end
 
-      # Used internally by GLCommand (probably don't reference them in your own GLCommands)
+      # Used internally by GLCommand (probably don't reference in your own GLCommands)
       # is true in GLCommand::Chainable
       def chain?
         false
@@ -106,7 +107,9 @@ module GLCommand
 
     def perform_call(args)
       raise_for_invalid_args!(**args)
+      instrument_command(:before_call)
       call_with_callbacks
+      instrument_command(:after_call)
       raise_unless_chained_or_skipped if self.class.chain? # defined in GLCommand::Chainable
       context.failure? ? handle_failure : context
     rescue StandardError => e
@@ -132,6 +135,11 @@ module GLCommand
     end
 
     private
+
+    # trigger: [:before_call, :after_call, :before_rollback]
+    def instrument_command(trigger)
+      # Override where gem is used if you want to instrument commands
+    end
 
     # rubocop:disable Metrics/AbcSize
     def handle_failure(e = nil)
@@ -159,9 +167,7 @@ module GLCommand
     rescue GLCommand::CommandNoNotifyError
       raise context.error # makes CommandNoNotifyError the cause
     end
-    # rubocop:enable Metrics/AbcSize
 
-    # rubocop:disable Metrics/AbcSize
     def call_with_callbacks
       GLExceptionNotifier.breadcrumbs(data: { context: context.inspect }, message: self.class.to_s)
       validate_validatable! # defined in GLCommand::Validatable
@@ -185,6 +191,8 @@ module GLCommand
 
     def call_rollbacks
       return if defined?(@rolled_back) # Not sure this is required
+
+      instrument_command(:before_rollback)
 
       @rolled_back = true
 

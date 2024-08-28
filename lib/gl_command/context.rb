@@ -7,9 +7,10 @@ require 'active_support/core_ext/module'
 module GLCommand
   class Context
     def initialize(klass, raise_errors: false, skip_unknown_parameters: false,
-                   **arguments_and_returns)
+                   in_chain: false, **arguments_and_returns)
       @klass = klass
       @raise_errors = raise_errors.nil? ? false : raise_errors
+      @in_chain = in_chain
       @klass.arguments_and_returns.each { |key| singleton_class.class_eval { attr_accessor key } }
       initialize_chain_context(**arguments_and_returns) if chain?
       assign_parameters(skip_unknown_parameters:, **arguments_and_returns)
@@ -28,6 +29,10 @@ module GLCommand
 
     def chain?
       false
+    end
+
+    def in_chain?
+      @in_chain
     end
 
     def returns

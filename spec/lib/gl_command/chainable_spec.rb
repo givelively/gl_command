@@ -38,6 +38,9 @@ RSpec.describe GLCommand::Chainable do
         expect(result.returns.keys).to eq([:test_npo])
         # context.arguments are overridden in the chain, but this chain doesn't overwrite them
         expect(result.arguments).to eq({ string: '810693451' })
+        # Verify chain information
+        expect(result).to be_chain
+        expect(result).not_to be_in_chain
       end
     end
 
@@ -183,13 +186,16 @@ RSpec.describe GLCommand::Chainable do
     describe 'call' do
       let(:result) { ArrayChain.call!(array:, item: 6) }
 
+      # rubocop:disable RSpec/MultipleExpectations
       it 'adds to the array' do
         expect(result).to be_successful
         expect(array).to eq([1, 2, 3, 4])
         expect(result.new_array).to eq array + [11]
         expect(result.revised_item).to eq 11
         expect(result.called).to eq([ArrayAdd, ArrayPop])
+        expect(result.is_in_chain).to be_truthy
       end
+      # rubocop:enable RSpec/MultipleExpectations
     end
 
     describe 'with validation failure' do

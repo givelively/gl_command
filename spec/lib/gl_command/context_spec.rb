@@ -7,7 +7,7 @@ RSpec.describe GLCommand::Context do
   # rubocop:disable RSpec/MultipleExpectations
   let(:context_instance_methods) do
     %i[arguments assign_callable assign_parameters chain? error error= errors failure?
-       full_error_message full_error_message= klass no_notifiable_error_to_raise
+       full_error_message full_error_message= in_chain? klass no_notifiable_error_to_raise
        no_notify? opts_hash raise_errors? returns success? successful? to_h]
   end
 
@@ -24,6 +24,8 @@ RSpec.describe GLCommand::Context do
       expect(context.send(:arguments)).to eq({})
       expect(context.returns).to eq({})
       expect(context.to_h).to eq({})
+      expect(context).not_to be_chain
+      expect(context).not_to be_in_chain
     end
 
     it 'only has the base methods' do
