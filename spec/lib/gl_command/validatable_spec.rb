@@ -183,6 +183,7 @@ RSpec.describe GLCommand::Validatable do
       result = test_multiple_class.call(number: '2', string: 'a', size: 'small')
       expect(result).to be_successful
       expect(result.something).to eq 'Number: 2, String: a, Size: small'
+      expect(result.errors).to be_blank
     end
 
     context 'with multiple validation errors' do
@@ -196,6 +197,24 @@ RSpec.describe GLCommand::Validatable do
         expect(result).not_to be_successful
         expect(result.full_error_message).to eq target_error_message
       end
+    end
+  end
+
+  describe 'errors' do
+    let(:errors_command) do
+      Class.new(GLCommand::Callable) do
+        def call
+          raise 'Error!'
+        end
+      end
+    end
+    let(:result) { errors_command.call }
+
+    it 'returns the errors' do
+      expect(result).to be_a_failure
+      expect(result.errors).not_to be_empty
+      # make it explicit that this is a full_error_message
+      expect(result.errors.full_messages).to eq(['full_error_message: Error!'])
     end
   end
 

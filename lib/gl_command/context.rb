@@ -25,7 +25,15 @@ module GLCommand
     attr_reader :klass, :error
     attr_writer :full_error_message
 
-    delegate :errors, to: :@callable, allow_nil: true
+    # delegate :errors, to: :@callable, allow_nil: true
+
+    def errors
+      current_errors = @callable&.errors
+      if @failure && current_errors.blank?
+        current_errors&.add(:base, "full_error_message: #{full_error_message}")
+      end
+      current_errors
+    end
 
     def chain?
       false
