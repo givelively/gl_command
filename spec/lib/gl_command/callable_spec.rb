@@ -349,6 +349,35 @@ RSpec.describe GLCommand::Callable do
     end
   end
 
+  describe 'build_context' do
+    let(:context_class) do
+      Class.new(GLCommand::Callable) do
+        def call
+        end
+      end
+    end
+
+    context 'with error string' do
+      let(:result) { CreateTestNpo.build_context(error: 'Some error') }
+      it 'is failure' do
+        expect(result).to be_a_failure
+        expect(result.full_error_message).to eq 'Some error'
+        expect(result.error.class).to eq GLCommand::StopAndFail
+      end
+    end
+
+    context 'with error' do
+      let(:error) { ActiveRecord::RecordNotFound.new('Some error class') }
+      let(:result) { CreateTestNpo.build_context(error: error) }
+
+      it 'is failure' do
+        expect(result).to be_a_failure
+        expect(result.full_error_message).to eq 'Some error class'
+        expect(result.error.class).to eq ActiveRecord::RecordNotFound
+      end
+    end
+  end
+
   describe 'command with positional_parameter' do
     let(:test_class) do
       Class.new(GLCommand::Callable) do
