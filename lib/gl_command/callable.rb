@@ -39,7 +39,7 @@ module GLCommand
       def build_context(raise_errors: false, skip_unknown_parameters: false, error: nil,
                         **arguments_and_returns)
         new_context = context_class.new(self, raise_errors:, skip_unknown_parameters:,
-          **arguments_and_returns)
+                                              **arguments_and_returns)
         new_context.error = error if error.present?
         new_context
       end
