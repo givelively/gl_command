@@ -273,7 +273,6 @@ RSpec.describe GLCommand::Context do
       end
 
       it 'is truthy' do
-        # expect(context.errors).not_to be_present
         expect(context).to be_failure
         expect(context.error.class).to eq GLCommand::StopAndFail
         expect(context.full_error_message).to eq 'something'
