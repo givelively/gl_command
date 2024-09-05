@@ -25,8 +25,7 @@ module GLCommand
     attr_reader :klass, :error
     attr_writer :full_error_message
 
-    # If someone calls errors on a context, they expect to get the errors!
-    # Include the errors from
+    # If someone calls #errors, they expect to get the errors! Include the non-validation error, if it exists
     def errors
       current_errors&.add(:base, "Command Error: #{full_error_message}") if add_command_error?
       current_errors
@@ -138,9 +137,8 @@ module GLCommand
       return true if current_errors.blank?
 
       # Add command error unless the existing error is a validation error or there's already a command error
-      return false if  @error&.class == ActiveRecord::RecordInvalid
-
-      current_errors.full_messages.none? { |err| err.start_with?('Command Error: ') }
+      @error&.class != ActiveRecord::RecordInvalid &&
+        current_errors.full_messages.none? { |err| err.start_with?('Command Error: ') }
     end
 
     def exception?(passed_error)

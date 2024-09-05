@@ -218,7 +218,6 @@ RSpec.describe GLCommand::Validatable do
     it 'returns the errors' do
       expect(result).to be_a_failure
       expect(result.errors.count).to eq 1
-      # make it explicit that this is a full_error_message
       expect(result.full_error_message).to eq 'Raised error message!'
       expect(result.errors.full_messages).to eq(['Command Error: Raised error message!'])
     end
@@ -229,7 +228,6 @@ RSpec.describe GLCommand::Validatable do
       it 'returns the errors' do
         expect(result).to be_a_failure
         expect(result.errors.count).to eq 2
-        # make it explicit that this is a full_error_message
         expect(result.full_error_message).to eq 'Raised error message!'
         expect(result.errors.full_messages.sort).to eq(['Command Error: Raised error message!', 'validation error'])
       end
@@ -238,10 +236,10 @@ RSpec.describe GLCommand::Validatable do
     context 'with skip_raising' do
       let(:validation_error) { 'validation error' }
       let(:skip_raising) { true }
+
       it 'returns with just the validation error' do
         expect(result).to be_a_failure
         expect(result.errors.count).to eq 1
-        # make it explicit that this is a full_error_message
         expect(result.full_error_message).to eq 'Validation failed: validation error'
         expect(result.errors.full_messages.sort).to eq(['validation error'])
       end
