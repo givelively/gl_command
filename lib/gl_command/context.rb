@@ -26,9 +26,9 @@ module GLCommand
     attr_writer :full_error_message
 
     # If someone calls errors on a context, they expect to get the errors!
-    # Make that work, but also try to make it clear that they probably shouldn't be using that for presentation
+    # Include the errors from
     def errors
-      current_errors&.add(:base, "full_error_message: #{full_error_message}") if @failure && current_errors.blank?
+      current_errors&.add(:base, "Command Error: #{full_error_message}") if add_command_error?
       current_errors
     end
 
@@ -132,6 +132,17 @@ module GLCommand
       @callable&.errors
     end
 
+    def add_command_error?
+      return false if @error.blank?
+
+      return true if current_errors.blank?
+
+      # Add command error unless the existing error is a validation error or there's already a command error
+      return false if  @error&.class == ActiveRecord::RecordInvalid
+
+      current_errors.full_messages.none? { |err| err.start_with?('Command Error: ') }
+    end
+
     def exception?(passed_error)
       passed_error.is_a?(Exception) ||
         (passed_error.respond_to?(:ancestors) && passed_error.ancestors.include?(Exception))
@@ -145,7 +156,7 @@ module GLCommand
     def merge_errors(new_errors)
       # When merging the errors, don't add duplicate errors
       new_errors.each do |new_error|
-        errors.import(new_error) unless errors&.full_messages&.include?(new_error.full_message)
+        current_errors.import(new_error) unless current_errors&.full_messages&.include?(new_error.full_message)
       end
     end
 

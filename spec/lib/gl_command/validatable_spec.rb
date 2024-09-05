@@ -203,18 +203,48 @@ RSpec.describe GLCommand::Validatable do
   describe 'errors' do
     let(:errors_command) do
       Class.new(GLCommand::Callable) do
+        allows :validation_error, :skip_raising
+
         def call
-          raise 'Error!'
+          errors.add(:base, validation_error) if validation_error.present?
+          raise 'Raised error message!' unless skip_raising == true
         end
       end
     end
-    let(:result) { errors_command.call }
+    let(:result) { errors_command.call(validation_error:, skip_raising:) }
+    let(:validation_error) { nil }
+    let(:skip_raising) { false }
 
     it 'returns the errors' do
       expect(result).to be_a_failure
-      expect(result.errors).not_to be_empty
+      expect(result.errors.count).to eq 1
       # make it explicit that this is a full_error_message
-      expect(result.errors.full_messages).to eq(['full_error_message: Error!'])
+      expect(result.full_error_message).to eq 'Raised error message!'
+      expect(result.errors.full_messages).to eq(['Command Error: Raised error message!'])
+    end
+
+    context 'with validation_error' do
+      let(:validation_error) { 'validation error' }
+
+      it 'returns the errors' do
+        expect(result).to be_a_failure
+        expect(result.errors.count).to eq 2
+        # make it explicit that this is a full_error_message
+        expect(result.full_error_message).to eq 'Raised error message!'
+        expect(result.errors.full_messages.sort).to eq(['Command Error: Raised error message!', 'validation error'])
+      end
+    end
+
+    context 'with skip_raising' do
+      let(:validation_error) { 'validation error' }
+      let(:skip_raising) { true }
+      it 'returns with just the validation error' do
+        expect(result).to be_a_failure
+        expect(result.errors.count).to eq 1
+        # make it explicit that this is a full_error_message
+        expect(result.full_error_message).to eq 'Validation failed: validation error'
+        expect(result.errors.full_messages.sort).to eq(['validation error'])
+      end
     end
   end
 

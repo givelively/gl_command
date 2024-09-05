@@ -209,6 +209,7 @@ RSpec.describe GLCommand::Chainable do
       it 'adds an error' do
         expect(GLExceptionNotifier).not_to receive(:call)
         expect(result).not_to be_successful
+        expect(result.errors.full_messages).to eq(['Array Must be an array with no blank items!'])
         expect(result.error.to_s).to eq target_error_message
         expect(result.full_error_message).to eq target_error_message
         expect(result.error.class).to eq(ActiveRecord::RecordInvalid)
