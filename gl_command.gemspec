@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ['Give Lively']
   spec.summary = 'Give Lively Commands'
   spec.homepage = 'https://github.com/givelively/gl_command'
-  spec.license = 'Apache'
+  spec.license = 'Apache-2.0'
   spec.platform = Gem::Platform::RUBY
 
   spec.required_ruby_version = '>= 3.1'
