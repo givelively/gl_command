@@ -35,9 +35,13 @@ module GLCommand
         call(*posargs, **args.merge(raise_errors: true))
       end
 
-      def build_context(raise_errors: false, skip_unknown_parameters: false,
+      # error can be passed to build context, useful for stubbing in tests
+      def build_context(raise_errors: false, skip_unknown_parameters: false, error: nil,
                         **arguments_and_returns)
-        context_class.new(self, raise_errors:, skip_unknown_parameters:, **arguments_and_returns)
+        new_context = context_class.new(self, raise_errors:, skip_unknown_parameters:,
+                                              **arguments_and_returns)
+        new_context.error = error if error.present?
+        new_context
       end
 
       def requires(*attributes, **strong_attributes)

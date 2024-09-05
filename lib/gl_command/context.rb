@@ -25,7 +25,12 @@ module GLCommand
     attr_reader :klass, :error
     attr_writer :full_error_message
 
-    delegate :errors, to: :@callable, allow_nil: true
+    # If someone calls errors on a context, they expect to get the errors!
+    # Make that work, but also try to make it clear that they probably shouldn't be using that for presentation
+    def errors
+      current_errors&.add(:base, "full_error_message: #{full_error_message}") if @failure && current_errors.blank?
+      current_errors
+    end
 
     def chain?
       false
@@ -48,7 +53,7 @@ module GLCommand
     end
 
     def failure?
-      @failure || errors.present? || @full_error_message.present? || false
+      @failure || current_errors.present? || @full_error_message.present? || false
     end
 
     def success?
@@ -103,7 +108,7 @@ module GLCommand
             passed_error.is_a?(ActiveRecord::RecordInvalid) && defined?(passed_error.record.errors)
           # Return a new error if it's an error (rather than the class)
           passed_error.is_a?(Class) ? passed_error.new(@full_error_message) : passed_error
-        elsif errors.present? # check for validation errors
+        elsif current_errors.present? # check for validation errors
           # Assign ActiveRecord::RecordInvalid if validatable error
           ActiveRecord::RecordInvalid.new(@callable)
         else
@@ -122,6 +127,10 @@ module GLCommand
     end
 
     private
+
+    def current_errors
+      @callable&.errors
+    end
 
     def exception?(passed_error)
       passed_error.is_a?(Exception) ||
