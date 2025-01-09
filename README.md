@@ -195,6 +195,24 @@ class SomeChain < GLCommand::Chainable
   end
 end
 ```
+And if you need to stop and skip `chain` to run, pass the `skip_chain` inside the call method.
+
+```ruby
+class SomeChain < GLCommand::Chainable
+  requires :item
+
+  returns :new_item
+
+  chain CommmandOne, CommandTwo
+
+  def call
+    skip_chain unless item.valid? # Automatically skips the whole chain without any errors
+
+    chain(:item)
+  end
+end
+
+```
 
 
 ---
