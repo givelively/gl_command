@@ -195,7 +195,7 @@ class SomeChain < GLCommand::Chainable
   end
 end
 ```
-And if you need to stop and skip `chain` to run, pass the `skip_chain` inside the call method.
+And if you need to return early (and skip the `chain`), call `skip_chain` - or else you will get an error: `#chain method not called in GLCommand::Chainable #call.`
 
 ```ruby
 class SomeChain < GLCommand::Chainable
