@@ -195,6 +195,24 @@ class SomeChain < GLCommand::Chainable
   end
 end
 ```
+And if you need to return early (and skip the `chain`), call `skip_chain` - or else you will get an error: `#chain method not called in GLCommand::Chainable #call.`
+
+```ruby
+class SomeChain < GLCommand::Chainable
+  requires :item
+
+  returns :new_item
+
+  chain CommmandOne, CommandTwo
+
+  def call
+    skip_chain unless item.valid? # Automatically skips the whole chain without any errors
+
+    chain(:item)
+  end
+end
+
+```
 
 
 ---
