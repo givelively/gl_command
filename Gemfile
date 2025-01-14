@@ -9,7 +9,6 @@ group :development, :test do
   gem 'rails'
   gem 'rspec'
   gem 'rspec-rails'
-  gem 'rubocop', '1.62.0' # Lock to reduce churn in .rubocop_rules.yml
 end
 
 gemspec
