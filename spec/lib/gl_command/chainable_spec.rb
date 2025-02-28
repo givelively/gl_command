@@ -180,6 +180,20 @@ RSpec.describe GLCommand::Chainable do
     end
   end
 
+  describe 'argument that is a reserved word' do
+    let(:test_class) do
+      Class.new(GLCommand::Chainable) do
+        requires :result
+      end
+    end
+
+    it 'raises' do
+      expect do
+        test_class.call(result: [])
+      end.to raise_error(/reserved/i)
+    end
+  end
+
   context 'with array_add_class chain' do
     let(:array) { [1, 2, 3, 4] }
 

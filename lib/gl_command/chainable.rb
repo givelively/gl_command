@@ -50,7 +50,7 @@ module GLCommand
           context.called << command
         else
           @notified = true # chained command already notified
-          errors.merge!(result.errors)
+          errors&.merge!(result.errors)
           stop_and_fail!(result.error, no_notify: result.no_notify?)
           break
         end
