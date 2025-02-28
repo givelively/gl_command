@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 group :development, :test do
   gem 'gl_lint'
-  gem 'gl_rubocop', '~> 0.2.1', require: false
+  gem 'gl_rubocop', require: false
   gem 'guard-rspec'
   gem 'rails'
   gem 'rspec'
