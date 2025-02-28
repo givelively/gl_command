@@ -1,6 +1,4 @@
 ---
-RuboCop-version: 1.62.0 (using Parser 3.3.7.1, rubocop-ast 1.38.1, running on ruby
-  3.2.6)
 Bundler/DuplicatedGem:
   Severity: warning
   VersionAdded: '0.46'
@@ -850,14 +848,23 @@ Lint/Void:
   - "/**/*.haml"
 MagicNumbers/Base: {}
 MagicNumbers/NoArgument:
+  Exclude:
+  - "/spec/**/*"
+  - "/**/spec/**/*"
   PermittedValues:
   - 0
   - 1
 MagicNumbers/NoDefault:
+  Exclude:
+  - "/spec/**/*"
+  - "/**/spec/**/*"
   PermittedValues:
   - 0
   - 1
 MagicNumbers/NoReturn:
+  Exclude:
+  - "/spec/**/*"
+  - "/**/spec/**/*"
   PermittedReturnValues:
   - 0
   - 1

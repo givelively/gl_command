@@ -67,6 +67,10 @@ class TestNpo
     @all ||= []
   end
 
+  def self.count
+    all.count
+  end
+
   attr_reader :ein, :id
 
   validates_presence_of :ein
@@ -77,7 +81,7 @@ class TestNpo
   def initialize(ein:)
     run_callbacks :initialize do
       @ein = ein
-      @id = TestNpo.all.count + 1
+      @id = TestNpo.count + 1
     end
   end
 
