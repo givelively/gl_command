@@ -67,6 +67,10 @@ class TestNpo
     @all ||= []
   end
 
+  def self.count
+    all.count
+  end
+
   attr_reader :ein, :id
 
   validates_presence_of :ein
