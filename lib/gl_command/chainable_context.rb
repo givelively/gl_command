@@ -3,7 +3,7 @@
 module GLCommand
   class ChainableContext < GLCommand::Context
     def self.reserved_words
-      %i[callable called failure no_notify raise_errors result] + instance_methods
+      %i[callable called failure no_notify raise_errors _result] + instance_methods
     end
 
     # Called at the end of GLCommand::Context initialize
