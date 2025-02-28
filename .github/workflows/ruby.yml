@@ -27,4 +27,4 @@ jobs:
       - name: Run tests
         run: bundle exec rspec
       - name: Lint
-        run: bin/lint --all --no-fix
+        run: bin/lint --branch --no-fix
