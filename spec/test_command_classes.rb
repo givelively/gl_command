@@ -77,7 +77,7 @@ class TestNpo
   def initialize(ein:)
     run_callbacks :initialize do
       @ein = ein
-      @id = TestNpo.all.count + 1
+      @id = TestNpo.count + 1
     end
   end
 

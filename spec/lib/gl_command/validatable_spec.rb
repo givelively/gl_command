@@ -229,7 +229,8 @@ RSpec.describe GLCommand::Validatable do
         expect(result).to be_a_failure
         expect(result.errors.count).to eq 2
         expect(result.full_error_message).to eq 'Raised error message!'
-        expect(result.errors.full_messages.sort).to eq(['Command Error: Raised error message!', 'validation error'])
+        expect(result.errors.full_messages.sort).to eq(['Command Error: Raised error message!',
+                                                        'validation error'])
       end
     end
 
