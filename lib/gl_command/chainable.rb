@@ -32,7 +32,7 @@ module GLCommand
       end
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Lint/UnderscorePrefixedVariableName
     def chain(args)
       return if @chain_skipped
 
@@ -43,6 +43,7 @@ module GLCommand
         cargs = context.chain_arguments_and_returns.slice(*command.arguments)
                        .merge(context.opts_hash).merge(in_chain: true)
 
+        # using _result to make sure it doesn't cause naming conflicts with other uses of result
         _result = command.call(**cargs)
         context.assign_parameters(skip_unknown_parameters: true, **_result.returns)
 
@@ -56,7 +57,7 @@ module GLCommand
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Lint/UnderscorePrefixedVariableName
 
     def commands
       self.class.commands
