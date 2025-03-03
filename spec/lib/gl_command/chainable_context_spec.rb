@@ -19,8 +19,8 @@ RSpec.describe GLCommand::ChainableContext do
       %i[array is_in_chain item new_array popped_array popped_item revised_item]
     end
     let(:target_methods) do
-      %i[array array= is_in_chain is_in_chain= item item= new_array new_array= popped_array popped_array= revised_item
-         revised_item=]
+      %i[array array= is_in_chain is_in_chain= item item= new_array new_array= popped_array
+         popped_array= revised_item revised_item=]
     end
 
     it 'is successful, chain? and does not raises_errors by default' do
@@ -48,8 +48,8 @@ RSpec.describe GLCommand::ChainableContext do
     describe 'inspect' do
       let(:target) do
         '<GLCommand::ChainableContext error=nil, success=true, arguments={array: nil, item: nil}' \
-          ', returns={new_array: nil, popped_array: nil, revised_item: nil, is_in_chain: nil}, called=[], ' \
-          'class=ArrayChain>'
+          ', returns={new_array: nil, popped_array: nil, revised_item: nil, is_in_chain: nil}, ' \
+          'called=[], class=ArrayChain>'
       end
 
       it 'inspect has called' do
@@ -59,7 +59,8 @@ RSpec.describe GLCommand::ChainableContext do
 
     context 'with passed arguments and returns' do
       let(:passed_params) do
-        { array: [1], new_array: [2], popped_array: [3], item: 4, revised_item: 5, is_in_chain: nil }
+        { array: [1], new_array: [2], popped_array: [3], item: 4, revised_item: 5,
+          is_in_chain: nil }
       end
       let(:context) { ArrayChain.build_context(**passed_params) }
       let(:target_chain_hash) { passed_params.merge(popped_item: nil, is_in_chain: nil) }
@@ -75,8 +76,8 @@ RSpec.describe GLCommand::ChainableContext do
 
       context 'with passed chain arguments and returns' do
         let(:passed_params) do
-          { array: [1], new_array: [2], popped_array: [3], is_in_chain: nil, item: 4, revised_item: 5,
-            popped_item: 3 }
+          { array: [1], new_array: [2], popped_array: [3], is_in_chain: nil, item: 4,
+            revised_item: 5, popped_item: 3 }
         end
         let(:assignable_parameters) { ArrayChain.build_context.send(:assignable_parameters) }
 
@@ -97,7 +98,9 @@ RSpec.describe GLCommand::ChainableContext do
         end
 
         context 'with skip_unknown_parameters' do
-          let(:target_arguments_and_returns) { %i[array is_in_chain item new_array popped_array revised_item] }
+          let(:target_arguments_and_returns) do
+            %i[array is_in_chain item new_array popped_array revised_item]
+          end
 
           it "doesn't raise" do
             context = ArrayChain.build_context(skip_unknown_parameters: true, something: 'test')
