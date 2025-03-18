@@ -26,9 +26,8 @@ module GLCommand
 
         # DEFAULT_OPTS contains skip_unknown_parameters: true - so it raises on call
         # (rather than in context initialize) to make errors more legible
-        opts = DEFAULT_OPTS.merge(raise_errors: args.delete(:raise_errors),
+        opts = DEFAULT_OPTS.merge(raise_errors: args.delete(:raise_errors) || ALWAYS_RAISE_ERRORS,
                                   in_chain: args.delete(:in_chain)).compact
-        opts[:raise_errors] = true if ALWAYS_RAISE_ERRORS
         # args are passed in in perform_call(args) so that invalid args raise in a legible place
         new(build_context(**args.merge(opts))).perform_call(args)
       end
