@@ -6,6 +6,7 @@ require 'gl_command/validatable'
 
 module GLCommand
   class Callable
+    ALWAYS_RAISE_ERRORS = ENV['GL_COMMAND_ALWAYS_RAISE'] == 'true'
     DEFAULT_OPTS = { raise_errors: false, skip_unknown_parameters: true, in_chain: false }.freeze
     RESERVED_WORDS = (DEFAULT_OPTS.keys + GLCommand::ChainableContext.reserved_words).sort.freeze
 
@@ -25,7 +26,7 @@ module GLCommand
 
         # DEFAULT_OPTS contains skip_unknown_parameters: true - so it raises on call
         # (rather than in context initialize) to make errors more legible
-        opts = DEFAULT_OPTS.merge(raise_errors: args.delete(:raise_errors),
+        opts = DEFAULT_OPTS.merge(raise_errors: args.delete(:raise_errors) || ALWAYS_RAISE_ERRORS,
                                   in_chain: args.delete(:in_chain)).compact
         # args are passed in in perform_call(args) so that invalid args raise in a legible place
         new(build_context(**args.merge(opts))).perform_call(args)
