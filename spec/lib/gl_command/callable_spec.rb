@@ -52,8 +52,10 @@ RSpec.describe GLCommand::Callable do
           end.to raise_error(/Test Error/)
         end
       end
+
       context 'with ALWAYS_RAISE_ERRORS' do
         before { stub_const('GLCommand::Callable::ALWAYS_RAISE_ERRORS', true) }
+
         it 'runs rollback and raises' do
           expect do
             expect_any_instance_of(ArrayAdd).to receive(:instrument_command).with(:before_call).once
