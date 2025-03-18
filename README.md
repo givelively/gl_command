@@ -214,15 +214,24 @@ end
 
 ```
 
-## Publishing gem to rubygems!
 
-[Build the gem](http://guides.rubygems.org/make-your-own-gem/)
+## Publishing the gem to Rubygems
 
-    gem build gl_command.gemspec
+1. As per our code agreements, all code changes to this gem are required to be made via pull request with final approval from at least one Give Lively engineer.
 
-[Push to rubygems](http://guides.rubygems.org/publishing/)
+2. When creating a pull request, ensure that your code changes include an update to the gem's [version number](https://github.com/givelively/gl_command/blob/main/lib/gl_command/version.rb) using [semantic versioning](https://semver.org/)
 
-    gem push gl_command-1.0.0.gem
+3. After getting approval, merge your changes to `main`.
+
+4. Once your CI build finishes successfully, pull the latest version of `main` locally.
+
+5. Run the command `gem build`. This bundles the relevant files from the gem and prepares it to be published to [rubygems.org](https://rubygems.org/).
+
+6. This will create a new file locally that looks like `gl_command-<new_gem_version_number>.gem`.
+
+7. Run `gem push gl_command-<new_gem_version_number>.gem` to publish the new version
+
+**NOTE: only the gem owners listed on rubygems can publish new versions**
 
 ---
 
