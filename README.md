@@ -218,11 +218,11 @@ end
 
 [Build the gem](http://guides.rubygems.org/make-your-own-gem/)
 
-    gem build gl-command.gemspec
+    gem build gl_command.gemspec
 
 [Push to rubygems](http://guides.rubygems.org/publishing/)
 
-    gem push gl-command-1.0.0.gem
+    gem push gl_command-1.0.0.gem
 
 ---
 
