@@ -40,7 +40,7 @@ RSpec.describe GLCommand::Chainable do
         expect(result.arguments).to eq({ string: '810693451' })
         # Verify chain information
         expect(result).to be_chain
-        expect(result).not_to be_in_chain
+        expect(result.in_chain).to be_falsey
       end
     end
 
@@ -207,7 +207,8 @@ RSpec.describe GLCommand::Chainable do
         expect(result.new_array).to eq array + [11]
         expect(result.revised_item).to eq 11
         expect(result.called).to eq([ArrayAdd, ArrayPop])
-        expect(result.is_in_chain).to be_truthy
+        pp result
+        expect(result.in_chain).to be_an_instance_of(GLCommand::Chainable)
       end
       # rubocop:enable RSpec/MultipleExpectations
     end

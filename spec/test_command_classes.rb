@@ -38,7 +38,7 @@ class ArrayPop < GLCommand::Callable
   def call
     context.popped_item = array.pop
     context.popped_array = array.dup
-    context.is_in_chain = context.in_chain?
+    context.is_in_chain = context.in_chain
   end
 end
 

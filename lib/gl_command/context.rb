@@ -35,7 +35,7 @@ module GLCommand
       false
     end
 
-    def in_chain?
+    def in_chain
       @in_chain
     end
 
