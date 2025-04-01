@@ -67,6 +67,7 @@ GLCops/CallbackMethodNames: {}
 GLCops/InteractorInheritsFromInteractorBase:
   Include:
   - app/interactors/**/*
+GLCops/NoStubbingPerformAsync: {}
 GLCops/PreventErbFiles: {}
 GLCops/RailsCache: {}
 GLCops/SidekiqInheritsFromSidekiqJob:
@@ -146,6 +147,22 @@ Layout/CaseIndentation:
   EnforcedStyle: case
   IndentOneStep: false
   IndentationWidth:
+Layout/ClassStructure:
+  VersionAdded: '0.52'
+  VersionChanged: '1.53'
+  Categories:
+    module_inclusion:
+    - include
+    - prepend
+    - extend
+  ExpectedOrder:
+  - module_inclusion
+  - constants
+  - public_class_methods
+  - initializer
+  - public_methods
+  - protected_methods
+  - private_methods
 Layout/ClosingHeredocIndentation:
   VersionAdded: '0.57'
 Layout/ClosingParenthesisIndentation:

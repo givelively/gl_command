@@ -22,7 +22,7 @@ module GLCommand
       { raise_errors: raise_errors? }
     end
 
-    attr_reader :klass, :error
+    attr_reader :klass, :error, :in_chain
     attr_writer :full_error_message
 
     # If someone calls #errors, they expect to get the errors! Include the non-validation error, if it exists
@@ -33,10 +33,6 @@ module GLCommand
 
     def chain?
       false
-    end
-
-    def in_chain
-      @in_chain
     end
 
     def returns

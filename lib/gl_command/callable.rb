@@ -6,6 +6,7 @@ require 'gl_command/validatable'
 
 module GLCommand
   class Callable
+    include GLCommand::Validatable
     ALWAYS_RAISE_ERRORS = ENV['GL_COMMAND_ALWAYS_RAISE'] == 'true'
     DEFAULT_OPTS = { raise_errors: false, skip_unknown_parameters: true, in_chain: false }.freeze
     RESERVED_WORDS = (DEFAULT_OPTS.keys + GLCommand::ChainableContext.reserved_words).sort.freeze
@@ -101,8 +102,6 @@ module GLCommand
         attributes.index_with { nil }.merge(strong_attributes)
       end
     end
-
-    include GLCommand::Validatable
 
     attr_reader :context
 
