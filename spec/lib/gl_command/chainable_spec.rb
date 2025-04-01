@@ -207,8 +207,8 @@ RSpec.describe GLCommand::Chainable do
         expect(result.new_array).to eq array + [11]
         expect(result.revised_item).to eq 11
         expect(result.called).to eq([ArrayAdd, ArrayPop])
-        pp result
-        expect(result.in_chain).to be_an_instance_of(GLCommand::Chainable)
+        expect(result.is_in_chain).to be_an_instance_of(GLCommand::ChainableContext)
+        expect(result.is_in_chain.to_h).to eq result.to_h.except(:in_chain)
       end
       # rubocop:enable RSpec/MultipleExpectations
     end

@@ -41,7 +41,7 @@ module GLCommand
 
       commands.map do |command|
         cargs = context.chain_arguments_and_returns.slice(*command.arguments)
-                       .merge(context.opts_hash).merge(in_chain: self)
+                       .merge(context.opts_hash).merge(in_chain: context)
 
         # using _result to make sure it doesn't cause naming conflicts with other uses of result
         _result = command.call(**cargs)
