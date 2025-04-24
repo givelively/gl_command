@@ -50,12 +50,12 @@ class ArrayStopAndFail < GLCommand::Chainable
   returns :new_array
 
   def call
-    stop_and_fail_args = if no_notify_val == nil
-      {}
-    else
-      {no_notify: no_notify_val}
-    end
-    stop_and_fail!("This command always fails!", **stop_and_fail_args)
+    stop_and_fail_args = if no_notify_val.nil?
+                           {}
+                         else
+                           { no_notify: no_notify_val }
+                         end
+    stop_and_fail!('This command always fails!', **stop_and_fail_args)
   end
 end
 

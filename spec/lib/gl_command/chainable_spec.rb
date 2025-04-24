@@ -126,24 +126,24 @@ RSpec.describe GLCommand::Chainable do
     let(:array) { [42] }
     let(:no_notify_val) { nil }
 
-    it "fails and notifies" do
+    it 'fails and notifies' do
       expect(GLExceptionNotifier).to receive(:call)
       result = test_class.call(array:, no_notify_val:)
       expect(result).to be_a_failure
-      expect(result.error.to_s).to eq "This command always fails!"
-      expect(result.full_error_message).to eq "This command always fails!"
+      expect(result.error.to_s).to eq 'This command always fails!'
+      expect(result.full_error_message).to eq 'This command always fails!'
       expect(result.error.class).to eq(GLCommand::StopAndFail)
     end
 
     context 'with no_notify: false' do
       let(:no_notify_val) { false }
 
-      it "fails and notifies" do
+      it 'fails and notifies' do
         expect(GLExceptionNotifier).to receive(:call)
         result = test_class.call(array:, no_notify_val:)
         expect(result).to be_a_failure
-        expect(result.error.to_s).to eq "This command always fails!"
-        expect(result.full_error_message).to eq "This command always fails!"
+        expect(result.error.to_s).to eq 'This command always fails!'
+        expect(result.full_error_message).to eq 'This command always fails!'
         expect(result.error.class).to eq(GLCommand::StopAndFail)
       end
     end
@@ -155,8 +155,8 @@ RSpec.describe GLCommand::Chainable do
         expect(GLExceptionNotifier).not_to receive(:call)
         result = test_class.call(array:, no_notify_val:)
         expect(result).to be_a_failure
-        expect(result.error.to_s).to eq "This command always fails!"
-        expect(result.full_error_message).to eq "This command always fails!"
+        expect(result.error.to_s).to eq 'This command always fails!'
+        expect(result.full_error_message).to eq 'This command always fails!'
         expect(result.error.class).to eq(GLCommand::StopAndFail)
       end
     end
@@ -165,24 +165,32 @@ RSpec.describe GLCommand::Chainable do
       it "raises and doesn't notify" do
         expect(GLExceptionNotifier).not_to receive(:call)
 
-        expect { test_class.call!(array:, no_notify_val:) }.to raise_error(/This command always fails/)
+        expect do
+          test_class.call!(array:, no_notify_val:)
+        end.to raise_error(/This command always fails/)
       end
 
-      context "with no_notify: false" do
+      context 'with no_notify: false' do
         let(:no_notify_val) { false }
+
         it "raises and doesn't notify" do
           expect(GLExceptionNotifier).not_to receive(:call)
 
-          expect { test_class.call!(array:, no_notify_val:) }.to raise_error(/This command always fails/)
+          expect do
+            test_class.call!(array:, no_notify_val:)
+          end.to raise_error(/This command always fails/)
         end
       end
 
-      context "with no_notify: true" do
+      context 'with no_notify: true' do
         let(:no_notify_val) { true }
+
         it "raises and doesn't notify" do
           expect(GLExceptionNotifier).not_to receive(:call)
 
-          expect { test_class.call!(array:, no_notify_val:) }.to raise_error(/This command always fails/)
+          expect do
+            test_class.call!(array:, no_notify_val:)
+          end.to raise_error(/This command always fails/)
         end
       end
     end
