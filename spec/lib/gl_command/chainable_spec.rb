@@ -110,6 +110,84 @@ RSpec.describe GLCommand::Chainable do
     end
   end
 
+  describe 'stop_and_fail! with no_notify: in chain' do
+    let(:test_class) do
+      Class.new(GLCommand::Chainable) do
+        # Need to set the class name for validatable, or it raises: Class name cannot be blank.
+        def self.name
+          'TestChainableClass'
+        end
+
+        requires :array
+        allows :no_notify_val
+        chain ArrayPop, ArrayStopAndFail
+      end
+    end
+    let(:array) { [42] }
+    let(:no_notify_val) { nil }
+
+    it "fails and notifies" do
+      expect(GLExceptionNotifier).to receive(:call)
+      result = test_class.call(array:, no_notify_val:)
+      expect(result).to be_a_failure
+      expect(result.error.to_s).to eq "This command always fails!"
+      expect(result.full_error_message).to eq "This command always fails!"
+      expect(result.error.class).to eq(GLCommand::StopAndFail)
+    end
+
+    context 'with no_notify: false' do
+      let(:no_notify_val) { false }
+
+      it "fails and notifies" do
+        expect(GLExceptionNotifier).to receive(:call)
+        result = test_class.call(array:, no_notify_val:)
+        expect(result).to be_a_failure
+        expect(result.error.to_s).to eq "This command always fails!"
+        expect(result.full_error_message).to eq "This command always fails!"
+        expect(result.error.class).to eq(GLCommand::StopAndFail)
+      end
+    end
+
+    context 'with no_notify: true' do
+      let(:no_notify_val) { true }
+
+      it "fails and doesn't notify" do
+        expect(GLExceptionNotifier).not_to receive(:call)
+        result = test_class.call(array:, no_notify_val:)
+        expect(result).to be_a_failure
+        expect(result.error.to_s).to eq "This command always fails!"
+        expect(result.full_error_message).to eq "This command always fails!"
+        expect(result.error.class).to eq(GLCommand::StopAndFail)
+      end
+    end
+
+    context 'with call!' do
+      it "raises and doesn't notify" do
+        expect(GLExceptionNotifier).not_to receive(:call)
+
+        expect { test_class.call!(array:, no_notify_val:) }.to raise_error(/This command always fails/)
+      end
+
+      context "with no_notify: false" do
+        let(:no_notify_val) { false }
+        it "raises and doesn't notify" do
+          expect(GLExceptionNotifier).not_to receive(:call)
+
+          expect { test_class.call!(array:, no_notify_val:) }.to raise_error(/This command always fails/)
+        end
+      end
+
+      context "with no_notify: true" do
+        let(:no_notify_val) { true }
+        it "raises and doesn't notify" do
+          expect(GLExceptionNotifier).not_to receive(:call)
+
+          expect { test_class.call!(array:, no_notify_val:) }.to raise_error(/This command always fails/)
+        end
+      end
+    end
+  end
+
   describe 'without call defined' do
     let(:test_class) do
       Class.new(GLCommand::Chainable) do
