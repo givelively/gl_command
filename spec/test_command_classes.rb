@@ -222,3 +222,23 @@ class TestScope < GLCommand::Callable
     context.context_as_string = context.inspect
   end
 end
+
+class TestInstrumentTriggers < GLCommand::Callable
+  requires instruments_triggered: Array
+
+  allows :fail_error
+
+  returns instruments_triggered: Array
+
+  def call
+    return if fail_error.blank?
+
+    stop_and_fail!(fail_error, no_notify: true)
+  end
+
+  private
+
+  def instrument_command(trigger)
+    instruments_triggered << trigger
+  end
+end
