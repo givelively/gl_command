@@ -630,4 +630,43 @@ RSpec.describe GLCommand::Callable do
       end
     end
   end
+
+  describe 'instrument_command triggers' do
+    let(:instruments_triggered) { [] }
+    let(:fail_error) { false }
+    let(:result) { TestInstrumentTriggers.call(instruments_triggered:, fail_error:) }
+
+    it 'returns before_call and after_call' do
+      expect(result).to be_successful
+      expect(result.instruments_triggered).to eq(%i[before_call after_call])
+    end
+
+    context 'with fail_error' do
+      let(:fail_error) { true }
+
+      it 'returns before_call and before_rollback' do
+        expect(result).to be_failure
+        expect(result.instruments_triggered).to eq(%i[before_call before_rollback])
+      end
+    end
+
+    context 'with call!' do
+      let(:result) { TestInstrumentTriggers.call!(instruments_triggered:, fail_error:) }
+
+      it 'returns before_call and after_call' do
+        expect(result).to be_successful
+        expect(result.instruments_triggered).to eq(%i[before_call after_call])
+      end
+
+      context 'with fail_error' do
+        let(:fail_error) { true }
+
+        it 'returns before_call and before_rollback' do
+          expect { result }.to raise_error(GLCommand::StopAndFail)
+
+          expect(instruments_triggered).to eq(%i[before_call before_rollback])
+        end
+      end
+    end
+  end
 end

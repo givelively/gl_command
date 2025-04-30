@@ -42,6 +42,23 @@ class ArrayPop < GLCommand::Callable
   end
 end
 
+class ArrayStopAndFail < GLCommand::Chainable
+  requires :array
+
+  allows :no_notify_val
+
+  returns :new_array
+
+  def call
+    stop_and_fail_args = if no_notify_val.nil?
+                           {}
+                         else
+                           { no_notify: no_notify_val }
+                         end
+    stop_and_fail!('This command always fails!', **stop_and_fail_args)
+  end
+end
+
 class ArrayChain < GLCommand::Chainable
   requires :array, :item
   chain ArrayAdd, ArrayPop
@@ -203,5 +220,25 @@ class TestScope < GLCommand::Callable
     raise 'test failure' if should_fail
 
     context.context_as_string = context.inspect
+  end
+end
+
+class TestInstrumentTriggers < GLCommand::Callable
+  requires instruments_triggered: Array
+
+  allows :fail_error
+
+  returns instruments_triggered: Array
+
+  def call
+    return if fail_error.blank?
+
+    stop_and_fail!(fail_error, no_notify: true)
+  end
+
+  private
+
+  def instrument_command(trigger)
+    instruments_triggered << trigger
   end
 end
