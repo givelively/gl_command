@@ -2,7 +2,7 @@
 
 module GLCommand
   class ContextInspect
-    PERMITTED_OUTPUTS = %i[string hash]
+    PERMITTED_OUTPUTS = %i[string hash].freeze
 
     class << self
       def error(error_obj)
@@ -11,6 +11,7 @@ module GLCommand
         error_obj.is_a?(Array) ? error_obj.uniq.join(', ') : error_obj.to_s
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
       def hash_params(hash, output: :string)
         raise unless PERMITTED_OUTPUTS.include?(output)
 
@@ -31,6 +32,7 @@ module GLCommand
         end
         output == :string ? result.join(', ') : result.to_h
       end
+      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
 
       private
 
@@ -41,7 +43,7 @@ module GLCommand
           id_value = obj_id.is_a?(Integer) ? obj_id : "\"#{obj_id}\""
           "#<#{obj.class.name} #{key}=#{id_value}>"
         else
-          {obj.class.name => {key => obj_id}}
+          { obj.class.name => { key => obj_id } }
         end
       end
 
@@ -49,7 +51,7 @@ module GLCommand
         if output == :string
           "#<#{obj.class.name} sql=\"#{obj.to_sql}\">"
         else
-          {obj.class.name => obj.to_sql}
+          { obj.class.name => obj.to_sql }
         end
       end
     end
