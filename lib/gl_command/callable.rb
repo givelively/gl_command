@@ -202,6 +202,7 @@ module GLCommand
 
       chain_rollback if self.class.chain? # defined in GLCommand::Chainable
       rollback
+      instrument_command(:after_rollback)
     end
 
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
