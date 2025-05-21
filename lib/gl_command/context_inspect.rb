@@ -25,10 +25,10 @@ module GLCommand
                     'nil'
                   elsif value.respond_to?(:to_sql)
                     object_param_as_sql(value, output:)
-                  elsif value.respond_to?(:uuid)
-                    object_param_with_id(value, :uuid, output:)
                   elsif value.respond_to?(:id)
                     object_param_with_id(value, :id, output:)
+                  elsif value.respond_to?(:uuid)
+                    object_param_with_id(value, :uuid, output:)
                   else
                     value
                   end
