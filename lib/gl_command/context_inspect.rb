@@ -43,7 +43,7 @@ module GLCommand
           id_value = obj_id.is_a?(Integer) ? obj_id : "\"#{obj_id}\""
           "#<#{obj.class.name} #{key}=#{id_value}>"
         else
-          { obj.class.name => { key => obj_id } }
+          { obj.class.name => obj_id }
         end
       end
 
