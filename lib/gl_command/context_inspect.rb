@@ -15,26 +15,28 @@ module GLCommand
       def hash_params(hash, output: :string)
         raise unless PERMITTED_OUTPUTS.include?(output)
 
-        result = hash.map do |key, value|
-          value_s =
-            if value.nil?
-              'nil'
-            elsif value.respond_to?(:to_sql)
-              object_param_as_sql(value, output:)
-            elsif value.respond_to?(:uuid)
-              object_param_with_id(value, :uuid, output:)
-            elsif value.respond_to?(:id)
-              object_param_with_id(value, :id, output:)
-            else
-              value
-            end
-          output == :string ? "#{key}: #{value_s}" : [key, value_s]
-        end
+        result = hash.map { |key, value| output_for(key:, value:, output:) }
         output == :string ? result.join(', ') : result.to_h
       end
       # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
 
       private
+
+      def output_for(key:, value:, output:)
+        value_s = if value.nil?
+          'nil'
+        elsif value.respond_to?(:to_sql)
+          object_param_as_sql(value, output:)
+        elsif value.respond_to?(:uuid)
+          object_param_with_id(value, :uuid, output:)
+        elsif value.respond_to?(:id)
+          object_param_with_id(value, :id, output:)
+        else
+          value
+        end
+
+        output == :string ? "#{key}: #{value_s}" : [key, value_s]
+      end
 
       # Active record objects can be really big - rather than rendering the whole object, just show the ID
       def object_param_with_id(obj, key, output:)
