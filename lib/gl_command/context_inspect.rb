@@ -12,7 +12,9 @@ module GLCommand
       end
 
       def hash_params(hash, output: :string)
-        raise unless PERMITTED_OUTPUTS.include?(output)
+        unless PERMITTED_OUTPUTS.include?(output)
+          raise "Unknown output type: #{output}, must be one of #{PERMITTED_OUTPUTS}"
+        end
 
         result = hash.map { |key, value| output_for(key:, value:, output:) }
         output == :string ? result.join(', ') : result.to_h
@@ -43,7 +45,7 @@ module GLCommand
           id_value = obj_id.is_a?(Integer) ? obj_id : "\"#{obj_id}\""
           "#<#{obj.class.name} #{key}=#{id_value}>"
         else
-          { obj.class.name => obj_id }
+          obj_id
         end
       end
 
@@ -51,7 +53,7 @@ module GLCommand
         if output == :string
           "#<#{obj.class.name} sql=\"#{obj.to_sql}\">"
         else
-          { obj.class.name => obj.to_sql }
+          obj.to_sql
         end
       end
     end
