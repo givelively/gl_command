@@ -1,6 +1,7 @@
 require 'spec_helper'
 require_relative '../../test_command_classes'
 
+ActiveRecordRelation = Struct.new('ActiveRecord_Relation', :to_sql)
 RSpec.describe GLCommand::ContextInspect do
   describe 'context method_missing (loop)' do
     let(:test_class) do
@@ -19,6 +20,52 @@ RSpec.describe GLCommand::ContextInspect do
       expect(result.full_error_message.length).to be < 300
       expect(result.inspect.length).to be < 500
       expect(result.error.class).to eq NoMethodError
+    end
+  end
+
+  describe 'output' do
+    let(:test_class) do
+      Class.new(GLCommand::Callable) do
+        requires :ein
+        allows :collection
+        returns :test_npo
+
+        def call
+          context.test_npo = TestNpo.new(ein:)
+        end
+      end
+    end
+    let(:context) { test_class.call(ein: '81-0693451', collection:) }
+    let(:target) do
+      "ein: 81-0693451, collection: #<Struct::ActiveRecord_Relation sql=\"#{to_sql}\">, " \
+        'test_npo: #<TestNpo id=1>'
+    end
+    let(:collection) { ActiveRecordRelation.new(to_sql) }
+    let(:to_sql) { "SELECT \"nonprofits\".* FROM \"nonprofits\" WHERE (name ILIKE 'charity%')" }
+
+    before { TestNpo.destroy_all }
+
+    it 'responds with target' do
+      expect(described_class.hash_params(context.to_h)).to eq target
+      expect(described_class.hash_params(context.to_h, output: :string)).to eq target
+    end
+
+    context 'with output: :hash' do
+      let(:target) { { ein: '81-0693451', collection: to_sql, test_npo: 1 } }
+
+      it 'responds with target' do
+        expect(described_class.hash_params(context.to_h, output: :hash)).to eq target
+      end
+    end
+
+    context 'with unknown output' do
+      let(:target_error) { 'Unknown output type: something_else, must be one of [:string, :hash]' }
+
+      it 'responds with target' do
+        expect do
+          described_class.hash_params(context.to_h, output: :something_else)
+        end.to raise_error(target_error)
+      end
     end
   end
 

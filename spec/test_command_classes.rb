@@ -88,6 +88,10 @@ class TestNpo
     all.count
   end
 
+  def self.destroy_all
+    @all = []
+  end
+
   attr_reader :ein, :id
 
   validates_presence_of :ein

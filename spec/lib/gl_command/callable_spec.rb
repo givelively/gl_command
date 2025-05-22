@@ -33,6 +33,7 @@ RSpec.describe GLCommand::Callable do
       it 'runs rollback if there is a failure' do
         expect_any_instance_of(ArrayAdd).to receive(:instrument_command).with(:before_call).once
         expect_any_instance_of(ArrayAdd).to receive(:instrument_command).with(:before_rollback).once
+        expect_any_instance_of(ArrayAdd).to receive(:instrument_command).with(:after_rollback).once
         expect(GLExceptionNotifier).to receive(:call).once
         result = ArrayAdd.call(array:, item: 6)
         failure_expectations(result)
@@ -646,7 +647,7 @@ RSpec.describe GLCommand::Callable do
 
       it 'returns before_call and before_rollback' do
         expect(result).to be_failure
-        expect(result.instruments_triggered).to eq(%i[before_call before_rollback])
+        expect(result.instruments_triggered).to eq(%i[before_call before_rollback after_rollback])
       end
     end
 
@@ -664,7 +665,7 @@ RSpec.describe GLCommand::Callable do
         it 'returns before_call and before_rollback' do
           expect { result }.to raise_error(GLCommand::StopAndFail)
 
-          expect(instruments_triggered).to eq(%i[before_call before_rollback])
+          expect(instruments_triggered).to eq(%i[before_call before_rollback after_rollback])
         end
       end
     end
