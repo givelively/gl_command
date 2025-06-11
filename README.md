@@ -239,7 +239,7 @@ RSpec.describe SomeCommand, type: :callable do
   describe 'interface' do
     it { is_expected.to require(:user).being(User) }
     it { is_expected.to allow(:subject) }
-    it { is_expected.to return(:message) }
+    it { is_expected.to returns(:message) }
     it { is_expected.not_to require(:other_thing) }
   end
 end

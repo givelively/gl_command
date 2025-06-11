@@ -104,7 +104,7 @@ module GLCommand
       AllowArgumentMatcher.new(attribute)
     end
 
-    def return(attribute)
+    def returns(attribute)
       ReturnAttributeMatcher.new(attribute)
     end
   end
