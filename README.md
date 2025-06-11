@@ -214,6 +214,38 @@ end
 
 ```
 
+## RSpec Matchers
+
+`GLCommand` comes with a set of RSpec matchers to make testing your command's interface declarative and simple.
+
+### Setup
+
+To enable the matchers, add the following line to your `spec/spec_helper.rb` or `spec/rails_helper.rb`:
+
+```ruby
+require 'gl_command/rspec'
+```
+
+This will automatically include the necessary matchers and configure RSpec for specs marked with `type: :callable`.
+
+### Usage
+
+You can now test your command's interface like this:
+
+```ruby
+# spec/commands/some_command_spec.rb
+
+RSpec.describe SomeCommand, type: :callable do
+  describe 'interface' do
+    it { is_expected.to require(:user).being(User) }
+    it { is_expected.to allow(:subject) }
+    it { is_expected.to return(:message) }
+    it { is_expected.not_to require(:other_thing) }
+  end
+end
+```
+
+**Note:** The `.being(ClassName)` chain is supported for `require` and `allow` but not for `return`, as `GLCommand` does not store type information for return values.
 
 ## Publishing the gem to Rubygems
 
