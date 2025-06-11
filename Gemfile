@@ -6,9 +6,6 @@ group :development, :test do
   gem 'gl_lint'
   gem 'gl_rubocop', require: false
   gem 'guard-rspec'
-  gem 'rails'
-  gem 'rspec'
-  gem 'rspec-rails'
 end
 
 gemspec
