@@ -11,7 +11,7 @@ class MatcherTestCommand < GLCommand::Callable
 end
 
 RSpec.describe GLCommand::Matchers, type: :callable do
-  subject(:command) { MatcherTestCommand }
+  subject { MatcherTestCommand }
 
   describe 'interface matchers' do
     # Test `requires`
