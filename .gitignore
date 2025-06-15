@@ -38,3 +38,5 @@ spec/support/database.yml
 # .rubocop-https?--*
 
 db
+.aider*
+.env
