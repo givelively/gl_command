@@ -103,7 +103,7 @@ module GL
       klass.instance_variable_get(:@defaults).each do |attr, default|
         next if context.to_h.key?(attr)
 
-        value = default.is_a?(Proc) ? instance_eval(&default) : default
+        value = default.is_a?(Proc) ? instance_exec(&default) : default
         context[attr] = value
       end
     end
