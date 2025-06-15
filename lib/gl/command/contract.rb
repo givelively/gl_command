@@ -7,18 +7,30 @@ module GL
         include ActiveModel::Validations
         extend ClassMethods
 
+        before :apply_defaults!
         before :validate_contract!
         after :validate_return_contract!
       end
     end
 
     module ClassMethods
+      def self.extended(base)
+        base.instance_variable_set(:@defaults, {})
+      end
+
+      def inherited(subclass)
+        super
+        defaults = instance_variable_get(:@defaults)
+        subclass.instance_variable_set(:@defaults, defaults.dup)
+      end
+
       def allows(*attributes, **strong_attributes)
         delegate(*attributes, to: :context)
         return if strong_attributes.blank?
 
-        delegate(*strong_attributes.keys, to: :context)
-        enforce_attribute_types(**strong_attributes)
+        typed_attributes = parse_strong_attributes(**strong_attributes)
+        delegate(*typed_attributes.keys, to: :context)
+        enforce_attribute_types(**typed_attributes)
       end
 
       def requires(*attributes, **strong_attributes)
@@ -36,9 +48,9 @@ module GL
       def requires_strong_attributes(**attributes)
         return if attributes.blank?
 
-        attribute_keys = attributes.keys
-        requires_attributes(*attribute_keys)
-        enforce_attribute_types(**attributes)
+        typed_attributes = parse_strong_attributes(**attributes)
+        requires_attributes(*typed_attributes.keys)
+        enforce_attribute_types(**typed_attributes)
       end
 
       def returns(*attributes, **strong_attributes)
@@ -69,8 +81,30 @@ module GL
 
       private
 
+      def parse_strong_attributes(**attributes)
+        simple_attributes = attributes.select { |_, v| !v.is_a?(Hash) }
+        complex_attributes = attributes.select { |_, v| v.is_a?(Hash) }
+
+        complex_attributes.each do |attr, opts|
+          @defaults[attr] = opts[:default] if opts.key?(:default)
+        end
+
+        simple_attributes.merge(
+          complex_attributes.transform_values { |v| v[:type] }.compact
+        )
+      end
+
       def type_applies?(value, type)
         value.is_a?(type) || value.acts_like?(type.name.downcase.to_sym)
+      end
+    end
+
+    def apply_defaults!
+      klass.instance_variable_get(:@defaults).each do |attr, default|
+        next if context.to_h.key?(attr)
+
+        value = default.is_a?(Proc) ? instance_eval(&default) : default
+        context[attr] = value
       end
     end
 
