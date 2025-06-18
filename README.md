@@ -226,7 +226,7 @@ To enable the matchers, add the following line to your `spec/spec_helper.rb` or 
 require 'gl_command/rspec'
 ```
 
-This will automatically include the necessary matchers and configure RSpec for specs marked with `type: :callable`.
+This will automatically include the necessary matchers and configure RSpec for specs marked with `type: :command`.
 
 ### Usage
 
@@ -235,7 +235,7 @@ You can now test your command's interface like this:
 ```ruby
 # spec/commands/some_command_spec.rb
 
-RSpec.describe SomeCommand, type: :callable do
+RSpec.describe SomeCommand, type: :command do
   describe 'interface' do
     it { is_expected.to require(:user).being(User) }
     it { is_expected.to allow(:subject) }
