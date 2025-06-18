@@ -2,14 +2,6 @@
 
 require 'spec_helper'
 
-class MatcherTestCommand < GLCommand::Callable
-  requires :required_arg, another_one: String
-  allows :allowed_arg, and_another: Integer
-  returns :returned_val
-
-  def call; end
-end
-
 RSpec.describe GLCommand::Matchers, type: :command do
   subject(:command) { MatcherTestCommand }
 
