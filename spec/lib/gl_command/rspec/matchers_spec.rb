@@ -10,7 +10,7 @@ class MatcherTestCommand < GLCommand::Callable
   def call; end
 end
 
-RSpec.describe GLCommand::Matchers, type: :callable do
+RSpec.describe GLCommand::Matchers, type: :command do
   subject(:command) { MatcherTestCommand }
 
   describe 'interface matchers' do
