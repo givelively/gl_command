@@ -2,6 +2,7 @@
 
 require 'active_support/concern'
 require 'active_model'
+require 'active_record'
 
 module GLCommand
   module Validatable
