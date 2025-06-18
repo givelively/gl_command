@@ -1,5 +1,4 @@
 require 'spec_helper'
-require_relative '../../test_command_classes'
 
 ActiveRecordRelation = Struct.new('ActiveRecord_Relation', :to_sql)
 RSpec.describe GLCommand::ContextInspect do
