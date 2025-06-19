@@ -13,9 +13,9 @@ class ArrayAdd < GLCommand::Callable
   returns :new_array
 
   def call
-    do_another_thing # For testing rollbacks
     array.push(item)
     context.new_array = array.dup
+    do_another_thing # For testing rollbacks
     context
   end
 
