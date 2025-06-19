@@ -47,15 +47,16 @@ module GLCommand
         _result = command.call(**cargs)
         context.assign_parameters(skip_unknown_parameters: true, **_result.returns)
 
-        if _result.success?
-          context.called << command
-        else
+        context.called << command
+
+        if _result.failure?
           @notified = true # chained command already notified
           errors&.merge!(_result.errors)
           stop_and_fail!(_result.error, no_notify: _result.no_notify?)
           break
         end
       end
+      context
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Lint/UnderscorePrefixedVariableName
 
