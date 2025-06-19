@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+class ArrayHasNoNilValidator < ActiveModel::Validator
+  def validate(record)
+    return if record.array.is_a?(Array) && record.array.none?(&:blank?)
+
+    record.errors.add(:array, 'Must be an array with no blank items!')
+  end
+end
+
 class ArrayAdd < GLCommand::Callable
   requires :array, :item
   returns :new_array
@@ -26,14 +34,6 @@ class ArrayChain < GLCommand::Chainable
   chain ArrayAdd, ArrayPop
   def call; end
   def rollback; end
-end
-
-class ArrayHasNoNilValidator < ActiveModel::Validator
-  def validate(record)
-    return if record.array.is_a?(Array) && record.array.none?(&:blank?)
-
-    record.errors.add(:array, 'Must be an array with no blank items!')
-  end
 end
 
 class TestNpo
