@@ -57,9 +57,6 @@ class ArrayChain < GLCommand::Chainable
     context.is_in_chain = chain(item: context.revised_item)
   end
 
-  def rollback
-    context.new_array = []
-  end
 end
 
 class TestNpo
