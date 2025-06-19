@@ -11,7 +11,7 @@ end
 class ArrayPop < GLCommand::Callable
   requires :array
   returns :popped_array, :popped_item
-  validates_with :ArrayHasNoNilValidator
+  validates_with ArrayHasNoNilValidator
   def call; end
 end
 

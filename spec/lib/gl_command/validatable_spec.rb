@@ -1,5 +1,4 @@
 require 'spec_helper'
-require_relative '../../test_command_classes'
 
 RSpec.describe GLCommand::Validatable do
   describe 'ArrayPop' do
