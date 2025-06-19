@@ -670,4 +670,13 @@ RSpec.describe GLCommand::Callable do
       end
     end
   end
+
+  describe 'cumulative interface definition' do
+    it 'cumulatively defines the interface' do
+      expect(CumulativeDefinitionCommand.requires).to eq({ req1: nil, req2: String })
+      expect(CumulativeDefinitionCommand.allows).to eq({ allow1: nil, allow2: Integer })
+      expect(CumulativeDefinitionCommand.returns).to eq(%i[ret1 ret2])
+      expect(CumulativeDefinitionCommand.arguments).to contain_exactly(:req1, :req2, :allow1, :allow2)
+    end
+  end
 end

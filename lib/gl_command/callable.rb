@@ -47,21 +47,26 @@ module GLCommand
       end
 
       def requires(*attributes, **strong_attributes)
-        @requires ||= strong_args_hash(*attributes, **strong_attributes).freeze
+        @arguments = nil # Clear memoized arguments
+        (@requires ||= {}).merge!(strong_args_hash(*attributes, **strong_attributes))
       end
 
       def allows(*attributes, **strong_attributes)
-        @allows ||= strong_args_hash(*attributes, **strong_attributes).freeze
+        @arguments = nil # Clear memoized arguments
+        (@allows ||= {}).merge!(strong_args_hash(*attributes, **strong_attributes))
       end
 
       def returns(*attributes, **strong_attributes)
+        @arguments = nil # Clear memoized arguments
+        @returns ||= []
         # NOTE: Because returns aren't validated, we don't store the types (only store keys)
-        @returns ||= strong_args_hash(*attributes, **strong_attributes).keys.freeze
+        @returns.concat(strong_args_hash(*attributes, **strong_attributes).keys).uniq!
+        @returns
       end
 
       # arguments are what's passed to the .call command (the allows and requires)
       def arguments
-        return @arguments if defined?(@arguments)
+        return @arguments if @arguments
 
         duplicated_keys = requires.keys & allows.keys
         raise "Duplicated: #{duplicated_keys} - in both requires and allows" if duplicated_keys.any?
