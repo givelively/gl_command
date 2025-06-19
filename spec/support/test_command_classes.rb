@@ -16,6 +16,7 @@ class ArrayAdd < GLCommand::Callable
     do_another_thing # For testing rollbacks
     array.push(item)
     context.new_array = array.dup
+    context
   end
 
   def do_another_thing; end
