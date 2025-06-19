@@ -339,9 +339,9 @@ RSpec.describe GLCommand::Chainable do
       def failure_expectations(result)
         expect(result.error.to_s).to match(/Test Error/)
         expect(array).to eq([1, 2, 3, 4])
-        expect(result.revised_item).to eq 8
+        expect(result.revised_item).to eq 11
         expect(result.new_array).to eq([1, 2, 3, 4, 11])
-        expect(result.called).to eq([])
+        expect(result.called).to eq([ArrayAdd])
       end
       # rubocop:enable Metrics/AbcSize
 
