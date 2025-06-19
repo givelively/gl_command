@@ -48,38 +48,36 @@ module GLCommand
 
       def requires(*attributes, **strong_attributes)
         @arguments = nil # Clear memoized arguments
-        (@requires ||= {}).merge!(strong_args_hash(*attributes, **strong_attributes))
+        _requires.merge!(strong_args_hash(*attributes, **strong_attributes))
       end
 
       def allows(*attributes, **strong_attributes)
         @arguments = nil # Clear memoized arguments
-        (@allows ||= {}).merge!(strong_args_hash(*attributes, **strong_attributes))
+        _allows.merge!(strong_args_hash(*attributes, **strong_attributes))
       end
 
       def returns(*attributes, **strong_attributes)
         @arguments = nil # Clear memoized arguments
-        @returns ||= []
         # NOTE: Because returns aren't validated, we don't store the types (only store keys)
-        @returns.concat(strong_args_hash(*attributes, **strong_attributes).keys).uniq!
-        @returns
+        _returns.concat(strong_args_hash(*attributes, **strong_attributes).keys).uniq!
       end
 
       # arguments are what's passed to the .call command (the allows and requires)
       def arguments
         return @arguments if @arguments
 
-        duplicated_keys = requires.keys & allows.keys
+        duplicated_keys = _requires.keys & _allows.keys
         raise "Duplicated: #{duplicated_keys} - in both requires and allows" if duplicated_keys.any?
 
-        @arguments = (requires.keys + allows.keys).freeze
+        @arguments = (_requires.keys + _allows.keys).freeze
 
-        delegate(*@arguments + returns, to: :context)
+        delegate(*@arguments + _returns, to: :context)
         @arguments
       end
 
       # arguments_and_returns is just the keys (names) of the arguments and returns
       def arguments_and_returns
-        (arguments + returns).uniq
+        (arguments + _returns).uniq
       end
 
       # Used internally by GLCommand (probably don't reference in your own GLCommands)
@@ -105,6 +103,18 @@ module GLCommand
       def strong_args_hash(*attributes, **strong_attributes)
         # Convert attributes to strong attributes with nil value
         attributes.index_with { nil }.merge(strong_attributes)
+      end
+
+      def _requires
+        @requires ||= {}
+      end
+
+      def _allows
+        @allows ||= {}
+      end
+
+      def _returns
+        @returns ||= []
       end
     end
 
