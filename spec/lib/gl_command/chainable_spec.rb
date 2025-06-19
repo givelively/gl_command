@@ -439,7 +439,7 @@ RSpec.describe GLCommand::Chainable do
         expect(result).to be_a_failure
         expect(result.called).to eq([ChainClass1, ChainClass2])
         expect(result.full_error_message).to eq 'Failed'
-        expect(result.obj_3.to_h).to eq target
+        expect(result.obj.to_h).to eq({ id: 42, one: '1-rolled', two: '2-rolled', three: nil })
       end
     end
   end

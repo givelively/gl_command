@@ -21,7 +21,7 @@ class ArrayAdd < GLCommand::Callable
   def do_another_thing; end
 
   def rollback
-    array.pop
+    array.delete(item)
   end
 end
 

@@ -15,7 +15,7 @@ RSpec.describe GLCommand::Validatable do
 
     context 'without an array' do
       let(:array) { nil }
-      let(:errors) { ["Array can't be blank", 'Array Must be an array with no blank items!'] }
+      let(:errors) { ['Array Must be an array with no blank items!'] }
 
       it 'adds an error' do
         expect(result).not_to be_successful
