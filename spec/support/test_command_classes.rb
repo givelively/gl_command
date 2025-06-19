@@ -13,8 +13,9 @@ class ArrayAdd < GLCommand::Callable
   returns :new_array
 
   def call
+    do_another_thing # For testing rollbacks
     array.push(item)
-    context.new_array = array
+    context.new_array = array.dup
   end
 
   def do_another_thing; end
@@ -124,8 +125,10 @@ class ChainClass2 < GLCommand::Callable
   returns :obj_2
 
   def call
-    # The failure test calls stop_and_fail! here
-    stop_and_fail!(fail_message) if fail_message.present?
+    if fail_message.present?
+      context.error = fail_message
+      return
+    end
     obj_1.two = '2'
     context.obj_2 = obj_1
   end

@@ -7,7 +7,7 @@ RSpec.describe GLCommand::Context do
   let(:context_instance_methods) do
     %i[arguments assign_callable assign_parameters chain? error error= errors failure?
        full_error_message full_error_message= in_chain klass no_notifiable_error_to_raise
-       no_notify? opts_hash raise_errors? read_attribute_for_validation returns success? successful?
+       no_notify? opts_hash raise_errors? returns success? successful?
        to_h]
   end
 

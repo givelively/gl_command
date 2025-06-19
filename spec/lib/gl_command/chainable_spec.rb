@@ -323,7 +323,7 @@ RSpec.describe GLCommand::Chainable do
         expect(result.error.to_s).to eq target_error_message
         expect(result.full_error_message).to eq target_error_message
         expect(result.error.class).to eq(ActiveRecord::RecordInvalid)
-        expect(result.revised_item).to eq 8
+        expect(result.revised_item).to eq 11
       end
       # rubocop:enable RSpec/MultipleExpectations
     end
