@@ -60,6 +60,7 @@ module GLCommand
         @arguments = nil # Clear memoized arguments
         # NOTE: Because returns aren't validated, we don't store the types (only store keys)
         _returns.concat(strong_args_hash(*attributes, **strong_attributes).keys).uniq!
+        _returns
       end
 
       # arguments are what's passed to the .call command (the allows and requires)

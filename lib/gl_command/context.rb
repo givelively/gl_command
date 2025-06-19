@@ -1,14 +1,19 @@
 # frozen_string_literal: true
 
 require 'English'
+require 'active_model'
 # TODO: can we use forwardable instead of ActiveSupport delegate ?
 require 'active_support/core_ext/module'
 
 module GLCommand
   class Context
+    def self.human_attribute_name(attr, options = {}); attr; end
+    def read_attribute_for_validation(attr); send(attr); end
+
     def initialize(klass, raise_errors: false, skip_unknown_parameters: false,
                    in_chain: false, **arguments_and_returns)
       @klass = klass
+      @own_errors = ActiveModel::Errors.new(self)
       @raise_errors = raise_errors.nil? ? false : raise_errors
       @in_chain = in_chain
       @klass.arguments_and_returns.each { |key| singleton_class.class_eval { attr_accessor key } }
@@ -126,7 +131,7 @@ module GLCommand
     private
 
     def current_errors
-      @callable&.errors
+      @callable&.errors || @own_errors
     end
 
     def add_command_error?
