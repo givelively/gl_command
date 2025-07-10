@@ -1,6 +1,6 @@
 # GLCommand
 
-`GLCommand` is a way to encapsulate business logic.
+`GLCommand` is a way to encapsulate business logic and standardize error handling.
 
 Calling a command returns a `GLCommand::Context` which has these properties:
 
@@ -9,6 +9,21 @@ Calling a command returns a `GLCommand::Context` which has these properties:
 - `error` (which contains the error, if an error was raised)
 - `full_error_message` - which renders a string from the error, or can be set explicitly (used to show a legible error to the user).
 - `success` - `true` if the command executed without an error (false if there is an `error`)
+
+# Table of contents
+
+- [Installation](#installation)
+- [Using GLCommand](#using-glcommand)
+  - [Success/Failure](#successfailure)
+  - [Displaying Errors](#displaying-errors)
+  - [stop_and_fail!](#stop_and_fail!)
+  - [Validations](#validations)
+- [GLExceptionNotifier](#glexceptionnotifier)
+- [Chainable](#chainable)
+- [Testing GL Commands](#testing-gl-commands)
+  - [Stubbing with build_context](#stubbing-with-build_context)
+  - [Rspec matchers](#rspec-matchers)
+- [Publishing the gem to Rubygems](#publishing-the-gem-to-rubygems)
 
 
 ## Installation
@@ -50,7 +65,7 @@ class SomeCommand < GLCommand::Callable
 end
 ```
 
-## Success/Failure
+### Success/Failure
 
 GLCommand context's are successful by default (`successful?` aliases `success?`).
 
@@ -70,7 +85,8 @@ Here are the ways of adding an error to a command:
 
 If you invoke a command with `.call!` all of the above will raise an exception
 
-If a command fails, it will call its `rollback` method before returning (even when invoked with `.call!`)
+If a command fails, it calls its `rollback` method before returning (even when invoked with `.call!`)
+
 
 ### Displaying errors
 
@@ -147,7 +163,7 @@ When a command fails `GLExceptionNotifier` is called, unless:
 - The failure is a validation failure
 - `stop_and_fail!` is called with `no_notify: true` - for example `stop_and_fail!('An error message', no_notify: true)`
 
-**NOTE:** commands that invoke other commands with `call!` inherit the no_notify property of called command.
+**NOTE:** commands that invoke other commands with `call!` inherit the `no_notify` property of the called command.
 
 ```ruby
 class InteriorCommand < GLCommand::Callable
@@ -211,9 +227,69 @@ class SomeChain < GLCommand::Chainable
     chain(:item)
   end
 end
-
 ```
 
+
+## Testing GL Commands
+
+Give Lively uses Rspec for testing, so this section assumes you're using RSpec.
+
+### Stubbing with `build_context`
+
+If you need the response from a command (typically because you are stubbing it), you can use the `build_context` method to create a context with the desired response. This has the advantage of using the actual Command's `requires`, `allows`, and `returns` methods.
+
+```ruby
+class SomeCommand < GLCommand::Callable
+  requires user: User
+  allows :subject
+  returns :message
+
+  def call
+    user.update!(subject:)
+    context.message = "Hello - user subject: #{user.subject}"
+  end
+end
+
+result = SomeCommand.build_context(user: User.new, message: "Hello!")
+result.success? # true
+result.full_error_message # nil
+result_error = SomeCommand.build_context(error: "invalid")
+result_error.success? # false
+result_error.full_error_message # "invalid"
+```
+
+### RSpec Matchers
+
+`GLCommand` comes with a set of RSpec matchers to make testing your command's interface declarative and simple.
+
+### Setup
+
+To enable the matchers, add the following line to your `spec/spec_helper.rb` or `spec/rails_helper.rb`:
+
+```ruby
+require 'gl_command/rspec'
+```
+
+This will automatically include the necessary matchers and configure RSpec for specs marked with `type: :command`.
+
+### Usage
+
+You can now test your command's interface like this:
+
+```ruby
+# spec/commands/some_command_spec.rb
+
+RSpec.describe SomeCommand, type: :command do
+  describe 'interface' do
+    it { is_expected.to require(:user).being(User) }
+    it { is_expected.to allow(:subject) }
+    it { is_expected.to returns(:message) }
+    it { is_expected.not_to require(:other_thing) }
+  end
+end
+```
+
+**Note:** The `.being(ClassName)` chain is supported for `require` and `allow` but not for `return`, as `GLCommand` does not store type information for return values.
 
 ## Publishing the gem to Rubygems
 
