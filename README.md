@@ -15,13 +15,13 @@ Calling a command returns a `GLCommand::Context` which has these properties:
 - [Installation](#installation)
 - [Using GLCommand](#using-glcommand)
   - [Success/Failure](#successfailure)
-  - [Displaying Errors](#displaying-errors)
-  - [stop_and_fail!](#stop_and_fail!)
+  - [Displaying errors (use `full_error_message`)](#displaying-errors-use-full_error_message)
+  - [stop_and_fail!](#stop_and_fail)
   - [Validations](#validations)
 - [GLExceptionNotifier](#glexceptionnotifier)
 - [Chainable](#chainable)
-- [Testing GL Commands](#testing-gl-commands)
-  - [Stubbing with build_context](#stubbing-with-build_context)
+- [Testing GLCommands](#testing-glcommands)
+  - [Stubbing with `build_context`](#stubbing-with-build_context)
   - [Rspec matchers](#rspec-matchers)
 - [Publishing the gem to Rubygems](#publishing-the-gem-to-rubygems)
 
@@ -88,7 +88,7 @@ If you invoke a command with `.call!` all of the above will raise an exception
 If a command fails, it calls its `rollback` method before returning (even when invoked with `.call!`)
 
 
-### Displaying errors
+### Displaying errors (use `full_error_message`)
 
 In addition to encapsulating business logic, GLCommand also standardizes error handling.
 
@@ -155,7 +155,7 @@ If validations fail, `GLExceptionNotifier` is not called
 
 ## GLExceptionNotifier
 
-[ExceptionNotifier](https://github.com/givelively/gl_exception_notifier) is Give Lively's wrapper for notify our error monitoring service (currently [Sentry](https://github.com/getsentry/sentry-ruby))
+[GLExceptionNotifier](https://github.com/givelively/gl_exception_notifier) is Give Lively's wrapper for notify our error monitoring service (currently [Sentry](https://github.com/getsentry/sentry-ruby))
 
 When a command fails `GLExceptionNotifier` is called, unless:
 
@@ -230,7 +230,7 @@ end
 ```
 
 
-## Testing GL Commands
+## Testing `GLCommand`s
 
 Give Lively uses Rspec for testing, so this section assumes you're using RSpec.
 
@@ -256,6 +256,8 @@ result.full_error_message # nil
 result_error = SomeCommand.build_context(error: "invalid")
 result_error.success? # false
 result_error.full_error_message # "invalid"
+
+SomeCommand.build_context(other_thing: "some other thing") #  raises ArgumentError, "Unknown argument or return attribute: '#{arg}'"
 ```
 
 ### RSpec Matchers
