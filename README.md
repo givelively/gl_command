@@ -20,7 +20,7 @@ Calling a command returns a `GLCommand::Context` which has these properties:
   - [Validations](#validations)
 - [GLExceptionNotifier](#glexceptionnotifier)
 - [Chainable](#chainable)
-- [Testing GLCommands](#testing-glcommands)
+- [Testing `GLCommand`s](#testing-glcommands)
   - [Stubbing with `build_context`](#stubbing-with-build_context)
   - [Rspec matchers](#rspec-matchers)
 - [Publishing the gem to Rubygems](#publishing-the-gem-to-rubygems)
@@ -92,7 +92,7 @@ If a command fails, it calls its `rollback` method before returning (even when i
 
 In addition to encapsulating business logic, GLCommand also standardizes error handling.
 
-This means that rather than having to rescue errors in controllers, you can just render the command's `full_error_message`
+This means that rather than having to rescue errors in controllers, just render the command's `full_error_message`
 
 ```ruby
 result = GLCommand::Callable.call(params)
@@ -236,7 +236,7 @@ Give Lively uses Rspec for testing, so this section assumes you're using RSpec.
 
 ### Stubbing with `build_context`
 
-If you need the response from a command (typically because you are stubbing it), you can use the `build_context` method to create a context with the desired response. This has the advantage of using the actual Command's `requires`, `allows`, and `returns` methods.
+If you need the response from a command (typically because you are stubbing it), use the `build_context` method to create a context with the desired response. This has the advantage of using the actual Command's `requires`, `allows`, and `returns` methods.
 
 ```ruby
 class SomeCommand < GLCommand::Callable
@@ -257,7 +257,8 @@ result_error = SomeCommand.build_context(error: "invalid")
 result_error.success? # false
 result_error.full_error_message # "invalid"
 
-SomeCommand.build_context(other_thing: "some other thing") #  raises ArgumentError, "Unknown argument or return attribute: '#{arg}'"
+SomeCommand.build_context(other_thing: "some other thing")
+# ArgumentError: Unknown argument or return attribute: 'other_thing'
 ```
 
 ### RSpec Matchers
