@@ -104,7 +104,7 @@ else
 end
 ```
 
-In general, use `context.full_error_message` to render errors.
+In general, use `context.full_error_message` to render errors (rather than `context.error.message` which might not have the full error message text).
 
 
 ### `stop_and_fail!`
