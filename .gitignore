@@ -39,3 +39,5 @@ Gemfile.lock
 # .rubocop-https?--*
 
 db
+.aider*
+.env

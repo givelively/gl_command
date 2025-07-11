@@ -1,5 +1,4 @@
 require 'spec_helper'
-require_relative '../../test_command_classes'
 
 RSpec.describe GLCommand::Callable do
   context 'with array_add_class' do
