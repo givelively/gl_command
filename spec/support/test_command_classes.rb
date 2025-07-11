@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+class MatcherTestCommand < GLCommand::Callable
+  requires :required_arg, another_one: String
+  allows :allowed_arg, and_another: Integer
+  returns :returned_val
+
+  def call; end
+end
+
 class ArrayAdd < GLCommand::Callable
   requires :array, :item
 

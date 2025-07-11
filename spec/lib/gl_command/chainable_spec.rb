@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require_relative '../../test_command_classes'
 
 RSpec.describe GLCommand::Chainable do
   let(:context_instance_methods) do
