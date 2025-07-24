@@ -168,13 +168,13 @@ end
 
 ### Best practices for error handling
 
-**Don't add validation errors (with `errors.add`) in the `call` method.**
+#### Don't add validation errors (with `errors.add`) in the `call` method
 
 Only add validation errors in validations
 
-**Prefer raising the original error**
+#### Prefer raising the original error
 
-For example, don't rescue and do `stop_and_fail!('Some special error message')`, do this:
+For example, don't rescue and stop and fail with an error message `stop_and_fail!('Some special error message')`, do this:
 
 ```ruby
 rescue StandardError => e
