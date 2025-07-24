@@ -18,6 +18,7 @@ Calling a command returns a `GLCommand::Context` which has these properties:
   - [Displaying errors (use `full_error_message`)](#displaying-errors-use-full_error_message)
   - [stop_and_fail!](#stop_and_fail)
   - [Validations](#validations)
+  - [Best practices for error handling](#best-practices-for-error-handling)
 - [GLExceptionNotifier](#glexceptionnotifier)
 - [Chainable](#chainable)
 - [Testing `GLCommand`s](#testing-glcommands)
@@ -146,12 +147,43 @@ stop_and_fail!('An error message', no_notify: true) # GLExceptionNotifier is *no
 
 ### Validations
 
-You can add validations to `GLCommand::Callable` and `GLCommand::Chainable`.
+You can add validations to `GLCommand::Callable` and `GLCommand::Chainable`. They use `ActiveModel::Validations`, so you can use [Rails active record validations](https://guides.rubyonrails.org/active_record_validations.html).
 
 If the validations fail, the command returns `success: false` without executing.
 
 If validations fail, `GLExceptionNotifier` is not called
 
+```ruby
+class ExampleCommand < GLCommand::Callable
+  validates :name, presence: true
+  validate :name_must_start_with_cool
+
+  def name_must_start_with_cool
+    return true unless name.start_with?('cool')
+
+    errors.add(:name, "Doesn't start with 'cool'")
+  end
+end
+```
+
+### Best practices for error handling
+
+**Don't add validation errors (with `errors.add`) in the `call` method.**
+
+Only add validation errors in validations
+
+**Prefer raising the original error**
+
+For example, don't rescue and do `stop_and_fail!('Some special error message')`, do this:
+
+```ruby
+rescue StandardError => e
+  full_error_message = "Some special error message"
+  stop_and_fail!(e)
+end
+```
+
+This will preserve the original error and stack trace!
 
 ## GLExceptionNotifier
 
