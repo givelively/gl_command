@@ -147,11 +147,9 @@ stop_and_fail!('An error message', no_notify: true) # GLExceptionNotifier is *no
 
 ### Validations
 
-You can add validations to `GLCommand::Callable` and `GLCommand::Chainable`. They use `ActiveModel::Validations`, so you can use [Rails active record validations](https://guides.rubyonrails.org/active_record_validations.html).
+You can add validations to `GLCommand::Callable` and `GLCommand::Chainable`. They include `ActiveModel::Validations`, so you can use [Rails active record validations](https://guides.rubyonrails.org/active_record_validations.html).
 
-If the validations fail, the command returns `success: false` without executing.
-
-If validations fail, `GLExceptionNotifier` is not called
+If the validations fail, the command returns `success: false` without executing and if validations fail, `GLExceptionNotifier` is **not** called.
 
 ```ruby
 class ExampleCommand < GLCommand::Callable
@@ -174,16 +172,16 @@ i.e. don't use `errors.add` in the `call` method. Use `stop_and_fail!` instead.
 
 #### Prefer raising the original error
 
-For example, if you want to raise a custom error message, don't rescue and then do `stop_and_fail!('Some special error message')`. Do this instead:
+For example, if you want to raise a custom error message, don't rescue and then `stop_and_fail!('Some special error message')`. Do this instead:
 
 ```ruby
 rescue StandardError => e
-  full_error_message = "Some special error message"
-  stop_and_fail!(e)
+  context.full_error_message = "Some special error message"
+  raise e
 end
 ```
 
-This will preserve the original error and stack trace!
+This will preserve the original error and stack trace, which makes it easier to debug and track down issues.
 
 ## GLExceptionNotifier
 
