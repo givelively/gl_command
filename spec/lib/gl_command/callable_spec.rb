@@ -385,8 +385,7 @@ RSpec.describe GLCommand::Callable do
 
     context 'with error' do
       let(:error) { ActiveRecord::RecordNotFound.new('Some error class') }
-      let(:result) { CreateTestNpo.build_context(error:)
- }
+      let(:result) { CreateTestNpo.build_context(error:) }
 
       it 'is failure' do
         expect(result).to be_a_failure
@@ -635,8 +634,7 @@ RSpec.describe GLCommand::Callable do
   describe 'instrument_command triggers' do
     let(:instruments_triggered) { [] }
     let(:fail_error) { false }
-    let(:result) { TestInstrumentTriggers.call(instruments_triggered:, fail_error:)
- }
+    let(:result) { TestInstrumentTriggers.call(instruments_triggered:, fail_error:) }
 
     it 'returns before_call and after_call' do
       expect(result).to be_successful
@@ -653,8 +651,7 @@ RSpec.describe GLCommand::Callable do
     end
 
     context 'with call!' do
-      let(:result) { TestInstrumentTriggers.call!(instruments_triggered:, fail_error:)
- }
+      let(:result) { TestInstrumentTriggers.call!(instruments_triggered:, fail_error:) }
 
       it 'returns before_call and after_call' do
         expect(result).to be_successful
