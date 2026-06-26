@@ -113,7 +113,7 @@ RSpec.describe GLCommand::Chainable do
     let(:test_class) do
       Class.new(GLCommand::Chainable) do
         # Need to set the class name for validatable, or it raises: Class name cannot be blank.
-        define_singleton_method(:name) do
+        def self.name
           'TestChainableClass'
         end
 
@@ -209,7 +209,7 @@ RSpec.describe GLCommand::Chainable do
     let(:test_class) do
       Class.new(GLCommand::Chainable) do
         # Need to set the class name for validatable, or it raises: Class name cannot be blank.
-        define_singleton_method(:name) do
+        def self.name
           'TestChainableClass'
         end
 
@@ -256,8 +256,7 @@ RSpec.describe GLCommand::Chainable do
   describe "chain call that doesn't call chain" do
     let(:test_class) do
       Class.new(GLCommand::Chainable) do
-        define_method(:call) do
-        end
+        def call; end
       end
     end
 
@@ -296,6 +295,7 @@ RSpec.describe GLCommand::Chainable do
     describe 'call' do
       let(:result) { ArrayChain.call!(array:, item: 6) }
 
+      # rubocop:disable RSpec/MultipleExpectations
       it 'adds to the array' do
         expect(result).to be_successful
         expect(array).to eq([1, 2, 3, 4])
@@ -305,6 +305,7 @@ RSpec.describe GLCommand::Chainable do
         expect(result.is_in_chain).to be_an_instance_of(GLCommand::ChainableContext)
         expect(result.is_in_chain.to_h).to eq result.to_h.except(:in_chain)
       end
+      # rubocop:enable RSpec/MultipleExpectations
     end
 
     describe 'with validation failure' do
@@ -314,6 +315,7 @@ RSpec.describe GLCommand::Chainable do
       end
       let(:result) { ArrayChain.call(array:, item: 6) }
 
+      # rubocop:disable RSpec/MultipleExpectations
       it 'adds an error' do
         expect(GLExceptionNotifier).not_to receive(:call)
         expect(result).not_to be_successful
@@ -323,6 +325,7 @@ RSpec.describe GLCommand::Chainable do
         expect(result.error.class).to eq(ActiveRecord::RecordInvalid)
         expect(result.revised_item).to eq 8
       end
+      # rubocop:enable RSpec/MultipleExpectations
     end
 
     describe 'rollback' do
@@ -333,7 +336,7 @@ RSpec.describe GLCommand::Chainable do
       end
 
       # rubocop:disable Metrics/AbcSize
-      define_method(:failure_expectations) do |result|
+      def failure_expectations(result)
         expect(result.error.to_s).to match(/Test Error/)
         expect(array).to eq([1, 2, 3, 4])
         expect(result.revised_item).to eq 8
@@ -370,7 +373,7 @@ RSpec.describe GLCommand::Chainable do
         validates_with ArrayHasNoNilValidator
 
         # Need to set the class name for validatable, or it raises: Class name cannot be blank.
-        define_singleton_method(:name) do
+        def self.name
           'TestChainableValidatableClass'
         end
       end

@@ -1,6 +1,17 @@
 inherit_gem:
   gl_rubocop: default.yml
 
-# TODO: Remove after implementing DEV-9754
 require:
-- rubocop-rake
+  - rubocop-rake
+
+Rails:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+I18n/RailsI18n:
+  Enabled: false
+
+Sorbet/BlockMethodDefinition:
+  Enabled: false
