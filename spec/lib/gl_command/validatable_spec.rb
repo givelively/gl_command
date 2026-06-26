@@ -44,7 +44,7 @@ RSpec.describe GLCommand::Validatable do
     let(:test_validates_class) do
       Class.new(GLCommand::Callable) do
         # Need to set the class name for validatable, or it raises: Class name cannot be blank.
-        def self.name
+        define_singleton_method(:name) do
           'TestClass'
         end
 
@@ -52,7 +52,8 @@ RSpec.describe GLCommand::Validatable do
 
         validates :number, numericality: { only_integer: true }, allow_nil: true
 
-        def call; end
+        define_method(:call) do
+        end
       end
     end
 
@@ -89,11 +90,11 @@ RSpec.describe GLCommand::Validatable do
         validates :number, numericality: true
 
         # Need to set the class name for validatable, or it raises: Class name cannot be blank.
-        def self.name
+        define_singleton_method(:name) do
           'TestClassManual'
         end
 
-        def call
+        define_method(:call) do
           unless number.is_a?(Integer)
             # This DOES NOT stop execution!
             errors.add(:base, 'Number must be an integer')
@@ -168,11 +169,11 @@ RSpec.describe GLCommand::Validatable do
                                       message: '%<value>s is not a valid size' }
 
         # Need to set the class name for validatable, or it raises: Class name cannot be blank.
-        def self.name
+        define_singleton_method(:name) do
           'TestClassMultiple'
         end
 
-        def call
+        define_method(:call) do
           "Number: #{number}, String: #{string}, Size: #{size}"
         end
       end
@@ -204,7 +205,7 @@ RSpec.describe GLCommand::Validatable do
       Class.new(GLCommand::Callable) do
         allows :validation_error, :skip_raising
 
-        def call
+        define_method(:call) do
           errors.add(:base, validation_error) if validation_error.present?
           raise 'Raised error message!' unless skip_raising == true
         end

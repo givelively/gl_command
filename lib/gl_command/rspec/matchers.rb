@@ -46,15 +46,15 @@ module GLCommand
     class RequireArgumentMatcher < CommandArgumentMatcher
       private
 
-      def scope; :requires; end
-      def action; 'require'; end
+      def scope = :requires
+      def action = 'require'
     end
 
     class AllowArgumentMatcher < CommandArgumentMatcher
       private
 
-      def scope; :allows; end
-      def action; 'allow'; end
+      def scope = :allows
+      def action = 'allow'
     end
 
     # Specific matcher for `returns`, which only stores an Array of keys.

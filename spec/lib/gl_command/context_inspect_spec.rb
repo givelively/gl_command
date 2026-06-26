@@ -6,7 +6,7 @@ RSpec.describe GLCommand::ContextInspect do
     let(:test_class) do
       Class.new(GLCommand::Callable) do
         allows :full_error_message_str
-        def call
+        define_method(:call) do
           context.some_unknown_method
         end
       end
@@ -29,7 +29,7 @@ RSpec.describe GLCommand::ContextInspect do
         allows :collection
         returns :test_npo
 
-        def call
+        define_method(:call) do
           context.test_npo = TestNpo.new(ein:)
         end
       end

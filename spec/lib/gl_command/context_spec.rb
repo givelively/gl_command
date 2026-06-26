@@ -3,7 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe GLCommand::Context do
-  # rubocop:disable RSpec/MultipleExpectations
   let(:context_instance_methods) do
     %i[arguments assign_callable assign_parameters chain? error error= errors failure?
        full_error_message full_error_message= in_chain klass no_notifiable_error_to_raise
@@ -12,7 +11,8 @@ RSpec.describe GLCommand::Context do
 
   let(:test_class) do
     Class.new(GLCommand::Callable) do
-      def call; end
+      define_method(:call) do
+      end
     end
   end
 
@@ -116,7 +116,8 @@ RSpec.describe GLCommand::Context do
 
         returns :new_thing, :extra
 
-        def call; end
+        define_method(:call) do
+        end
       end
     end
 
@@ -189,7 +190,7 @@ RSpec.describe GLCommand::Context do
       let(:test_class) do
         Class.new(GLCommand::Callable) do
           allows :full_error_message_str, :set_no_notify
-          def call
+          define_method(:call) do
             context.instance_variable_set(:@no_notify, true) if set_no_notify
 
             context.errors.add(:base, full_error_message_str)
@@ -263,7 +264,7 @@ RSpec.describe GLCommand::Context do
         Class.new(GLCommand::Callable) do
           allows :full_error_message_str, :set_no_notify
 
-          def call
+          define_method(:call) do
             context.instance_variable_set(:@no_notify, true) if set_no_notify
 
             context.full_error_message = full_error_message_str
@@ -321,7 +322,7 @@ RSpec.describe GLCommand::Context do
 
         returns new_array: Array
 
-        def call
+        define_method(:call) do
           result = ArrayPop.call!(array:)
 
           context.new_array = result.popped_array
@@ -370,5 +371,4 @@ RSpec.describe GLCommand::Context do
       end
     end
   end
-  # rubocop:enable RSpec/MultipleExpectations
 end

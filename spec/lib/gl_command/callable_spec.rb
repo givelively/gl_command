@@ -22,7 +22,7 @@ RSpec.describe GLCommand::Callable do
                                            }
       end
 
-      def failure_expectations(result)
+      define_method(:failure_expectations) do |result|
         expect(result).to be_failure
         expect(result.error.to_s).to match(/Test Error/)
         expect(array).to eq([1, 2, 3, 4])
@@ -143,7 +143,7 @@ RSpec.describe GLCommand::Callable do
 
         returns :root
 
-        def call
+        define_method(:call) do
           Math.sqrt(number)
         end
       end
@@ -210,7 +210,7 @@ RSpec.describe GLCommand::Callable do
 
         returns :new_array, :array
 
-        def call
+        define_method(:call) do
           context.new_array = array.dup.push(item)
           context.array = context.new_array
         end
@@ -243,7 +243,7 @@ RSpec.describe GLCommand::Callable do
 
         returns :revised_number
 
-        def call
+        define_method(:call) do
           context.revised_number = number * 2
           if fail_error
             stop_and_fail!(fail_error, no_notify: true)
@@ -254,7 +254,7 @@ RSpec.describe GLCommand::Callable do
           raise 'SPECIAL ERROR'
         end
 
-        def rollback
+        define_method(:rollback) do
           context.revised_number = context.number / 2
         end
       end
@@ -328,7 +328,7 @@ RSpec.describe GLCommand::Callable do
         Class.new(GLCommand::Callable) do
           returns :something
 
-          def call
+          define_method(:call) do
             stop_and_fail!(no_notify: true)
           end
         end
@@ -349,7 +349,7 @@ RSpec.describe GLCommand::Callable do
         Class.new(GLCommand::Callable) do
           returns :something
 
-          def call
+          define_method(:call) do
             stop_and_fail!
           end
         end
@@ -369,7 +369,8 @@ RSpec.describe GLCommand::Callable do
   describe 'build_context' do
     let(:context_class) do
       Class.new(GLCommand::Callable) do
-        def call; end
+        define_method(:call) do
+        end
       end
     end
 
@@ -398,7 +399,8 @@ RSpec.describe GLCommand::Callable do
   describe 'command with positional_parameter' do
     let(:test_class) do
       Class.new(GLCommand::Callable) do
-        def call(something, another_thing:); end
+        define_method(:call) do |something, another_thing:|
+        end
       end
     end
 
@@ -453,7 +455,8 @@ RSpec.describe GLCommand::Callable do
       Class.new(GLCommand::Callable) do
         returns :error
 
-        def call; end
+        define_method(:call) do
+        end
       end
     end
     let(:target_error) do
@@ -477,7 +480,8 @@ RSpec.describe GLCommand::Callable do
 
         returns :something, new_array: Array
 
-        def call; end
+        define_method(:call) do
+        end
       end
     end
 
@@ -547,7 +551,8 @@ RSpec.describe GLCommand::Callable do
       Class.new(GLCommand::Callable) do
         allows :something, other: String
 
-        def call; end
+        define_method(:call) do
+        end
       end
     end
 
@@ -578,7 +583,7 @@ RSpec.describe GLCommand::Callable do
 
         returns :new_array, :removed_item
 
-        def call
+        define_method(:call) do
           context.new_array = array.dup
           new_array.pop
           add_item!
@@ -586,7 +591,7 @@ RSpec.describe GLCommand::Callable do
 
         private
 
-        def add_item!
+        define_method(:add_item!) do
           context.removed_item = array.last
         end
       end
