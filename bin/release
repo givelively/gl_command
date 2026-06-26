@@ -31,15 +31,37 @@ if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
   exit 1
 fi
 
-bundle exec rspec || { echo "Error: specs failed, aborting release"; exit 1; }
-
+# main is protected, so the version bump goes through a PR
+RELEASE_BRANCH="release-v$VERSION"
+git checkout -b "$RELEASE_BRANCH"
 printf "module GLCommand\n  VERSION = '$VERSION'.freeze\nend\n" > ./lib/gl_command/version.rb
 bundle
 git add Gemfile.lock lib/gl_command/version.rb
 git commit -m "Bump version for $VERSION"
-git push
+git push -u origin "$RELEASE_BRANCH"
+
+gh pr create --base main --title "Bump version for $VERSION" --body "Automated version bump for the $VERSION release."
+gh pr merge "$RELEASE_BRANCH" --squash --auto
+
+echo "Waiting for the release PR to merge (auto-merges once CI passes)..."
+while true; do
+  STATE=$(gh pr view "$RELEASE_BRANCH" --json state --jq .state)
+  case "$STATE" in
+    MERGED) break ;;
+    CLOSED)
+      echo "Error: release PR was closed without merging"
+      exit 1
+      ;;
+    *) sleep 10 ;;
+  esac
+done
+
+git checkout main
+git pull origin main
+git branch -d "$RELEASE_BRANCH"
+
 git tag v$VERSION
-git push --tags
+git push origin v$VERSION
 gem build gl_command.gemspec
 gem push "gl_command-$VERSION.gem" --host https://rubygems.org
 rm "gl_command-$VERSION.gem"
