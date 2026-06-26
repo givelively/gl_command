@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe GLCommand::Matchers, type: :command do
+RSpec.describe GLCommand::Matchers, type: :command do # rubocop:disable RSpec/FilePath, RSpec/SpecFilePathFormat
   subject(:command) { MatcherTestCommand }
 
   describe 'interface matchers' do

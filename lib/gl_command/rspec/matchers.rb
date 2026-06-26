@@ -69,6 +69,7 @@ module GLCommand
         self
       end
 
+      # rubocop:disable Layout/LineLength
       def matches?(command_class)
         @command_class = command_class.is_a?(Class) ? command_class : command_class.class
 
@@ -79,6 +80,7 @@ module GLCommand
 
         @command_class.returns.include?(@attribute)
       end
+      # rubocop:enable Layout/LineLength
 
       def description
         "return attribute `#{@attribute}`"
