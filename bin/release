@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-VERSION=$1
+# Abort on any unchecked failure so we never publish a release for a version
+# that didn't actually make it to RubyGems (e.g. a failed `gem push`).
+set -euo pipefail
+
+VERSION="${1:-}"
 
 if [ -z "$VERSION" ]; then
   echo "bin/release needs a version!"
