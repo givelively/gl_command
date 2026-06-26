@@ -214,10 +214,11 @@ module GLCommand
       raise ArgumentError, "unknown #{error_keys_str(unknown)}" if unknown.any?
 
       # strong_attributes type checking
-      # type can be a single class (e.g. String) or an array of classes
-      # (e.g. [User, AdminUser]), in which case the value may be any of them
+      # type can be a class (e.g. String), a symbol naming a predicate method
+      # the value must answer truthily (e.g. :acts_as_syncable?), or an array of
+      # either (e.g. [User, AdminUser]), in which case the value may match any
       self.class.requires.merge(self.class.allows).each do |arg, type|
-        next if type.nil? || Array(type).any? { |t| args[arg].is_a?(t) }
+        next if type.nil? || Array(type).any? { |t| value_matches_type?(args[arg], t) }
         # Validation skipped if allows and nil (but not if blank)
         next if args[arg].nil? && self.class.allows.include?(arg)
 
@@ -230,8 +231,20 @@ module GLCommand
       "keyword#{keys.count > 1 ? 's' : ''}: #{keys.map { |k| ":#{k}" }.join(', ')}"
     end
 
+    # A type can be a class (checked with is_a?) or a symbol naming a predicate
+    # method the value must respond to and return truthy from
+    def value_matches_type?(value, type)
+      if type.is_a?(Symbol)
+        value.respond_to?(type) && value.public_send(type)
+      else
+        value.is_a?(type)
+      end
+    end
+
     def type_error_str(type)
-      type.is_a?(Array) ? "one of #{type.join(', ')}" : "a #{type}"
+      return "one of #{type.join(', ')}" if type.is_a?(Array)
+
+      type.is_a?(Symbol) ? type.to_s : "a #{type}"
     end
   end
 end
