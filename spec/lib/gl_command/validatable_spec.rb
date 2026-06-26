@@ -246,31 +246,32 @@ RSpec.describe GLCommand::Validatable do
     end
   end
 
-  # TODO: include active record model
+  describe 'Record raises ActiveRecord::RecordInvalid in call' do
+    let(:test_call_with_invalid) do
+      Class.new(GLCommand::Callable) do
+        # Need to set the class name for validatable, or it raises: Class name cannot be blank.
+        def self.name
+          'TestCallWithInvalid'
+        end
 
-  # describe 'Record raises ActiveRecord::RecordInvalid in call' do
-  #   let(:test_call_with_invalid) do
-  #     Class.new(GLCommand::Callable) do
-  #       # Need to set the class name for validatable, or it raises: Class name cannot be blank.
-  #       def self.name
-  #         'TestCallWithInvalid'
-  #       end
+        def call
+          errors.add(:base, 'Cart must exist') # Ensure this isn't duplicated
+          CartCustomer.create!
+        end
+      end
+    end
+    let(:target_errors) do
+      ['Cart must exist', "Cart can't be blank", "Customer can't be blank"]
+    end
 
-  #       def call
-  #         errors.add(:base, 'Cart must exist') # Ensure this isn't duplicated
-  #         CartCustomer.create!
-  #       end
-  #     end
-  #   end
-  #   let(:target_errors) do
-  #     ['Cart must exist', "Cart can't be blank", "Customer can't be blank"]
-  #   end
-
-  #   it "adds the record's errors to context.errors but doesn't duplicate them" do
-  #     result = test_call_with_invalid.call
-  #     expect(result).to be_failure
-  #     expect(result.errors.full_messages).to match_array target_errors
-  #     expect(result.full_error_message).to eq "Validation failed: #{target_errors.join(', ')}"
-  #   end
-  # end
+    it "adds the record's errors to context.errors but doesn't duplicate them" do
+      result = test_call_with_invalid.call
+      expect(result).to be_failure
+      expect(result.errors.full_messages).to match_array target_errors
+      # full_error_message comes from the raised RecordInvalid, so it reflects the
+      # record's own validation errors (not the command's manually-added :base error)
+      expect(result.full_error_message)
+        .to eq "Validation failed: Cart can't be blank, Customer can't be blank"
+    end
+  end
 end
