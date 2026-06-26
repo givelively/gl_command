@@ -126,7 +126,10 @@ module GLCommand
     private
 
     def current_errors
-      @callable&.errors
+      return @callable.errors if defined?(@callable)
+
+      # @standalone_errors only is instantiated when you use build_context
+      (@standalone_errors ||= ActiveModel::Errors.new(self))
     end
 
     def add_command_error?
