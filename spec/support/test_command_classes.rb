@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MatcherTestCommand < GLCommand::Callable
-  requires :required_arg, another_one: String
+  requires :required_arg, another_one: String, multi: [Integer, String]
   allows :allowed_arg, and_another: Integer
   returns :returned_val
 

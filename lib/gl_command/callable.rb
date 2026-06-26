@@ -214,18 +214,24 @@ module GLCommand
       raise ArgumentError, "unknown #{error_keys_str(unknown)}" if unknown.any?
 
       # strong_attributes type checking
+      # type can be a single class (e.g. String) or an array of classes
+      # (e.g. [User, AdminUser]), in which case the value may be any of them
       self.class.requires.merge(self.class.allows).each do |arg, type|
-        next if type.nil? || args[arg].is_a?(type)
+        next if type.nil? || Array(type).any? { |t| args[arg].is_a?(t) }
         # Validation skipped if allows and nil (but not if blank)
         next if args[arg].nil? && self.class.allows.include?(arg)
 
-        raise GLCommand::ArgumentTypeError, ":#{arg} is not a #{type}"
+        raise GLCommand::ArgumentTypeError, ":#{arg} is not #{type_error_str(type)}"
       end
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def error_keys_str(keys)
       "keyword#{keys.count > 1 ? 's' : ''}: #{keys.map { |k| ":#{k}" }.join(', ')}"
+    end
+
+    def type_error_str(type)
+      type.is_a?(Array) ? "one of #{type.join(', ')}" : "a #{type}"
     end
   end
 end

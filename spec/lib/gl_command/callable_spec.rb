@@ -571,6 +571,57 @@ RSpec.describe GLCommand::Callable do
     end
   end
 
+  describe 'strong_attributes with an array of types' do
+    let(:test_class) do
+      Class.new(GLCommand::Callable) do
+        requires identifier: [Integer, String]
+
+        allows extra: [Symbol, String]
+
+        def call; end
+      end
+    end
+
+    it 'stores the array of types' do
+      expect(test_class.instance_variable_get(:@requires)).to eq({ identifier: [Integer, String] })
+      expect(test_class.instance_variable_get(:@allows)).to eq({ extra: [Symbol, String] })
+    end
+
+    it 'is successful when a required arg matches the first type' do
+      result = test_class.call(identifier: 1)
+      expect(result).to be_a_success
+    end
+
+    it 'is successful when a required arg matches a later type' do
+      result = test_class.call(identifier: 'abc')
+      expect(result).to be_a_success
+    end
+
+    it 'fails when a required arg matches none of the types' do
+      result = test_class.call(identifier: [1])
+      expect(result).to be_a_failure
+      expect(result.error.class).to eq GLCommand::ArgumentTypeError
+      expect(result.full_error_message).to eq ':identifier is not one of Integer, String'
+    end
+
+    it 'is successful when an allowed arg matches one of the types' do
+      result = test_class.call(identifier: 1, extra: :sym)
+      expect(result).to be_a_success
+    end
+
+    it 'fails when an allowed arg matches none of the types' do
+      result = test_class.call(identifier: 1, extra: 5)
+      expect(result).to be_a_failure
+      expect(result.error.class).to eq GLCommand::ArgumentTypeError
+      expect(result.full_error_message).to eq ':extra is not one of Symbol, String'
+    end
+
+    it 'does not validate an allowed arg of array types if nil' do
+      result = test_class.call(identifier: 1, extra: nil)
+      expect(result).to be_a_success
+    end
+  end
+
   describe 'delegates arguments and returns' do
     let(:test_class) do
       Class.new(GLCommand::Callable) do
