@@ -11,7 +11,7 @@ jobs:
       matrix:
         # NOTE: when updating the ruby versions, consider re-writing the rubocop_rules.yml
         # and updating rules_version in spec/rubocop_rules_spec.rb
-        ruby-version: ['3.3', '3.2', '3.1']
+        ruby-version: ['4.0', '3.4', '3.3']
     env:
       RAILS_ENV: test
     steps:
