@@ -4,9 +4,6 @@ inherit_gem:
 require:
   - rubocop-rake
 
-Rails:
-  Enabled: false
-
 Metrics/ParameterLists:
   Enabled: false
 
