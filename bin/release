@@ -64,9 +64,13 @@ git checkout main
 git pull origin main
 git branch -d "$RELEASE_BRANCH"
 
-git tag v$VERSION
-git push origin v$VERSION
+# Publish the gem first; the tag and GitHub release are only created once the
+# gem has actually made it to RubyGems. This keeps a failed `gem push` from
+# leaving behind a tag that points at an unpublished release (and blocks re-runs).
 gem build gl_command.gemspec
 gem push "gl_command-$VERSION.gem" --host https://rubygems.org
 rm "gl_command-$VERSION.gem"
+
+git tag v$VERSION
+git push origin v$VERSION
 gh release create "v$VERSION" --title "v$VERSION" --generate-notes
