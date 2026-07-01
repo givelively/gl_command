@@ -139,8 +139,6 @@ Gemspec/RubyVersionGlobalsUsage:
   VersionChanged: '1.40'
   Include:
   - "**/*.gemspec"
-I18n/RailsI18n/DecorateString: {}
-I18n/RailsI18n/DecorateStringFormattingUsingInterpolation: {}
 Layout/AccessModifierIndentation:
   VersionAdded: '0.49'
   EnforcedStyle: indent
@@ -1039,15 +1037,6 @@ Metrics/ModuleLength:
   CountComments: false
   Max: 100
   CountAsOne: []
-Metrics/ParameterLists:
-  VersionAdded: '0.25'
-  VersionChanged: '1.5'
-  Max: 6
-  CountKeywordArgs: true
-  MaxOptionalParameters: 3
-  Exclude:
-  - "/db/seeds/**/*"
-  - "/app/components/**/*"
 Metrics/PerceivedComplexity:
   VersionAdded: '0.25'
   VersionChanged: '0.81'
