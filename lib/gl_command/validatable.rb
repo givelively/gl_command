@@ -13,7 +13,7 @@ module GLCommand
     include ActiveModel::Validations
 
     class_methods do
-      def i18n_scope
+      define_method(:i18n_scope) do
         :activerecord
       end
     end

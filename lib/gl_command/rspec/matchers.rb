@@ -46,15 +46,15 @@ module GLCommand
     class RequireArgumentMatcher < CommandArgumentMatcher
       private
 
-      def scope; :requires; end
-      def action; 'require'; end
+      def scope = :requires
+      def action = 'require'
     end
 
     class AllowArgumentMatcher < CommandArgumentMatcher
       private
 
-      def scope; :allows; end
-      def action; 'allow'; end
+      def scope = :allows
+      def action = 'allow'
     end
 
     # Specific matcher for `returns`, which only stores an Array of keys.
@@ -69,6 +69,7 @@ module GLCommand
         self
       end
 
+      # rubocop:disable Layout/LineLength
       def matches?(command_class)
         @command_class = command_class.is_a?(Class) ? command_class : command_class.class
 
@@ -79,6 +80,7 @@ module GLCommand
 
         @command_class.returns.include?(@attribute)
       end
+      # rubocop:enable Layout/LineLength
 
       def description
         "return attribute `#{@attribute}`"
