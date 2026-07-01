@@ -295,7 +295,6 @@ RSpec.describe GLCommand::Chainable do
     describe 'call' do
       let(:result) { ArrayChain.call!(array:, item: 6) }
 
-      # rubocop:disable RSpec/MultipleExpectations
       it 'adds to the array' do
         expect(result).to be_successful
         expect(array).to eq([1, 2, 3, 4])
@@ -305,7 +304,6 @@ RSpec.describe GLCommand::Chainable do
         expect(result.is_in_chain).to be_an_instance_of(GLCommand::ChainableContext)
         expect(result.is_in_chain.to_h).to eq result.to_h.except(:in_chain)
       end
-      # rubocop:enable RSpec/MultipleExpectations
     end
 
     describe 'with validation failure' do
@@ -315,7 +313,6 @@ RSpec.describe GLCommand::Chainable do
       end
       let(:result) { ArrayChain.call(array:, item: 6) }
 
-      # rubocop:disable RSpec/MultipleExpectations
       it 'adds an error' do
         expect(GLExceptionNotifier).not_to receive(:call)
         expect(result).not_to be_successful
@@ -325,7 +322,6 @@ RSpec.describe GLCommand::Chainable do
         expect(result.error.class).to eq(ActiveRecord::RecordInvalid)
         expect(result.revised_item).to eq 8
       end
-      # rubocop:enable RSpec/MultipleExpectations
     end
 
     describe 'rollback' do
