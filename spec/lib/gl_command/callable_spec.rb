@@ -391,6 +391,8 @@ RSpec.describe GLCommand::Callable do
         expect(result).to be_a_failure
         expect(result.full_error_message).to eq 'Some error class'
         expect(result.error.class).to eq ActiveRecord::RecordNotFound
+        expect(result.errors.map(&:class)).to eq([ActiveModel::Error])
+        expect(result.errors.full_messages).to eq(['Some error class'])
       end
     end
   end

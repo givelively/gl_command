@@ -27,7 +27,7 @@ module GLCommand
 
     # If someone calls #errors, they expect to get the errors! Include the non-validation error, if it exists
     def errors
-      current_errors&.add(:base, "Command Error: #{full_error_message}") if add_command_error?
+      current_errors&.add(:base, full_error_message) if add_command_error?
       current_errors
     end
 
@@ -126,7 +126,10 @@ module GLCommand
     private
 
     def current_errors
-      @callable&.errors
+      return @callable.errors if defined?(@callable)
+
+      # @standalone_errors only is instantiated when you use build_context
+      (@standalone_errors ||= ActiveModel::Errors.new(self))
     end
 
     def add_command_error?
@@ -136,7 +139,7 @@ module GLCommand
 
       # Add command error unless the existing error is a validation error or there's already a command error
       @error&.class != ActiveRecord::RecordInvalid &&
-        current_errors.full_messages.none? { |err| err.start_with?('Command Error: ') }
+        current_errors.full_messages.none? { |err| err == @error.message }
     end
 
     def exception?(passed_error)
