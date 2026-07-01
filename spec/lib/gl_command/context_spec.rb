@@ -3,7 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe GLCommand::Context do
-  # rubocop:disable RSpec/MultipleExpectations
   let(:context_instance_methods) do
     %i[arguments assign_callable assign_parameters chain? error error= errors failure?
        full_error_message full_error_message= in_chain klass no_notifiable_error_to_raise
@@ -370,5 +369,4 @@ RSpec.describe GLCommand::Context do
       end
     end
   end
-  # rubocop:enable RSpec/MultipleExpectations
 end
