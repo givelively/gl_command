@@ -130,6 +130,33 @@ class TestNpo
   end
 end
 
+# Mimics an ActiveRecord model (without needing a database connection) so that
+# `create!` raises a real ActiveRecord::RecordInvalid with the record's errors
+class CartCustomer
+  include ActiveModel::Validations
+
+  def self.i18n_scope
+    :activerecord
+  end
+
+  def self.create!(**attrs)
+    record = new(**attrs)
+    raise ActiveRecord::RecordInvalid, record unless record.valid?
+
+    record
+  end
+
+  attr_reader :cart, :customer
+
+  validates :cart, presence: true
+  validates :customer, presence: true
+
+  def initialize(cart: nil, customer: nil)
+    @cart = cart
+    @customer = customer
+  end
+end
+
 class TestNormalizeEin < GLCommand::Callable
   requires string: String
 
