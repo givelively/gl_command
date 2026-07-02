@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MatcherTestCommand < GLCommand::Callable
-  requires :required_arg, another_one: String
+  requires :required_arg, another_one: String, multi: [Integer, String]
   allows :allowed_arg, and_another: Integer
   returns :returned_val
 
@@ -127,6 +127,33 @@ class TestNpo
     return if invalid?
 
     TestNpo.all << self
+  end
+end
+
+# Mimics an ActiveRecord model (without needing a database connection) so that
+# `create!` raises a real ActiveRecord::RecordInvalid with the record's errors
+class CartCustomer
+  include ActiveModel::Validations
+
+  def self.i18n_scope
+    :activerecord
+  end
+
+  def self.create!(**attrs)
+    record = new(**attrs)
+    raise ActiveRecord::RecordInvalid, record unless record.valid?
+
+    record
+  end
+
+  attr_reader :cart, :customer
+
+  validates :cart, presence: true
+  validates :customer, presence: true
+
+  def initialize(cart: nil, customer: nil)
+    @cart = cart
+    @customer = customer
   end
 end
 

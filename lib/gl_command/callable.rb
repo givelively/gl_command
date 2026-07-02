@@ -214,18 +214,37 @@ module GLCommand
       raise ArgumentError, "unknown #{error_keys_str(unknown)}" if unknown.any?
 
       # strong_attributes type checking
+      # type can be a class (e.g. String), a symbol naming a predicate method
+      # the value must answer truthily (e.g. :acts_as_syncable?), or an array of
+      # either (e.g. [User, AdminUser]), in which case the value may match any
       self.class.requires.merge(self.class.allows).each do |arg, type|
-        next if type.nil? || args[arg].is_a?(type)
+        next if type.nil? || Array(type).any? { |t| value_matches_type?(args[arg], t) }
         # Validation skipped if allows and nil (but not if blank)
         next if args[arg].nil? && self.class.allows.include?(arg)
 
-        raise GLCommand::ArgumentTypeError, ":#{arg} is not a #{type}"
+        raise GLCommand::ArgumentTypeError, ":#{arg} is not #{type_error_str(type)}"
       end
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def error_keys_str(keys)
       "keyword#{keys.count > 1 ? 's' : ''}: #{keys.map { |k| ":#{k}" }.join(', ')}"
+    end
+
+    # A type can be a class (checked with is_a?) or a symbol naming a predicate
+    # method the value must respond to and return truthy from
+    def value_matches_type?(value, type)
+      if type.is_a?(Symbol)
+        value.respond_to?(type) && value.public_send(type)
+      else
+        value.is_a?(type)
+      end
+    end
+
+    def type_error_str(type)
+      return "one of #{type.join(', ')}" if type.is_a?(Array)
+
+      type.is_a?(Symbol) ? type.to_s : "a #{type}"
     end
   end
 end

@@ -573,6 +573,118 @@ RSpec.describe GLCommand::Callable do
     end
   end
 
+  describe 'strong_attributes with an array of types' do
+    let(:test_class) do
+      Class.new(GLCommand::Callable) do
+        requires identifier: [Integer, String]
+
+        allows extra: [Symbol, String]
+
+        def call; end
+      end
+    end
+
+    it 'stores the array of types' do
+      expect(test_class.instance_variable_get(:@requires)).to eq({ identifier: [Integer, String] })
+      expect(test_class.instance_variable_get(:@allows)).to eq({ extra: [Symbol, String] })
+    end
+
+    it 'is successful when a required arg matches the first type' do
+      result = test_class.call(identifier: 1)
+      expect(result).to be_a_success
+    end
+
+    it 'is successful when a required arg matches a later type' do
+      result = test_class.call(identifier: 'abc')
+      expect(result).to be_a_success
+    end
+
+    it 'fails when a required arg matches none of the types' do
+      result = test_class.call(identifier: [1])
+      expect(result).to be_a_failure
+      expect(result.error.class).to eq GLCommand::ArgumentTypeError
+      expect(result.full_error_message).to eq ':identifier is not one of Integer, String'
+    end
+
+    it 'is successful when an allowed arg matches one of the types' do
+      result = test_class.call(identifier: 1, extra: :sym)
+      expect(result).to be_a_success
+    end
+
+    it 'fails when an allowed arg matches none of the types' do
+      result = test_class.call(identifier: 1, extra: 5)
+      expect(result).to be_a_failure
+      expect(result.error.class).to eq GLCommand::ArgumentTypeError
+      expect(result.full_error_message).to eq ':extra is not one of Symbol, String'
+    end
+
+    it 'does not validate an allowed arg of array types if nil' do
+      result = test_class.call(identifier: 1, extra: nil)
+      expect(result).to be_a_success
+    end
+  end
+
+  describe 'strong_attributes with a predicate method type' do
+    let(:syncable_class) do
+      Struct.new(:syncable) do
+        def acts_as_syncable? = syncable
+      end
+    end
+    let(:test_class) do
+      Class.new(GLCommand::Callable) do
+        requires syncable_object: :acts_as_syncable?
+
+        allows maybe_syncable: :acts_as_syncable?
+
+        def call; end
+      end
+    end
+
+    it 'stores the symbol type' do
+      expect(test_class.instance_variable_get(:@requires))
+        .to eq({ syncable_object: :acts_as_syncable? })
+      expect(test_class.instance_variable_get(:@allows))
+        .to eq({ maybe_syncable: :acts_as_syncable? })
+    end
+
+    it 'is successful when the predicate is truthy' do
+      result = test_class.call(syncable_object: syncable_class.new(true))
+      expect(result).to be_a_success
+    end
+
+    it 'fails when the predicate is falsey' do
+      result = test_class.call(syncable_object: syncable_class.new(false))
+      expect(result).to be_a_failure
+      expect(result.error.class).to eq GLCommand::ArgumentTypeError
+      expect(result.full_error_message).to eq ':syncable_object is not acts_as_syncable?'
+    end
+
+    it 'fails when the value does not respond to the predicate' do
+      result = test_class.call(syncable_object: 'a string')
+      expect(result).to be_a_failure
+      expect(result.error.class).to eq GLCommand::ArgumentTypeError
+      expect(result.full_error_message).to eq ':syncable_object is not acts_as_syncable?'
+    end
+
+    it 'works for allows when the predicate is truthy' do
+      result = test_class.call(syncable_object: syncable_class.new(true),
+                               maybe_syncable: syncable_class.new(true))
+      expect(result).to be_a_success
+    end
+
+    it 'fails for allows when the predicate is falsey' do
+      result = test_class.call(syncable_object: syncable_class.new(true),
+                               maybe_syncable: syncable_class.new(false))
+      expect(result).to be_a_failure
+      expect(result.full_error_message).to eq ':maybe_syncable is not acts_as_syncable?'
+    end
+
+    it 'does not validate an allowed predicate type if nil' do
+      result = test_class.call(syncable_object: syncable_class.new(true), maybe_syncable: nil)
+      expect(result).to be_a_success
+    end
+  end
+
   describe 'delegates arguments and returns' do
     let(:test_class) do
       Class.new(GLCommand::Callable) do
