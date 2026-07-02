@@ -83,7 +83,10 @@ finish_release() {
 
   git checkout main
   git pull origin main
-  git branch -d "$RELEASE_BRANCH"
+  # -D (not -d): a squash merge means the branch tip is never an ancestor of
+  # main, so git considers it "not fully merged" even though the PR (checked
+  # above) did merge. We've already confirmed the merge via the PR state.
+  git branch -D "$RELEASE_BRANCH"
 
   # Publish the gem first; the tag and GitHub release are only created once the
   # gem has actually made it to RubyGems. This keeps a failed `gem push` from
