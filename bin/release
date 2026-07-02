@@ -40,7 +40,7 @@ RELEASE_BRANCH="release-v$VERSION"
 git checkout -b "$RELEASE_BRANCH"
 printf "module GLCommand\n  VERSION = '$VERSION'.freeze\nend\n" > ./lib/gl_command/version.rb
 bundle
-git add Gemfile.lock lib/gl_command/version.rb
+git add lib/gl_command/version.rb
 git commit -m "Bump version for $VERSION"
 git push -u origin "$RELEASE_BRANCH"
 
