@@ -41,3 +41,4 @@ Gemfile.lock
 db
 .aider*
 .env
+.release-in-progress
