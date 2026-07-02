@@ -12,6 +12,8 @@ RSpec.describe GLCommand::Matchers, type: :command do # rubocop:disable RSpec/Fi
     it { is_expected.not_to require(:allowed_arg) }
     it { is_expected.not_to require(:non_existent_arg) }
     it { is_expected.not_to require(:another_one).being(Integer) }
+    it { is_expected.to require(:multi).being([Integer, String]) }
+    it { is_expected.not_to require(:multi).being(Integer) }
 
     context 'when checking `not_to require`' do
       let(:matcher) { require(:required_arg) }
