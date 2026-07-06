@@ -4,73 +4,119 @@
 # that didn't actually make it to RubyGems (e.g. a failed `gem push`).
 set -euo pipefail
 
-VERSION="${1:-}"
+STATE_FILE=".release-in-progress"
 
-if [ -z "$VERSION" ]; then
+start_release() {
+  local VERSION="$1"
+
+  if [ -f "$STATE_FILE" ]; then
+    # shellcheck disable=SC1090
+    source "$STATE_FILE"
+    echo "A release is already in progress for $RELEASE_VERSION on branch $RELEASE_BRANCH."
+    echo "Run \`bin/release finish\` once its PR has merged."
+    exit 1
+  fi
+
+  if ! [[ "$VERSION" =~ ^[0-9]+(\.[0-9]+){0,2}$ ]]; then
+    echo "Error: invalid version '$VERSION' (expected something like 1.5.0)"
+    exit 1
+  fi
+
+  # Normalize to a three-part version (e.g. 1.5 -> 1.5.0)
+  while [[ "$VERSION" != *.*.* ]]; do
+    VERSION="$VERSION.0"
+  done
+
+  BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  if [ "$BRANCH" != "main" ]; then
+    echo "Error: must be on main branch to release (currently on $BRANCH)"
+    exit 1
+  fi
+
+  git fetch origin main
+  if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+    echo "Error: local main is not up to date with origin/main"
+    exit 1
+  fi
+
+  # main is protected, so the version bump goes through a PR
+  RELEASE_BRANCH="release-v$VERSION"
+  git checkout -b "$RELEASE_BRANCH"
+  printf "module GLCommand\n  VERSION = '$VERSION'.freeze\nend\n" > ./lib/gl_command/version.rb
+  bundle
+  git add lib/gl_command/version.rb
+  git commit -m "Bump version for $VERSION"
+  git push -u origin "$RELEASE_BRANCH"
+
+  gh pr create --base main --title "Bump version for $VERSION" --body "Automated version bump for the $VERSION release."
+  gh pr merge "$RELEASE_BRANCH" --squash --auto
+
+  git checkout main
+
+  printf "RELEASE_VERSION=%s\nRELEASE_BRANCH=%s\n" "$VERSION" "$RELEASE_BRANCH" > "$STATE_FILE"
+
+  echo "PR needs to be approved before it can merge - finish the release with \`bin/release finish\` once the PR merges"
+}
+
+finish_release() {
+  if [ ! -f "$STATE_FILE" ]; then
+    echo "Error: no release in progress (no $STATE_FILE found)"
+    exit 1
+  fi
+
+  # shellcheck disable=SC1090
+  source "$STATE_FILE"
+  VERSION="$RELEASE_VERSION"
+
+  STATE=$(gh pr view "$RELEASE_BRANCH" --json state --jq .state)
+  case "$STATE" in
+    MERGED) ;;
+    CLOSED)
+      echo "Error: release PR was closed without merging"
+      rm -f "$STATE_FILE"
+      echo "Cleared release state; run \`bin/release <version>\` to start a new release."
+      exit 1
+      ;;
+    *)
+      echo "PR for $RELEASE_BRANCH hasn't merged yet (currently $STATE). Try again once it's approved and merged."
+      exit 1
+      ;;
+  esac
+
+  git checkout main
+  git pull origin main
+  # -D (not -d): a squash merge means the branch tip is never an ancestor of
+  # main, so git considers it "not fully merged" even though the PR (checked
+  # above) did merge. We've already confirmed the merge via the PR state.
+  if git show-ref --verify --quiet "refs/heads/$RELEASE_BRANCH"; then
+    git branch -D "$RELEASE_BRANCH"
+  fi
+
+  # Publish the gem first; the tag and GitHub release are only created once the
+  # gem has actually made it to RubyGems. This keeps a failed `gem push` from
+  # leaving behind a tag that points at an unpublished release (and blocks re-runs).
+  gem build gl_command.gemspec
+  gem push "gl_command-$VERSION.gem" --host https://rubygems.org
+  rm "gl_command-$VERSION.gem"
+
+  git tag "v$VERSION"
+  git push origin "v$VERSION"
+  gh release create "v$VERSION" --title "v$VERSION" --generate-notes
+
+  rm -f "$STATE_FILE"
+}
+
+ARG="${1:-}"
+
+if [ -z "$ARG" ]; then
   echo "bin/release needs a version!"
   echo ""
   echo "Example: bin/release 1.5.0"
   exit 1
 fi
 
-if ! [[ "$VERSION" =~ ^[0-9]+(\.[0-9]+){0,2}$ ]]; then
-  echo "Error: invalid version '$VERSION' (expected something like 1.5.0)"
-  exit 1
+if [ "$ARG" = "finish" ]; then
+  finish_release
+else
+  start_release "$ARG"
 fi
-
-# Normalize to a three-part version (e.g. 1.5 -> 1.5.0)
-while [[ "$VERSION" != *.*.* ]]; do
-  VERSION="$VERSION.0"
-done
-
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
-if [ "$BRANCH" != "main" ]; then
-  echo "Error: must be on main branch to release (currently on $BRANCH)"
-  exit 1
-fi
-
-git fetch origin main
-if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
-  echo "Error: local main is not up to date with origin/main"
-  exit 1
-fi
-
-# main is protected, so the version bump goes through a PR
-RELEASE_BRANCH="release-v$VERSION"
-git checkout -b "$RELEASE_BRANCH"
-printf "module GLCommand\n  VERSION = '$VERSION'.freeze\nend\n" > ./lib/gl_command/version.rb
-bundle
-git add lib/gl_command/version.rb
-git commit -m "Bump version for $VERSION"
-git push -u origin "$RELEASE_BRANCH"
-
-gh pr create --base main --title "Bump version for $VERSION" --body "Automated version bump for the $VERSION release."
-gh pr merge "$RELEASE_BRANCH" --squash --auto
-
-echo "Waiting for the release PR to merge (auto-merges once CI passes)..."
-while true; do
-  STATE=$(gh pr view "$RELEASE_BRANCH" --json state --jq .state)
-  case "$STATE" in
-    MERGED) break ;;
-    CLOSED)
-      echo "Error: release PR was closed without merging"
-      exit 1
-      ;;
-    *) sleep 10 ;;
-  esac
-done
-
-git checkout main
-git pull origin main
-git branch -d "$RELEASE_BRANCH"
-
-# Publish the gem first; the tag and GitHub release are only created once the
-# gem has actually made it to RubyGems. This keeps a failed `gem push` from
-# leaving behind a tag that points at an unpublished release (and blocks re-runs).
-gem build gl_command.gemspec
-gem push "gl_command-$VERSION.gem" --host https://rubygems.org
-rm "gl_command-$VERSION.gem"
-
-git tag v$VERSION
-git push origin v$VERSION
-gh release create "v$VERSION" --title "v$VERSION" --generate-notes

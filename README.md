@@ -358,21 +358,17 @@ end
 
 ## Publishing the gem to Rubygems
 
-1. As per our code agreements, all code changes to this gem are required to be made via pull request with final approval from at least one Give Lively engineer.
-
-2. When creating a pull request, ensure that your code changes include an update to the gem's [version number](https://github.com/givelively/gl_command/blob/main/lib/gl_command/version.rb) using [semantic versioning](https://semver.org/)
-
-3. After getting approval, merge your changes to `main`.
-
-4. Once your CI build finishes successfully, pull the latest version of `main` locally.
-
-5. Run the command `gem build`. This bundles the relevant files from the gem and prepares it to be published to [rubygems.org](https://rubygems.org/).
-
-6. This will create a new file locally that looks like `gl_command-<new_gem_version_number>.gem`.
-
-7. Run `gem push gl_command-<new_gem_version_number>.gem` to publish the new version
+As per our code agreements, all code changes to this gem (including version bumps) are required to be made via pull request with final approval from at least one Give Lively engineer. Releasing is automated by `bin/release`, which handles the version bump PR and, once it's merged, builds, publishes and creates a tagged release on GitHub with the changelog.
 
 **NOTE: only the gem owners listed on rubygems can publish new versions**
+
+1. From an up-to-date `main`, run `bin/release <version>` (e.g. `bin/release 1.5.0`), using [semantic versioning](https://semver.org/) for the version number.
+
+   This creates a `release-vX.Y.Z` branch, bumps the [version number](https://github.com/givelively/gl_command/blob/main/lib/gl_command/version.rb), pushes the branch, opens a PR against `main`, and enables auto-merge on it. Since `main` is protected, the PR still needs review. The script then prints a message telling you to run `bin/release finish` and exits — it does not wait around for the PR to be approved.
+
+2. Once a Give Lively engineer approves the PR, it auto-merges (once CI passes).
+
+3. Run `bin/release finish`. If the PR hasn't merged yet, it tells you so and exits; otherwise it pulls `main`, deletes the local release branch, builds the gem, runs `gem push` to publish it to [rubygems.org](https://rubygems.org/), then tags the release and creates a GitHub release.
 
 ---
 
