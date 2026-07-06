@@ -73,6 +73,8 @@ finish_release() {
     MERGED) ;;
     CLOSED)
       echo "Error: release PR was closed without merging"
+      rm -f "$STATE_FILE"
+      echo "Cleared release state; run \`bin/release <version>\` to start a new release."
       exit 1
       ;;
     *)
@@ -86,7 +88,9 @@ finish_release() {
   # -D (not -d): a squash merge means the branch tip is never an ancestor of
   # main, so git considers it "not fully merged" even though the PR (checked
   # above) did merge. We've already confirmed the merge via the PR state.
-  git branch -D "$RELEASE_BRANCH"
+  if git show-ref --verify --quiet "refs/heads/$RELEASE_BRANCH"; then
+    git branch -D "$RELEASE_BRANCH"
+  fi
 
   # Publish the gem first; the tag and GitHub release are only created once the
   # gem has actually made it to RubyGems. This keeps a failed `gem push` from
