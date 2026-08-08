@@ -783,4 +783,40 @@ RSpec.describe GLCommand::Callable do
       end
     end
   end
+
+  describe 'additive keywords' do
+    let(:test_class) do
+      Class.new(GLCommand::Callable) do
+        requires :arg1
+        requires arg2: String
+
+        allows :opt1
+        allows opt2: Integer
+
+        returns :ret1
+        returns :ret2
+
+        def call; end
+      end
+    end
+
+    it 'accumulates arguments and returns from multiple calls' do
+      expect(test_class.arguments).to contain_exactly(:arg1, :arg2, :opt1, :opt2)
+      expect(test_class.instance_variable_get(:@requires)).to eq({ arg1: nil, arg2: String })
+      expect(test_class.instance_variable_get(:@allows)).to eq({ opt1: nil, opt2: Integer })
+      expect(test_class.instance_variable_get(:@returns)).to contain_exactly(:ret1, :ret2)
+    end
+
+    it 'is successful with all arguments' do
+      result = test_class.call(arg1: 'foo', arg2: 'bar', opt1: 'baz', opt2: 123)
+      expect(result).to be_successful
+    end
+
+    it 'is unsuccessful without required arguments' do
+      result = test_class.call(opt1: 'baz', opt2: 123)
+      expect(result).not_to be_successful
+      expect(result.error.class).to eq ArgumentError
+      expect(result.error.to_s).to match(/missing keywords: :arg1, :arg2/)
+    end
+  end
 end
