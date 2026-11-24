@@ -757,7 +757,6 @@ RSpec.describe GLCommand::Callable do
       Class.new(GLCommand::Callable) do
         requires record: target_class
         allows mod_record: target_module,
-               either: [target_class, String],
                syncable: :acts_as_syncable?
 
         def call; end
@@ -782,12 +781,6 @@ RSpec.describe GLCommand::Callable do
     it 'accepts an instance_double whose class includes a required module' do
       result = test_class.call!(record: instance_double(base_class),
                                 mod_record: instance_double(subclass))
-      expect(result).to be_a_success
-    end
-
-    it 'accepts an instance_double matching an array type' do
-      result = test_class.call!(record: instance_double(base_class),
-                                either: instance_double(subclass))
       expect(result).to be_a_success
     end
 
