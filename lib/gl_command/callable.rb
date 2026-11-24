@@ -2,11 +2,14 @@
 
 require 'active_support/core_ext/module'
 require 'gl_exception_notifier'
+require 'gl_command/argument_type_validation'
 require 'gl_command/validatable'
 
 module GLCommand
   class Callable
+    include GLCommand::ArgumentTypeValidation
     include GLCommand::Validatable
+
     ALWAYS_RAISE_ERRORS = ENV['GL_COMMAND_ALWAYS_RAISE'] == 'true'
     DEFAULT_OPTS = { raise_errors: false, skip_unknown_parameters: true, in_chain: false }.freeze
     RESERVED_WORDS = (DEFAULT_OPTS.keys + GLCommand::ChainableContext.reserved_words).sort.freeze
@@ -30,19 +33,19 @@ module GLCommand
         opts = DEFAULT_OPTS.merge(raise_errors: args.delete(:raise_errors) || ALWAYS_RAISE_ERRORS,
                                   in_chain: args.delete(:in_chain)).compact
         # args are passed in in perform_call(args) so that invalid args raise in a legible place
-        new(build_context(**args.merge(opts))).perform_call(args)
+        new(initialize_context(**args, **opts)).perform_call(args)
       end
 
       def call!(*posargs, **args)
-        call(*posargs, **args.merge(raise_errors: true))
+        call(*posargs, **args, raise_errors: true)
       end
 
       # error can be passed to build context, useful for stubbing in tests
       def build_context(raise_errors: false, skip_unknown_parameters: false, error: nil,
                         **arguments_and_returns)
-        new_context = context_class.new(self, raise_errors:, skip_unknown_parameters:,
-                                              **arguments_and_returns)
-        new_context.error = error if error.present?
+        new_context = initialize_context(raise_errors:, skip_unknown_parameters:, error:,
+                                         **arguments_and_returns)
+        validate_context_argument_types!(**arguments_and_returns) if test_environment?
         new_context
       end
 
@@ -100,6 +103,14 @@ module GLCommand
       def strong_args_hash(*attributes, **strong_attributes)
         # Convert attributes to strong attributes with nil value
         attributes.index_with { nil }.merge(strong_attributes)
+      end
+
+      def initialize_context(raise_errors: false, skip_unknown_parameters: false, error: nil,
+                             **arguments_and_returns)
+        new_context = context_class.new(self, raise_errors:, skip_unknown_parameters:,
+                                              **arguments_and_returns)
+        new_context.error = error if error.present?
+        new_context
       end
     end
 
@@ -205,7 +216,7 @@ module GLCommand
       instrument_command(:after_rollback)
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable-next Metrics/AbcSize
     def raise_for_invalid_args!(**args)
       missing = (self.class.requires || {}).keys - args.keys
       raise ArgumentError, "missing #{error_keys_str(missing)}" if missing.any?
@@ -218,33 +229,12 @@ module GLCommand
       # the value must answer truthily (e.g. :acts_as_syncable?), or an array of
       # either (e.g. [User, AdminUser]), in which case the value may match any
       self.class.requires.merge(self.class.allows).each do |arg, type|
-        next if type.nil? || Array(type).any? { |t| value_matches_type?(args[arg], t) }
-        # Validation skipped if allows and nil (but not if blank)
-        next if args[arg].nil? && self.class.allows.include?(arg)
-
-        raise GLCommand::ArgumentTypeError, ":#{arg} is not #{type_error_str(type)}"
+        validate_argument_type!(arg, args[arg], type)
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def error_keys_str(keys)
-      "keyword#{keys.count > 1 ? 's' : ''}: #{keys.map { |k| ":#{k}" }.join(', ')}"
-    end
-
-    # A type can be a class (checked with is_a?) or a symbol naming a predicate
-    # method the value must respond to and return truthy from
-    def value_matches_type?(value, type)
-      if type.is_a?(Symbol)
-        value.respond_to?(type) && value.public_send(type)
-      else
-        value.is_a?(type)
-      end
-    end
-
-    def type_error_str(type)
-      return "one of #{type.join(', ')}" if type.is_a?(Array)
-
-      type.is_a?(Symbol) ? type.to_s : "a #{type}"
+      "keyword#{'s' if keys.count > 1}: #{keys.map { |k| ":#{k}" }.join(', ')}"
     end
   end
 end

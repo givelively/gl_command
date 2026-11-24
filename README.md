@@ -321,7 +321,12 @@ result_error.full_error_message # "invalid"
 
 SomeCommand.build_context(other_thing: "some other thing")
 # ArgumentError: Unknown argument or return attribute: 'other_thing'
+
+SomeCommand.build_context(user: "not a user")
+# GLCommand::ArgumentTypeError: :user is not a User (validated in test environments)
 ```
+
+In test environments, typed `requires` and `allows` declarations also accept RSpec verifying doubles (`instance_double` / `instance_spy`) whose doubled class or module is `<= type`.
 
 ### RSpec Matchers
 

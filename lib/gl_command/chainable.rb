@@ -32,7 +32,7 @@ module GLCommand
       end
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Lint/UnderscorePrefixedVariableName
+    # rubocop:disable-next Metrics/AbcSize, Metrics/MethodLength, Lint/UnderscorePrefixedVariableName
     def chain(args)
       return if @chain_skipped
 
@@ -57,18 +57,15 @@ module GLCommand
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Lint/UnderscorePrefixedVariableName
 
-    def commands
-      self.class.commands
-    end
+    delegate :commands, to: :class
 
     def chain_rollback
       context.called.reverse_each do |command|
         chain_params = context.chain_arguments_and_returns
                               .slice(*command.arguments_and_returns)
 
-        command.new(command.build_context(**chain_params)).rollback
+        command.new(command.send(:initialize_context, **chain_params)).rollback
       end
     end
 
