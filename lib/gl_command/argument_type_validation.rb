@@ -41,7 +41,10 @@ module GLCommand
     # type when its doubled module/class is `<= type`.
     def value_matches_type?(value, type)
       return value.respond_to?(type) && value.public_send(type) if type.is_a?(Symbol)
-      return verifying_double_matches_type?(value, type) if instance_verifying_double?(value)
+
+      if instance_verifying_double?(value) && verifying_double_matches_type?(value, type)
+        return true
+      end
 
       value.is_a?(type)
     end

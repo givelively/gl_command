@@ -784,6 +784,16 @@ RSpec.describe GLCommand::Callable do
       expect(result).to be_a_success
     end
 
+    it 'accepts an instance_double when the declared type is Object' do
+      object_command = Class.new(GLCommand::Callable) do
+        requires value: Object
+
+        def call; end
+      end
+
+      expect(object_command.call!(value: instance_double(syncable_module))).to be_a_success
+    end
+
     it 'accepts an instance_double stubbing a predicate type' do
       syncable_double = instance_double(base_class, acts_as_syncable?: true)
       result = test_class.call!(record: instance_double(base_class), syncable: syncable_double)
