@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'gl_command'
+
 module GLCommand
   module RSpec
     module VerifyingDoubleSupport
