@@ -45,7 +45,7 @@ module GLCommand
                         **arguments_and_returns)
         new_context = initialize_context(raise_errors:, skip_unknown_parameters:, error:,
                                          **arguments_and_returns)
-        validate_context_argument_types!(**arguments_and_returns) if test_environment?
+        validate_context_argument_types!(**arguments_and_returns)
         new_context
       end
 

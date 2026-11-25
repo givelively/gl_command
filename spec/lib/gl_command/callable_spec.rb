@@ -442,12 +442,6 @@ RSpec.describe GLCommand::Callable do
           typed_command.build_context(label: 123)
         end.to raise_error(GLCommand::ArgumentTypeError, ':label is not a String')
       end
-
-      it 'skips type validation outside test environments' do
-        allow(typed_command).to receive(:test_environment?).and_return(false)
-        result = typed_command.build_context(number: 'four')
-        expect(result.number).to eq 'four'
-      end
     end
   end
 
