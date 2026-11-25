@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'gl_command/rspec/matchers'
+require 'gl_command/rspec/verifying_doubles'
 
 # A shared context to automatically set the subject of a spec to the
 # described class. This allows `is_expected` to work directly on the

@@ -24,7 +24,7 @@ RSpec.describe GLCommand::Callable do
 
       def failure_expectations(result)
         expect(result).to be_failure
-        expect(result.error.to_s).to match(/Test Error/)
+        expect(result.error.to_s).to include('Test Error')
         expect(array).to eq([1, 2, 3, 4])
         expect(result.new_array).to eq([1, 2, 3, 4, 6])
       end
@@ -190,7 +190,7 @@ RSpec.describe GLCommand::Callable do
         result = square_root_class.call(number: -4)
         expect(result).to be_failure
         expect(result.error).to be_present
-        expect(result.error.to_s).to match(/Numerical argument is out of domain/)
+        expect(result.error.to_s).to include('Numerical argument is out of domain')
       end
 
       context 'with call!' do
@@ -395,6 +395,54 @@ RSpec.describe GLCommand::Callable do
         expect(result.errors.full_messages).to eq(['Some error class'])
       end
     end
+
+    context 'with typed requires and allows' do
+      let(:typed_command) do
+        Class.new(GLCommand::Callable) do
+          requires number: Numeric
+          allows label: String
+          returns :root
+
+          def call; end
+        end
+      end
+
+      it 'succeeds when only returns are passed' do
+        result = typed_command.build_context(root: 42)
+        expect(result).to be_successful
+        expect(result.root).to eq 42
+      end
+
+      it 'succeeds when passed arguments match declared types' do
+        result = typed_command.build_context(number: 4, label: 'ok', root: 2)
+        expect(result).to be_successful
+        expect(result.number).to eq 4
+        expect(result.label).to eq 'ok'
+      end
+
+      it 'allows nil for typed allows arguments' do
+        result = typed_command.build_context(label: nil)
+        expect(result).to be_successful
+      end
+
+      it 'raises ArgumentTypeError when a required argument has the wrong type' do
+        expect do
+          typed_command.build_context(number: 'four')
+        end.to raise_error(GLCommand::ArgumentTypeError, ':number is not a Numeric')
+      end
+
+      it 'raises ArgumentTypeError when a required typed argument is nil' do
+        expect do
+          typed_command.build_context(number: nil)
+        end.to raise_error(GLCommand::ArgumentTypeError, ':number is not a Numeric')
+      end
+
+      it 'raises ArgumentTypeError when an allowed argument has the wrong type' do
+        expect do
+          typed_command.build_context(label: 123)
+        end.to raise_error(GLCommand::ArgumentTypeError, ':label is not a String')
+      end
+    end
   end
 
   describe 'command with positional_parameter' do
@@ -501,14 +549,14 @@ RSpec.describe GLCommand::Callable do
       expect(result).not_to be_successful
 
       expect(result.error.class).to eq ArgumentError
-      expect(result.error.to_s).to match(/unknown keyword: :not_array/)
+      expect(result.error.to_s).to include('unknown keyword: :not_array')
     end
 
     it 'is unsuccessful without required keyword' do
       result = test_class.call
       expect(result).not_to be_successful
       expect(result.error.class).to eq ArgumentError
-      expect(result.error.to_s).to match(/missing keyword: :array/)
+      expect(result.error.to_s).to include('missing keyword: :array')
     end
 
     context 'with call!' do
@@ -682,6 +730,98 @@ RSpec.describe GLCommand::Callable do
     it 'does not validate an allowed predicate type if nil' do
       result = test_class.call(syncable_object: syncable_class.new(true), maybe_syncable: nil)
       expect(result).to be_a_success
+    end
+  end
+
+  describe 'strong_attributes with RSpec verifying doubles' do
+    let(:syncable_module) { Module.new }
+    let(:base_class) do
+      mod = syncable_module
+      Class.new do
+        include mod
+
+        def acts_as_syncable? = true
+      end
+    end
+    let(:subclass) { Class.new(base_class) }
+    let(:unrelated_class) { Class.new }
+    let(:test_class) do
+      target_class = base_class
+      target_module = syncable_module
+      Class.new(GLCommand::Callable) do
+        requires record: target_class
+        allows mod_record: target_module,
+               syncable: :acts_as_syncable?
+
+        def call; end
+      end
+    end
+
+    it 'accepts an instance_double of the exact required class' do
+      result = test_class.call!(record: instance_double(base_class))
+      expect(result).to be_a_success
+    end
+
+    it 'accepts an instance_double of a subclass of the required class' do
+      result = test_class.call!(record: instance_double(subclass))
+      expect(result).to be_a_success
+    end
+
+    it 'accepts an instance_spy of the required class' do
+      result = test_class.call!(record: instance_spy(base_class))
+      expect(result).to be_a_success
+    end
+
+    it 'accepts an instance_double whose class includes a required module' do
+      result = test_class.call!(record: instance_double(base_class),
+                                mod_record: instance_double(subclass))
+      expect(result).to be_a_success
+    end
+
+    it 'accepts an instance_double when the declared type is Object' do
+      object_command = Class.new(GLCommand::Callable) do
+        requires value: Object
+
+        def call; end
+      end
+
+      expect(object_command.call!(value: instance_double(syncable_module))).to be_a_success
+    end
+
+    it 'accepts an instance_double stubbing a predicate type' do
+      syncable_double = instance_double(base_class, acts_as_syncable?: true)
+      result = test_class.call!(record: instance_double(base_class), syncable: syncable_double)
+      expect(result).to be_a_success
+    end
+
+    it 'accepts a matching instance_double in build_context' do
+      context = test_class.build_context(record: instance_double(subclass))
+      expect(context).to be_a_success
+    end
+
+    it 'rejects an instance_double of an unrelated class' do
+      expect do
+        test_class.call!(record: instance_double(unrelated_class))
+      end.to raise_error(GLCommand::ArgumentTypeError)
+    end
+
+    it 'rejects an instance_double of an unrelated class in build_context' do
+      expect do
+        test_class.build_context(record: instance_double(unrelated_class))
+      end.to raise_error(GLCommand::ArgumentTypeError)
+    end
+
+    it 'rejects an unverified double' do
+      expect do
+        test_class.call!(record: double(:unverified))
+      end.to raise_error(GLCommand::ArgumentTypeError)
+    end
+
+    it 'rejects an instance_double whose predicate stub returns false' do
+      syncable_double = instance_double(base_class, acts_as_syncable?: false)
+      expect do
+        test_class.call!(record: instance_double(base_class), syncable: syncable_double)
+      end.to raise_error(GLCommand::ArgumentTypeError, ':syncable is not acts_as_syncable?')
     end
   end
 

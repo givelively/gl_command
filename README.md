@@ -321,21 +321,24 @@ result_error.full_error_message # "invalid"
 
 SomeCommand.build_context(other_thing: "some other thing")
 # ArgumentError: Unknown argument or return attribute: 'other_thing'
+
+SomeCommand.build_context(user: "not a user")
+# GLCommand::ArgumentTypeError: :user is not a User
 ```
 
-### RSpec Matchers
+### RSpec Support
 
-`GLCommand` comes with a set of RSpec matchers to make testing your command's interface declarative and simple.
+`GLCommand` comes with a set of RSpec matchers and verifying-double support (`instance_double` / `instance_spy`) for typed `requires` and `allows` declarations.
 
 ### Setup
 
-To enable the matchers, add the following line to your `spec/spec_helper.rb` or `spec/rails_helper.rb`:
+To enable RSpec matchers and verifying-double support, add the following line to your `spec/spec_helper.rb` or `spec/rails_helper.rb`:
 
 ```ruby
 require 'gl_command/rspec'
 ```
 
-This will automatically include the necessary matchers and configure RSpec for specs marked with `type: :command`.
+This will automatically include the necessary matchers, configure RSpec for specs marked with `type: :command`, and allow RSpec verifying doubles (`instance_double` / `instance_spy`) whose doubled class or module is `<= type`. If you only want verifying-double support without including the `require` / `allow` / `returns` matchers, `require 'gl_command/rspec/verifying_doubles'`.
 
 ### Usage
 
